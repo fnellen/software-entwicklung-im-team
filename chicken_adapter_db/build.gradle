@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "com.github.spotbugs" version "4.7.9"
+    id 'checkstyle'
+}
+
+sourceCompatibility = '17'
+
+spotbugs {
+    effort = "max"
+}
+
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+checkstyle {
+    ignoreFailures = false
+    maxWarnings = 0
+}
+
+
+dependencies {
+    implementation project(':chicken_domain')
+    implementation project(':chicken_application')
+
+    testImplementation "org.testcontainers:mariadb:1.16.3"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.flywaydb:flyway-core'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.5.3'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
