@@ -5,3 +5,4 @@
 /chicken_adapter_db/build/
 /.idea/
 /.gradle/
+.env

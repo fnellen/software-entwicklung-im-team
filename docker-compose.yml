@@ -4,6 +4,7 @@ services:
     image: mariadb:10.5
     ports:
       - "3332:3306"
+    env_file:
+      - .env
     environment:
-      - "MYSQL_ROOT_PASSWORD="
-  
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
