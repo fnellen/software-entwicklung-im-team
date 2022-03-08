@@ -1,11 +1,10 @@
 @startuml
 class Benutzer{
+
+}
+class Student{
 + Long id
 - String githubHandle
-- Rolle rolle
-}
-
-class Student{
 - Set<Urlaub> urlaube
 - Set<KlausurReferenz> klausuren
 + berechneRestUrlaub()
@@ -18,27 +17,32 @@ class KlausurReferenz{
 - Long klausur_id
 }
 
-
-
-class UrlaubDomainService{
+class FreistellungsAntragsDomainService{
 + belegeUrlaub(Student student, Urlaub urlaub)
 + urlaubStornieren(Student student, Urlaub urlaub)
 - validiereUrlaubsBlöcke(Student student, Urlaub urlaub)
 - validiereÜberschneidung(Student student, Urlaub urlaub)
++ belegeKlausur(Student student, Klausur klausur)
+- klausurStornieren(Student student, Klausur klausur)
+- validiereÜberschneidung(Student student, Klausur klausur)
+}
+class UrlaubDomainService{
+
+}
+
+class Urlaub{
+- Zeitraum zeitraum
 - validiereZeitraumUrlaub(Urlaub urlaub)
 - validiereBlockLänge(Urlaub urlaub)
 - validiereBlockAnfang(Urlaub urlaub)
 }
 
-class Urlaub{
-- Zeitraum zeitraum
+class (Klausur)ApplicationService{
++ klausurRegistrieren(Klausur klausur)
 }
 
 class KlausurDomainService{
-+ klausurRegistrieren(Benuter benutzer, Klausur klausur)
-+ belegeKlausur(Student student, Klausur klausur)
-- klausurStornieren(Student student, Klausur klausur)
-- validiereÜberschneidung(Student student, Klausur klausur)
+
 }
 
 class Klausur{
@@ -64,4 +68,9 @@ class LSFID{
 
 Student -> Urlaub
 Student -> Klausur
+package "Aggregate"{
+
+}
+
+
 @enduml
