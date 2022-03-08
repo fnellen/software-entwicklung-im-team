@@ -1,11 +1,8 @@
 package chicken.aggregates.klausur;
 
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Optional;
 
 public class VeranstaltungsId {
 
