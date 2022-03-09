@@ -9,9 +9,11 @@ import java.io.IOException;
  */
 public class VeranstaltungsId {
 
+  private final WebClient webClient;
   private final Long veranstaltungsId;
 
-  private VeranstaltungsId(Long veranstaltungsId) {
+  private VeranstaltungsId(Long veranstaltungsId, WebClient webClient) {
+    this.webClient = webClient;
     this.veranstaltungsId = veranstaltungsId;
   }
 
@@ -29,24 +31,25 @@ public class VeranstaltungsId {
    *
    * @param veranstaltungsId Id der Veranstaltung.
    * @return Gibt null zurück, wenn die Id der Veranstaltung nicht valide ist, ansonsten wird ein
-   *         VeranstaltungsId Objekt zurück gegeben.
+   * VeranstaltungsId Objekt zurück gegeben.
    */
-  public static VeranstaltungsId erstelle(Long veranstaltungsId) {
-    if (istEchteVeranstaltungsId(veranstaltungsId)) {
-      return new VeranstaltungsId(veranstaltungsId);
+  public static VeranstaltungsId erstelle(Long veranstaltungsId, WebClient webClient) {
+    if (istEchteVeranstaltungsId(veranstaltungsId, webClient)) {
+      return new VeranstaltungsId(veranstaltungsId, webClient);
     }
     return null;
   }
 
-  private static boolean istEchteVeranstaltungsId(Long veranstaltungsId) {
-    return (webCheck(veranstaltungsId));
+  private static boolean istEchteVeranstaltungsId(Long veranstaltungsId, WebClient webClient) {
+    return (webCheck(veranstaltungsId, webClient));
   }
 
-  private static boolean webCheck(Long veranstaltungsId) {
-    try (final WebClient webClient = new WebClient()) {
-      final HtmlPage page1 = webClient.getPage("https://lsf.hhu.de/qisserver/rds?state=verpublish&status=init&vmfile=no"
-          + "&publishid=" + veranstaltungsId.toString()
-          + "&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung");
+  private static boolean webCheck(Long veranstaltungsId, WebClient webClient) {
+    try (webClient) {
+      final HtmlPage page1 = webClient.getPage(
+          "https://lsf.hhu.de/qisserver/rds?state=verpublish&status=init&vmfile=no"
+              + "&publishid=" + veranstaltungsId.toString()
+              + "&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung");
       String htmlPageString = page1.getWebResponse().getContentAsString();
       return htmlPageString.contains("Veranstaltungsart");
     } catch (IOException e) {
