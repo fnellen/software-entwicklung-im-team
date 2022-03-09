@@ -9,7 +9,7 @@ public class VeranstaltungIdTest {
 
   @Test
   @DisplayName("Existierende Veranstaltung-id gibt true zurück.")
-  void test_1(){
+  void test_1() {
     VeranstaltungsId erstelle = VeranstaltungsId.erstelle(217419L);
 
     assertThat(erstelle).isNotNull();
@@ -17,7 +17,7 @@ public class VeranstaltungIdTest {
 
   @Test
   @DisplayName("Nicht Existierende Veranstaltung-id gibt false zurück.")
-  void test_2(){
+  void test_2() {
     VeranstaltungsId erstelle = VeranstaltungsId.erstelle(257419L);
 
     assertThat(erstelle).isNull();
@@ -25,7 +25,7 @@ public class VeranstaltungIdTest {
 
   @Test
   @DisplayName("Veranstaltung-id mit nicht korrekter Länge gibt false zurück.")
-  void test_3(){
+  void test_3() {
     VeranstaltungsId erstelle = VeranstaltungsId.erstelle(0L);
 
     assertThat(erstelle).isNull();

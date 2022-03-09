@@ -13,11 +13,11 @@ class UrlaubZeitraum {
     return konvertiereInZeitraum().dauerInMinuten();
   }
 
-  private ZeitraumDto konvertiereInZeitraum(){
+  private ZeitraumDto konvertiereInZeitraum() {
     return ZeitraumDto.erstelleZeitraum(datum, startUhrzeit, endUhrzeit);
   }
 
-  public UrlaubZeitraum(ZeitraumDto zeitraumDto){
+  public UrlaubZeitraum(ZeitraumDto zeitraumDto) {
     this.datum = zeitraumDto.getDatum();
     this.startUhrzeit = zeitraumDto.getStartUhrzeit();
     this.endUhrzeit = zeitraumDto.getEndUhrzeit();
