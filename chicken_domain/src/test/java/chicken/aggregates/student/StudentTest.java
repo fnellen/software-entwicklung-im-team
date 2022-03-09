@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class StudentTest {
 
   @Test
-  @DisplayName("Der Resturlaub wird korrekt berechnet.")
+  @DisplayName("Der Belegte Urlaub wird korrekt berechnet.")
   void test_1() {
     Student student = new Student(1L, "");
     UrlaubZeitraum zeitraum1 = new UrlaubZeitraum(
@@ -22,8 +22,8 @@ public class StudentTest {
         LocalTime.of(11, 00)));
     student.fuegeUrlaubHinzufuegen(zeitraum1);
     student.fuegeUrlaubHinzufuegen(zeitraum2);
-    long restUrlaub = student.berechneRestUrlaub();
+    long restUrlaub = student.berechneBeantragtenUrlaub();
 
-    assertThat(restUrlaub).isEqualTo(150);
+    assertThat(restUrlaub).isEqualTo(90);
   }
 }
