@@ -1,16 +1,16 @@
-package chicken.aggregates.utilities;
+package chicken.aggregates.dto;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Zeitraum {
+public class ZeitraumDto {
   private final LocalDate datum;
   private final LocalTime startUhrzeit;
   private final LocalTime endUhrzeit;
 
-  private Zeitraum(LocalDate datum, LocalTime startUhrzeit, LocalTime endUhrzeit) {
+  private ZeitraumDto(LocalDate datum, LocalTime startUhrzeit, LocalTime endUhrzeit) {
     this.datum = datum;
     this.startUhrzeit = startUhrzeit;
     this.endUhrzeit = endUhrzeit;
@@ -28,13 +28,13 @@ public class Zeitraum {
     return endUhrzeit;
   }
 
-  public static Zeitraum erstelleZeitraum(LocalDate datum, LocalTime startUhrzeit,
-                                          LocalTime endUhrzeit) {
+  public static ZeitraumDto erstelleZeitraum(LocalDate datum, LocalTime startUhrzeit,
+                                             LocalTime endUhrzeit) {
     if (!validierePraktikumszeitraum(datum)) return null;
     if (validiereObAnWochenende(datum)) return null;
     if (!validiereUhrzeiten(startUhrzeit, endUhrzeit)) return null;
     if (!validiereUhrzeitBlock(startUhrzeit, endUhrzeit)) return null;
-    return new Zeitraum(datum, startUhrzeit, endUhrzeit);
+    return new ZeitraumDto(datum, startUhrzeit, endUhrzeit);
   }
 
   @Deprecated

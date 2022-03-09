@@ -1,6 +1,5 @@
 package chicken.aggregates.student;
 
-import chicken.aggregates.utilities.Zeitraum;
 import chicken.aggregates.klausur.Klausur;
 import chicken.aggregates.klausur.KlausurReferenz;
 import chicken.stereotypes.AggregateRoot;
@@ -12,7 +11,7 @@ public class Student {
 
   private final Long id;
   private final String githubHandle;
-  private Set<Zeitraum> urlaube = new HashSet<>();
+  private Set<UrlaubZeitraum> urlaube = new HashSet<>();
   private Set<KlausurReferenz> klausuren;
 
   private static final long GESAMT_URLAUBSZEIT_IN_MINUTEN = 240L;
@@ -23,7 +22,7 @@ public class Student {
   }
 
 
-  public void fuegeUrlaubHinzufuegen(Zeitraum urlaubsZeitraum) {
+  public void fuegeUrlaubHinzufuegen(UrlaubZeitraum urlaubsZeitraum) {
     if (urlaubsZeitraum.dauerInMinuten() + this.berechneRestUrlaub() <=
         GESAMT_URLAUBSZEIT_IN_MINUTEN) {
       urlaube.add(urlaubsZeitraum);
@@ -35,7 +34,7 @@ public class Student {
   }
 
   public long berechneRestUrlaub() {
-    long urlaub = urlaube.stream().mapToLong(Zeitraum::dauerInMinuten).sum();
+    long urlaub = urlaube.stream().mapToLong(UrlaubZeitraum::dauerInMinuten).sum();
     return GESAMT_URLAUBSZEIT_IN_MINUTEN - urlaub;
   }
 
