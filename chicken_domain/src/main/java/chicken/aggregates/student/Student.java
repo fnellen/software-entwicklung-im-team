@@ -23,7 +23,7 @@ public class Student {
   /**
    * Konstruktor zur Erstellung eines Studenten.
    *
-   * @param id Eindeutige Identifikation des Studenten in der Datenbank.
+   * @param id           Eindeutige Identifikation des Studenten in der Datenbank.
    * @param githubHandle Eindeutige Identifikation des Studenten durch GitHub-Authentifizierung.
    */
   public Student(Long id, String githubHandle) {
@@ -53,5 +53,8 @@ public class Student {
     return urlaub;
   }
 
+  public long berechneRestUrlaub() {
+    return GESAMT_URLAUBSZEIT_IN_MINUTEN - this.berechneBeantragtenUrlaub();
+  }
 
 }
