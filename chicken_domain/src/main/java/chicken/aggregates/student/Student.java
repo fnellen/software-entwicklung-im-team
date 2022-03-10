@@ -1,7 +1,7 @@
 package chicken.aggregates.student;
 
+import chicken.aggregates.dto.ZeitraumDto;
 import chicken.aggregates.klausur.Klausur;
-import chicken.aggregates.klausur.KlausurReferenz;
 import chicken.stereotypes.AggregateRoot;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,4 +57,18 @@ public class Student {
     return GESAMT_URLAUBSZEIT_IN_MINUTEN - this.berechneBeantragtenUrlaub();
   }
 
+  public void setzeUrlaube(Set<ZeitraumDto> urlaube) {
+    Set<UrlaubZeitraum> urlaubeAusDatenbank = new HashSet<>();
+    for (ZeitraumDto u : urlaube) {
+      urlaubeAusDatenbank.add(new UrlaubZeitraum(u));
+    }
+    this.urlaube = urlaubeAusDatenbank;
+  }
+
+  public Set<KlausurReferenz> getKlausuren() {
+  }
+
+  public void setzeKlausuren(Set<KlausurReferenz> klausurenReferenzen) {
+    this.klausuren = klausurenReferenzen;
+  }
 }
