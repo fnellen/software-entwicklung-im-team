@@ -9,11 +9,9 @@ import java.io.IOException;
  */
 public class VeranstaltungsId {
 
-  private final WebClient webClient;
   private final Long veranstaltungsId;
 
-  private VeranstaltungsId(Long veranstaltungsId, WebClient webClient) {
-    this.webClient = webClient;
+  private VeranstaltungsId(Long veranstaltungsId) {
     this.veranstaltungsId = veranstaltungsId;
   }
 
@@ -33,19 +31,19 @@ public class VeranstaltungsId {
    * @return Gibt null zurück, wenn die Id der Veranstaltung nicht valide ist, ansonsten wird ein
    * VeranstaltungsId Objekt zurück gegeben.
    */
-  public static VeranstaltungsId erstelle(Long veranstaltungsId, WebClient webClient) {
-    if (istEchteVeranstaltungsId(veranstaltungsId, webClient)) {
-      return new VeranstaltungsId(veranstaltungsId, webClient);
+  public static VeranstaltungsId erstelle(Long veranstaltungsId) {
+    if (istEchteVeranstaltungsId(veranstaltungsId)) {
+      return new VeranstaltungsId(veranstaltungsId);
     }
     return null;
   }
 
-  private static boolean istEchteVeranstaltungsId(Long veranstaltungsId, WebClient webClient) {
-    return (webCheck(veranstaltungsId, webClient));
+  private static boolean istEchteVeranstaltungsId(Long veranstaltungsId) {
+    return (webCheck(veranstaltungsId));
   }
 
-  private static boolean webCheck(Long veranstaltungsId, WebClient webClient) {
-    try (webClient) {
+  private static boolean webCheck(Long veranstaltungsId) {
+    try (WebClient webClient = new WebClient()) {
       final HtmlPage page1 = webClient.getPage(
           "https://lsf.hhu.de/qisserver/rds?state=verpublish&status=init&vmfile=no"
               + "&publishid=" + veranstaltungsId.toString()
