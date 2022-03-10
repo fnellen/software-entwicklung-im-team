@@ -66,6 +66,7 @@ public class Student {
   }
 
   public Set<KlausurReferenz> getKlausuren() {
+    return Set.of(); // TODO: implement this
   }
 
   public void setzeKlausuren(Set<KlausurReferenz> klausurenReferenzen) {
