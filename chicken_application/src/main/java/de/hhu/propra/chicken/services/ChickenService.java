@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ApplicationService {
+public class ChickenService {
   public static final LocalTime START_UHRZEIT = LocalTime.of(9, 30);
   public static final LocalTime END_UHRZEIT = LocalTime.of(13, 30);
   public static final long PRAKTIKUMS_TAG_DAUER = 240L;
@@ -23,8 +23,8 @@ public class ApplicationService {
   private final KlausurRepository klausurRepository;
 
 
-  public ApplicationService(StudentRepository studentRepository,
-                            KlausurRepository klausurRepository) {
+  public ChickenService(StudentRepository studentRepository,
+                        KlausurRepository klausurRepository) {
     this.studentRepository = studentRepository;
     this.klausurRepository = klausurRepository;
   }
@@ -107,7 +107,7 @@ public class ApplicationService {
   }
 
   boolean ueberpruefeUrlaubsAnfaenge(ZeitraumDto urlaub, ZeitraumDto anfangsZeit,
-                                             ZeitraumDto endZeit, Student student) {
+                                     ZeitraumDto endZeit, Student student) {
     if (anfangsZeit.getStartUhrzeit().equals(START_UHRZEIT)
         && endZeit.getEndUhrzeit().equals(END_UHRZEIT)) {
       if (berechneZeitZwischenZeitraeumen(anfangsZeit, endZeit)) {
@@ -126,7 +126,7 @@ public class ApplicationService {
    * Anfang des zweiten Urlaubs mindestens 90 Minuten ist.
    */
   boolean berechneZeitZwischenZeitraeumen(ZeitraumDto urlaub1,
-                                                  ZeitraumDto urlaub2
+                                          ZeitraumDto urlaub2
   ) {
     Duration zeitZwischenUrlauben =
         Duration.between(urlaub1.getEndUhrzeit(), urlaub2.getStartUhrzeit());
