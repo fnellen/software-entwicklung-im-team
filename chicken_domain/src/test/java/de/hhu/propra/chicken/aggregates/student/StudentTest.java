@@ -14,14 +14,14 @@ public class StudentTest {
   @DisplayName("Der Belegte Urlaub wird korrekt berechnet.")
   void test_1() {
     Student student = new Student(1L, "");
-    UrlaubZeitraum zeitraum1 = new UrlaubZeitraum(
+    ZeitraumDto zeitraum1 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7), LocalTime.of(9, 30),
-            LocalTime.of(10, 30)));
-    UrlaubZeitraum zeitraum2 = new UrlaubZeitraum(
+            LocalTime.of(10, 30));
+    ZeitraumDto zeitraum2 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 10), LocalTime.of(10, 30),
-            LocalTime.of(11, 00)));
-    student.fuegeUrlaubHinzufuegen(zeitraum1);
-    student.fuegeUrlaubHinzufuegen(zeitraum2);
+            LocalTime.of(11, 0));
+    student.fuegeUrlaubHinzu(zeitraum1);
+    student.fuegeUrlaubHinzu(zeitraum2);
     long restUrlaub = student.berechneBeantragtenUrlaub();
 
     assertThat(restUrlaub).isEqualTo(90);
@@ -31,14 +31,14 @@ public class StudentTest {
   @DisplayName("Der restliche Urlaub wird korrekt berechnet.")
   void test_2() {
     Student student = new Student(1L, "");
-    UrlaubZeitraum zeitraum1 = new UrlaubZeitraum(
+    ZeitraumDto zeitraum1 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7), LocalTime.of(9, 30),
-            LocalTime.of(10, 30)));
-    UrlaubZeitraum zeitraum2 = new UrlaubZeitraum(
+            LocalTime.of(10, 30));
+    ZeitraumDto zeitraum2 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 10), LocalTime.of(10, 30),
-            LocalTime.of(11, 00)));
-    student.fuegeUrlaubHinzufuegen(zeitraum1);
-    student.fuegeUrlaubHinzufuegen(zeitraum2);
+            LocalTime.of(11, 00));
+    student.fuegeUrlaubHinzu(zeitraum1);
+    student.fuegeUrlaubHinzu(zeitraum2);
     long restUrlaub = student.berechneRestUrlaub();
 
     assertThat(restUrlaub).isEqualTo(150);

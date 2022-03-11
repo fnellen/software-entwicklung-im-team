@@ -1,7 +1,6 @@
 package de.hhu.propra.chicken.aggregates.student;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.stereotypes.AggregateRoot;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +14,7 @@ public class Student {
 
   private Long id;
   private final String githubHandle;
-  private Set<UrlaubZeitraum> urlaube = new HashSet<>();
+  private Set<ZeitraumDto> urlaube = new HashSet<>();
   private Set<KlausurReferenz> klausuren;
 
   private static final long GESAMT_URLAUBSZEIT_IN_MINUTEN = 240L;
@@ -39,7 +38,7 @@ public class Student {
     return githubHandle;
   }
 
-  public Set<UrlaubZeitraum> getUrlaube() {
+  public Set<ZeitraumDto> getUrlaube() {
     return urlaube;
   }
 
@@ -52,7 +51,7 @@ public class Student {
    *
    * @param urlaubsZeitraum Ein Zeitraum, indem der Student Urlaub hat.
    */
-  public void fuegeUrlaubHinzufuegen(UrlaubZeitraum urlaubsZeitraum) {
+  public void fuegeUrlaubHinzu(ZeitraumDto urlaubsZeitraum) {
     long minuten = urlaubsZeitraum.dauerInMinuten() + this.berechneBeantragtenUrlaub();
     if (minuten <= GESAMT_URLAUBSZEIT_IN_MINUTEN) {
       urlaube.add(urlaubsZeitraum);
@@ -64,7 +63,7 @@ public class Student {
   }*/
 
   public long berechneBeantragtenUrlaub() {
-    long urlaub = urlaube.stream().mapToLong(UrlaubZeitraum::dauerInMinuten).sum();
+    long urlaub = urlaube.stream().mapToLong(ZeitraumDto::dauerInMinuten).sum();
     return urlaub;
   }
 
@@ -72,19 +71,15 @@ public class Student {
     return GESAMT_URLAUBSZEIT_IN_MINUTEN - this.berechneBeantragtenUrlaub();
   }
 
-  public void setzeUrlaube(Set<ZeitraumDto> urlaube) {
-    Set<UrlaubZeitraum> urlaubeAusDatenbank = new HashSet<>();
-    for (ZeitraumDto u : urlaube) {
-      urlaubeAusDatenbank.add(new UrlaubZeitraum(u));
-    }
-    this.urlaube = urlaubeAusDatenbank;
+  void setzeUrlaube(Set<ZeitraumDto> urlaube) {
+    this.urlaube = urlaube;
   }
 
   public Set<KlausurReferenz> getKlausuren() {
     return klausuren;
   }
 
-  public void setzeKlausuren(Set<KlausurReferenz> klausurenReferenzen) {
+  void setzeKlausuren(Set<KlausurReferenz> klausurenReferenzen) {
     this.klausuren = klausurenReferenzen;
   }
 }
