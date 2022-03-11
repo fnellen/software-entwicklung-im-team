@@ -346,4 +346,14 @@
             <property name="optional" value="true"/>
         </module>
     </module>
+    <!-- No need for Javadoc -->
+    <module name="JavadocType">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="JavadocMethod">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="JavadocVariable">
+        <property name="severity" value="ignore"/>
+    </module>
 </module>
