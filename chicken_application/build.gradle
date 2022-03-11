@@ -1,7 +1,5 @@
 plugins {
     id 'java'
-    id "com.github.spotbugs" version "4.7.9"
-    id 'checkstyle'
 }
 
 sourceCompatibility = "17"
@@ -10,30 +8,11 @@ repositories {
     mavenCentral()
 }
 
-spotbugs {
-    effort = "max"
-}
-
-
-spotbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-checkstyle {
-    ignoreFailures = false
-    maxWarnings = 0
-}
-
 dependencies {
     implementation project(':chicken_domain')
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.mockito:mockito-core:4.3.1'
-
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.5.3'
 }
 
 test {

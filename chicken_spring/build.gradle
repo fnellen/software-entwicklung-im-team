@@ -1,9 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.6.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "com.github.spotbugs" version "4.7.9"
     id 'java'
-    id 'checkstyle'
 }
 
 sourceCompatibility = '17'
@@ -12,30 +10,12 @@ repositories {
     mavenCentral()
 }
 
-spotbugs {
-    effort = "max"
-}
-
-spotbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-checkstyle {
-    ignoreFailures = false
-    maxWarnings = 0
-}
-
 dependencies {
     implementation project(':chicken_application')
     implementation project(':chicken_adapter_db')
     implementation project(':chicken_adapter_web')
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.5.3'
 }
 
 

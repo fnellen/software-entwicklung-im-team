@@ -1,3 +1,27 @@
+plugins {
+    id "com.github.spotbugs" version "4.7.9"
+    id 'java'
+    id 'checkstyle'
+}
+
+sourceCompatibility = '17'
+
+spotbugs {
+    effort = "max"
+}
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+checkstyle {
+    ignoreFailures = false
+    maxWarnings = 0
+}
+
 allprojects {
     repositories {
         mavenCentral()
