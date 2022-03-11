@@ -13,7 +13,7 @@ import java.util.Set;
 @AggregateRoot
 public class Student {
 
-  private final Long id;
+  private Long id;
   private final String githubHandle;
   private Set<UrlaubZeitraum> urlaube = new HashSet<>();
   private Set<KlausurReferenz> klausuren;
@@ -31,6 +31,21 @@ public class Student {
     this.githubHandle = githubHandle;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public String getGithubHandle() {
+    return githubHandle;
+  }
+
+  public Set<UrlaubZeitraum> getUrlaube() {
+    return urlaube;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   /**
    * Fügt dem Studenten Urlaub hinzu.
