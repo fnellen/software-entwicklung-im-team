@@ -29,7 +29,9 @@ public class StudentRepositoryImpl implements StudentRepository {
 
   @Override
   public void speicherStudent(Student student) {
-
+    StudentDto studentDto = StudentDto.konvertiereZuStudentDto(student);
+    StudentDto gespeichertesDto = studentDao.save(studentDto);
+    student.setId(gespeichertesDto.id());
   }
 
 
