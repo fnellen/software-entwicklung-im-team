@@ -9,7 +9,7 @@ Wir erhalten ein Datum:
 ##Zeit Überprüfung
 
 Wir erhalten einen Zeitraum:
-- Praktikumszeit (8:30 - 13:30)
+- Praktikumszeit (9:30 - 13:30)
 - Startzeit vor Endzeit
 - Startblock (00, 15, 30, 45)
 
