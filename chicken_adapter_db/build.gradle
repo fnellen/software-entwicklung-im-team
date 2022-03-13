@@ -1,10 +1,7 @@
 plugins {
-    id 'java'
     id 'org.springframework.boot' version '2.6.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
-
-sourceCompatibility = '17'
 
 dependencies {
     implementation project(':chicken_domain')
@@ -15,13 +12,6 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.flywaydb:flyway-core'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
 }
 
 bootJar {

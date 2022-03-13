@@ -1,33 +1,52 @@
 plugins {
-    id "com.github.spotbugs" version "4.7.9"
-    id 'java'
-    id 'checkstyle'
+    id 'com.github.spotbugs' version '5.0.6' apply false
 }
 
-sourceCompatibility = '17'
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.spotbugs'
 
-spotbugs {
-    effort = "max"
-}
+    group = 'de.hhu.propra'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
 
-spotbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-checkstyle {
-    ignoreFailures = false
-    maxWarnings = 0
-}
-
-allprojects {
     repositories {
         mavenCentral()
     }
 
-    group = 'propra'
-    version = '0.0.1-SNAPSHOT'
+    dependencies {
+        compileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs.toolVersion.get()}"
+    }
 
+    spotbugs {
+        toolVersion = "4.6.0"
+        effort = "max"
+    }
+
+    tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+        reports {
+            xml.required = false
+            html.required = true
+        }
+    }
+
+    checkstyle {
+        toolVersion = "8.41.1" // 8.42 breaks compat, see https://github.com/checkstyle/checkstyle/issues/7417
+        ignoreFailures = false
+        maxWarnings = 0
+    }
+
+    println(checkstyle.toolVersion)
+
+    tasks.withType(Checkstyle) {
+        reports {
+            xml.required = false
+            html.required = true
+        }
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
 }
