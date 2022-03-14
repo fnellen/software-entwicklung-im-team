@@ -12,7 +12,7 @@ public record KlausurDto(@Id
                          ZeitraumDto klausurZeitraum,
                          boolean praesenz) {
 
-  public Klausur konvertiereZuKlausur(){
+  public Klausur konvertiereZuKlausur() {
     return new Klausur(this.id, this.veranstaltungsName, this.klausurZeitraum(), this.praesenz);
   }
 }

@@ -15,11 +15,7 @@ class VeranstaltungsId {
     this.veranstaltungsId = veranstaltungsId;
   }
 
-  /**
-   * Getter für die veranstaltungsId.
-   *
-   * @return gibt eine gültige Veranstaltungs Id als Long zurück
-   */
+
   public String getVeranstaltungsId() {
     return veranstaltungsId;
   }
