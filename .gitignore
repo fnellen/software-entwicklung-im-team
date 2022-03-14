@@ -1,8 +1,5 @@
-/chicken_spring/build/
-/chicken_domain/build/
-/chicken_application/build/
-/chicken_adapter_web/build/
-/chicken_adapter_db/build/
-/.idea/
-/.gradle/
+build/
+.idea/
+.gradle/
+out/
 .env
