@@ -15,10 +15,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ChickenService {
-  public static final LocalTime START_UHRZEIT = LocalTime.of(9, 30);
-  public static final LocalTime END_UHRZEIT = LocalTime.of(13, 30);
+  public static final LocalTime PRAKTIKUMS_START_UHRZEIT = LocalTime.of(9, 30);
+  public static final LocalTime PRAKTIKUMS_END_UHRZEIT = LocalTime.of(13, 30);
   public static final long PRAKTIKUMS_TAG_DAUER = 240L;
   public static final long MAXIMALER_URLAUB_AN_EINEM_TAG = 150L;
+  public static final int MINDESTARBEITSAUFWAND = 90;
   private final StudentRepository studentRepository;
   private final KlausurRepository klausurRepository;
 
@@ -40,10 +41,12 @@ public class ChickenService {
   public void belegeUrlaub(String githubHandle, ZeitraumDto beantragterUrlaub)
       throws StudentNichtGefundenException, UrlaubException {
     //Am Tag bezieht sich auf denselben Tag vom beantragterUrlaub.
-
+    long dauerDesUrlaubs = beantragterUrlaub.dauerInMinuten();
     Student student = holeStudent(githubHandle);
+    long resturlaub = student.berechneRestUrlaub();
+
     //Überprüfe, ob Student noch Resturlaub hat
-    if (student.berechneRestUrlaub() <= 0) {
+    if (resturlaub <= 0 || dauerDesUrlaubs - resturlaub < 0) {
       throw new UrlaubException("Student hat keinen Resturlaub mehr.");
     }
     Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragterUrlaub, student);
@@ -53,12 +56,6 @@ public class ChickenService {
       // TODO: andere Validierung
     } else {
       //An diesem Tag sind keine Klausuren
-      long dauerDesUrlaubs = beantragterUrlaub.dauerInMinuten();
-
-      //Student hat genug Resturlaub TODO: Schöner machen
-      if (student.berechneRestUrlaub() - dauerDesUrlaubs < 0) {
-        throw new UrlaubException("Student hat nicht genug Resturlaub.");
-      }
       Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
       if (urlaubeAmTag.isEmpty()) {
         //Hat keinen Urlaub an dem Tag
@@ -75,18 +72,21 @@ public class ChickenService {
          * Der bereits vorhandene Urlaub fängt um 9:30 Uhr an und der zu belegende Urlaub
          * hört um 13:30 Uhr auf.
          */
-        if (!ueberpruefeUrlaubsAnfaenge(beantragterUrlaub, beantragterUrlaub, urlaubAmTag,
-            student)) {
-          throw new UrlaubException(
-              "Zeit zwischen den zu bereits vorhandenen Urlauben ist weniger als 90 Minuten");
-        }
-        if (!ueberpruefeUrlaubsAnfaenge(beantragterUrlaub, urlaubAmTag, beantragterUrlaub,
-            student)) {
+        ZeitraumDto urlaub1 =
+            beantragterUrlaub.getStartUhrzeit()
+                .isBefore(urlaubAmTag.getStartUhrzeit()) ? beantragterUrlaub : urlaubAmTag;
+        ZeitraumDto urlaub2 =
+            beantragterUrlaub.getStartUhrzeit()
+                .isBefore(urlaubAmTag.getStartUhrzeit()) ? urlaubAmTag : beantragterUrlaub;
+
+        if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
+          student.fuegeUrlaubHinzu(beantragterUrlaub);
+        } else {
           throw new UrlaubException(
               "Zeit zwischen den zu bereits vorhandenen Urlauben ist weniger als 90 Minuten");
         }
       } else {
-        throw new UrlaubException("Zu viele Urlaube an diesem Tag");
+        throw new UrlaubException("Mehr als zwei Urlaube am Tag nicht möglich");
       }
     }
   }
@@ -102,35 +102,24 @@ public class ChickenService {
         student.getKlausuren().stream().map(KlausurReferenz::id).map(
             klausurRepository::findeKlausurMitId).collect(Collectors.toSet());
     return belegteKlausurenVomStudenten.stream()
-        .filter(e -> e.zeitraumDto().getDatum() == zeitraumDto.getDatum()).collect(
+        .filter(e -> e.zeitraumDto().getDatum().equals(zeitraumDto.getDatum())).collect(
             Collectors.toSet());
   }
 
-  boolean ueberpruefeUrlaubsAnfaenge(ZeitraumDto urlaub, ZeitraumDto anfangsZeit,
-                                     ZeitraumDto endZeit, Student student) {
-    if (anfangsZeit.getStartUhrzeit().equals(START_UHRZEIT)
-        && endZeit.getEndUhrzeit().equals(END_UHRZEIT)) {
-      if (berechneZeitZwischenZeitraeumen(anfangsZeit, endZeit)) {
-        student.fuegeUrlaubHinzu(urlaub);
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
+  boolean urlaubsRegelnUeberpruefen(ZeitraumDto urlaub1, ZeitraumDto urlaub2) {
+    return istUrlaubsverteilungKorrekt(urlaub1, urlaub2) && istGenugZeitZwischen(urlaub1, urlaub2);
   }
 
-  /**
-   * Überprüft, ob der Zeitraum zwischen dem Ende des ersten Urlaubs und dem
-   * Anfang des zweiten Urlaubs mindestens 90 Minuten ist.
-   */
-  boolean berechneZeitZwischenZeitraeumen(ZeitraumDto urlaub1,
-                                          ZeitraumDto urlaub2
-  ) {
+  boolean istUrlaubsverteilungKorrekt(ZeitraumDto urlaub1, ZeitraumDto urlaub2) {
+    return urlaub1.getStartUhrzeit().equals(PRAKTIKUMS_START_UHRZEIT)
+        && urlaub2.getEndUhrzeit().equals(PRAKTIKUMS_END_UHRZEIT);
+  }
+
+  boolean istGenugZeitZwischen(ZeitraumDto urlaub1, ZeitraumDto urlaub2) {
     Duration zeitZwischenUrlauben =
         Duration.between(urlaub1.getEndUhrzeit(), urlaub2.getStartUhrzeit());
-    return (zeitZwischenUrlauben.toMinutes() >= Duration.of(90, ChronoUnit.MINUTES).toMinutes());
+    return (zeitZwischenUrlauben.minus(Duration.of(MINDESTARBEITSAUFWAND, ChronoUnit.MINUTES))
+        .toMinutes() >= 0);
   }
 
 
