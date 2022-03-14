@@ -32,12 +32,10 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = "8.41.1" // 8.42 breaks compat, see https://github.com/checkstyle/checkstyle/issues/7417
+        toolVersion = "10.0"
         ignoreFailures = false
         maxWarnings = 0
     }
-
-    println(checkstyle.toolVersion)
 
     tasks.withType(Checkstyle) {
         reports {
