@@ -1,6 +1,7 @@
 package de.hhu.propra.chicken.aggregates.student;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.stereotypes.AggregateRoot;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,7 @@ public class Student {
   private Long id;
   private final String githubHandle;
   private Set<ZeitraumDto> urlaube = new HashSet<>();
-  private Set<KlausurReferenz> klausuren;
+  private Set<KlausurReferenz> klausuren = new HashSet<>();
 
   private static final long GESAMT_URLAUBSZEIT_IN_MINUTEN = 240L;
 
@@ -58,9 +59,9 @@ public class Student {
     }
   }
 
-  /*public void fuegeKlausurHinzufuegen(Klausur klausur) {
-    klausuren.add(new KlausurReferenz(klausur.id()));
-  }*/
+  public void fuegeKlausurHinzufuegen(Klausur klausur) {
+    klausuren.add(new KlausurReferenz(klausur.getVeranstaltungsId()));
+  }
 
   public long berechneBeantragtenUrlaub() {
     long urlaub = urlaube.stream().mapToLong(ZeitraumDto::dauerInMinuten).sum();
