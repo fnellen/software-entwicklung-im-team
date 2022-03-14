@@ -62,7 +62,9 @@ public class ChickenService {
 
       // falls sich der zu beantragende Urlaub nicht mit der Klausur überschneidet soll
       // trotzdem überprüft werden, ob sich schon vorhandene Urlaube schneiden
-      if (neuBerechneteZeitraeume.isEmpty()) neuBerechneteZeitraeume = Set.of(beantragterUrlaub);
+      if (neuBerechneteZeitraeume.isEmpty()) {
+        neuBerechneteZeitraeume = Set.of(beantragterUrlaub);
+      }
 
       Set<ZeitraumDto> neuBerechneteUrlaube = neuBerechneteZeitraeume
           .stream()
@@ -73,8 +75,7 @@ public class ChickenService {
               .collect(Collectors.toSet()).stream())
           .collect(Collectors.toSet());
       neuBerechneteUrlaube
-          .stream()
-          .forEach(urlaub -> student.fuegeUrlaubHinzu(urlaub));
+          .forEach(student::fuegeUrlaubHinzu);
     } else {
       //An diesem Tag sind keine Klausuren
       Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
@@ -140,19 +141,21 @@ public class ChickenService {
     if (zeitraumDto.getStartUhrzeit()
         .isBefore(beantragterUrlaub.getStartUhrzeit())
         &&
-        beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getEndUhrzeit()))
+        beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getEndUhrzeit())) {
       return true;
-    else if (zeitraumDto.getStartUhrzeit()
+    } else if (zeitraumDto.getStartUhrzeit()
         .isBefore(beantragterUrlaub.getStartUhrzeit())
         &&
-        beantragterUrlaub.getStartUhrzeit().isAfter(zeitraumDto.getEndUhrzeit()))
+        beantragterUrlaub.getStartUhrzeit().isAfter(zeitraumDto.getEndUhrzeit())) {
       return false;
-    else if (
+    } else if (
         zeitraumDto.getStartUhrzeit().isAfter(beantragterUrlaub.getStartUhrzeit())
             && beantragterUrlaub.getEndUhrzeit()
-            .isAfter(zeitraumDto.getStartUhrzeit()))
+            .isAfter(zeitraumDto.getStartUhrzeit())) {
       return true;
-    else return false;
+    } else {
+      return false;
+    }
   }
 
   Set<ZeitraumDto> getUrlaubeAmTag(ZeitraumDto zeitraumDto, Student student) {
