@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ChickenService {
   public static final LocalTime PRAKTIKUMS_START_UHRZEIT = LocalTime.of(9, 30);
@@ -53,7 +54,27 @@ public class ChickenService {
 
     if (!belegteKlausurenAmTag.isEmpty()) {
       //An diesem Tag sind Klausuren belegt
-      // TODO: andere Validierung
+      Set<ZeitraumDto> neuBerechneteZeitraeume = belegteKlausurenAmTag
+          .stream()
+          .filter(klausur -> ueberschneidenSichZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
+          .flatMap(klausur -> berechneZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
+          .collect(Collectors.toSet());
+
+      // falls sich der zu beantragende Urlaub nicht mit der Klausur überschneidet soll
+      // trotzdem überprüft werden, ob sich schon vorhandene Urlaube schneiden
+      if (neuBerechneteZeitraeume.isEmpty()) neuBerechneteZeitraeume = Set.of(beantragterUrlaub);
+
+      Set<ZeitraumDto> neuBerechneteUrlaube = neuBerechneteZeitraeume
+          .stream()
+          .flatMap(festerUrlaub -> student.getUrlaube()
+              .stream()
+              .filter(urlaub -> ueberschneidenSichZeitraeume(urlaub, festerUrlaub))
+              .flatMap(urlaub -> berechneZeitraeume(urlaub, festerUrlaub))
+              .collect(Collectors.toSet()).stream())
+          .collect(Collectors.toSet());
+      neuBerechneteUrlaube
+          .stream()
+          .forEach(urlaub -> student.fuegeUrlaubHinzu(urlaub));
     } else {
       //An diesem Tag sind keine Klausuren
       Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
@@ -89,6 +110,49 @@ public class ChickenService {
         throw new UrlaubException("Mehr als zwei Urlaube am Tag nicht möglich");
       }
     }
+  }
+
+  private Stream<ZeitraumDto> berechneZeitraeume(ZeitraumDto beantragterUrlaub,
+                                                 ZeitraumDto zeitraumDto) {
+    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getStartUhrzeit())
+        && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraumDto.getEndUhrzeit())) {
+      ZeitraumDto zeitraum1 = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
+          beantragterUrlaub.getStartUhrzeit(), zeitraumDto.getStartUhrzeit());
+      ZeitraumDto zeitraum2 = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
+          zeitraumDto.getEndUhrzeit(), beantragterUrlaub.getEndUhrzeit());
+      return Set.of(zeitraum1, zeitraum2).stream();
+    } else {
+      ZeitraumDto zeitraum;
+      if (zeitraumDto.getStartUhrzeit()
+          .isBefore(beantragterUrlaub.getStartUhrzeit())) {
+        zeitraum = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
+            zeitraumDto.getEndUhrzeit(), beantragterUrlaub.getEndUhrzeit());
+      } else {
+        zeitraum = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
+            beantragterUrlaub.getStartUhrzeit(), zeitraumDto.getStartUhrzeit());
+      }
+      return Set.of(zeitraum).stream();
+    }
+  }
+
+  private boolean ueberschneidenSichZeitraeume(ZeitraumDto beantragterUrlaub,
+                                               ZeitraumDto zeitraumDto) {
+    if (zeitraumDto.getStartUhrzeit()
+        .isBefore(beantragterUrlaub.getStartUhrzeit())
+        &&
+        beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getEndUhrzeit()))
+      return true;
+    else if (zeitraumDto.getStartUhrzeit()
+        .isBefore(beantragterUrlaub.getStartUhrzeit())
+        &&
+        beantragterUrlaub.getStartUhrzeit().isAfter(zeitraumDto.getEndUhrzeit()))
+      return false;
+    else if (
+        zeitraumDto.getStartUhrzeit().isAfter(beantragterUrlaub.getStartUhrzeit())
+            && beantragterUrlaub.getEndUhrzeit()
+            .isAfter(zeitraumDto.getStartUhrzeit()))
+      return true;
+    else return false;
   }
 
   Set<ZeitraumDto> getUrlaubeAmTag(ZeitraumDto zeitraumDto, Student student) {
