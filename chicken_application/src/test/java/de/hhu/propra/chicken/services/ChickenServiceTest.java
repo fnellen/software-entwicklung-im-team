@@ -82,8 +82,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("getBelegteKlausurenAmTag gibt die richtige Anzahl der belegten Klausuren an einem" +
-      " Tag zurück")
+  @DisplayName("getBelegteKlausurenAmTag gibt die richtige Anzahl der belegten Klausuren an einem"
+      + " Tag zurück")
   void test_4() {
 
     dennis.fuegeKlausurHinzufuegen(klausur1);
@@ -104,8 +104,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("getBelegteKlausurenAmTag gibt keine Klausuren an einem Tag ohne belegte Klausuren" +
-      " zurück")
+  @DisplayName("getBelegteKlausurenAmTag gibt keine Klausuren an einem Tag ohne belegte Klausuren"
+      + " zurück")
   void test_5() {
     dennis.fuegeKlausurHinzufuegen(klausur1);
     dennis.fuegeKlausurHinzufuegen(klausur2);
@@ -125,8 +125,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("istUrlaubsverteilungKorrekt gibt true bei korrekter Verteilung der " +
-      "Urlaubszeiten")
+  @DisplayName("istUrlaubsverteilungKorrekt gibt true bei korrekter Verteilung der "
+      + "Urlaubszeiten")
   void test_6() {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
     boolean verteilung = appService.istUrlaubsverteilungKorrekt(ZEITRAUM_03_07_0930_1030,
@@ -135,8 +135,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("istUrlaubsverteilungKorrekt gibt false bei nicht konformer Verteilung der " +
-      "Urlaubszeiten")
+  @DisplayName("istUrlaubsverteilungKorrekt gibt false bei nicht konformer Verteilung der "
+      + "Urlaubszeiten")
   void test_7() {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
     boolean verteilung = appService.istUrlaubsverteilungKorrekt(ZEITRAUM_03_07_0930_1030,
@@ -145,8 +145,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("istGenugZeitZwischen gibt true bei genügend Abstand zwischen den beiden " +
-      "Urlaubszeiten")
+  @DisplayName("istGenugZeitZwischen gibt true bei genügend Abstand zwischen den beiden "
+      + "Urlaubszeiten")
   void test_8() {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
     boolean abstand = appService.istGenugZeitZwischen(ZEITRAUM_03_07_0930_1030,
@@ -155,8 +155,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("istGenugZeitZwischen gibt false bei zu wenig Abstand zwischen den beiden " +
-      "Urlaubszeiten")
+  @DisplayName("istGenugZeitZwischen gibt false bei zu wenig Abstand zwischen den beiden "
+      + "Urlaubszeiten")
   void test_9() {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
     boolean abstand = appService.istGenugZeitZwischen(ZEITRAUM_03_07_1130_1230,
@@ -188,4 +188,5 @@ public class ChickenServiceTest {
     assertThatExceptionOfType(StudentNichtGefundenException.class)
         .isThrownBy(() -> appService.holeStudent("dehus101"));
   }
+
 }
