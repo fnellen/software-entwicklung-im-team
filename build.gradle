@@ -22,6 +22,7 @@ subprojects {
     spotbugs {
         toolVersion = "4.6.0"
         effort = "max"
+        excludeFilter = file("$rootDir/config/spotbugs/excludeFilter.xml")
     }
 
     tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
