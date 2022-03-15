@@ -56,7 +56,8 @@ public class ChickenService {
       //An diesem Tag sind Klausuren belegt
       Set<ZeitraumDto> neuBerechneteZeitraeume = belegteKlausurenAmTag.stream()
           .filter(klausur -> ueberschneidenSichZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
-          .flatMap(klausur -> berechneZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
+          .flatMap(klausur -> berechneNichtUeberlappendeZeitraeume(beantragterUrlaub,
+              klausur.zeitraumDto()))
           .collect(Collectors.toSet());
 
       // falls sich der zu beantragende Urlaub nicht mit der Klausur überschneidet, soll
@@ -69,7 +70,7 @@ public class ChickenService {
           .stream()
           .flatMap(festerUrlaub -> student.getUrlaube().stream()
               .filter(urlaub -> ueberschneidenSichZeitraeume(urlaub, festerUrlaub))
-              .flatMap(urlaub -> berechneZeitraeume(urlaub, festerUrlaub))
+              .flatMap(urlaub -> berechneNichtUeberlappendeZeitraeume(urlaub, festerUrlaub))
               .collect(Collectors.toSet()).stream())
           .collect(Collectors.toSet());
       neuBerechneteUrlaube.forEach(student::fuegeUrlaubHinzu);
@@ -110,31 +111,38 @@ public class ChickenService {
     }
   }
 
-  private Stream<ZeitraumDto> berechneZeitraeume(ZeitraumDto beantragterUrlaub,
-                                                 ZeitraumDto zeitraumDto) {
-    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getStartUhrzeit())
-        && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraumDto.getEndUhrzeit())) {
-      ZeitraumDto zeitraum1 = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
-          beantragterUrlaub.getStartUhrzeit(), zeitraumDto.getStartUhrzeit());
-      ZeitraumDto zeitraum2 = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
-          zeitraumDto.getEndUhrzeit(), beantragterUrlaub.getEndUhrzeit());
-      return Set.of(zeitraum1, zeitraum2).stream();
+  Stream<ZeitraumDto> berechneNichtUeberlappendeZeitraeume(ZeitraumDto zeitraumDto1,
+                                                           ZeitraumDto zeitraumDto2) {
+    if (zeitraumDto1.getStartUhrzeit().isBefore(zeitraumDto2.getStartUhrzeit())
+        && zeitraumDto1.getEndUhrzeit().isAfter(zeitraumDto2.getEndUhrzeit())) {
+      ZeitraumDto zeitraum1 = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
+          zeitraumDto1.getStartUhrzeit(), zeitraumDto2.getStartUhrzeit());
+      ZeitraumDto zeitraum2 = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
+          zeitraumDto2.getEndUhrzeit(), zeitraumDto1.getEndUhrzeit());
+      return Stream.of(zeitraum1, zeitraum2);
+    } else if (zeitraumDto2.getStartUhrzeit().isBefore(zeitraumDto1.getStartUhrzeit())
+        && zeitraumDto2.getEndUhrzeit().isAfter(zeitraumDto1.getEndUhrzeit())) {
+      ZeitraumDto zeitraum1 = ZeitraumDto.erstelleZeitraum(zeitraumDto2.getDatum(),
+          zeitraumDto2.getStartUhrzeit(), zeitraumDto1.getStartUhrzeit());
+      ZeitraumDto zeitraum2 = ZeitraumDto.erstelleZeitraum(zeitraumDto2.getDatum(),
+          zeitraumDto1.getEndUhrzeit(), zeitraumDto2.getEndUhrzeit());
+      return Stream.of(zeitraum1, zeitraum2);
     } else {
       ZeitraumDto zeitraum;
-      if (zeitraumDto.getStartUhrzeit()
-          .isBefore(beantragterUrlaub.getStartUhrzeit())) {
-        zeitraum = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
-            zeitraumDto.getEndUhrzeit(), beantragterUrlaub.getEndUhrzeit());
+      if (zeitraumDto2.getStartUhrzeit()
+          .isBefore(zeitraumDto1.getStartUhrzeit())) {
+        zeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
+            zeitraumDto2.getEndUhrzeit(), zeitraumDto1.getEndUhrzeit());
       } else {
-        zeitraum = ZeitraumDto.erstelleZeitraum(beantragterUrlaub.getDatum(),
-            beantragterUrlaub.getStartUhrzeit(), zeitraumDto.getStartUhrzeit());
+        zeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
+            zeitraumDto1.getStartUhrzeit(), zeitraumDto2.getStartUhrzeit());
       }
-      return Set.of(zeitraum).stream();
+      return Stream.of(zeitraum);
     }
   }
 
-  private boolean ueberschneidenSichZeitraeume(ZeitraumDto beantragterUrlaub,
-                                               ZeitraumDto zeitraumDto) {
+  boolean ueberschneidenSichZeitraeume(ZeitraumDto beantragterUrlaub,
+                                       ZeitraumDto zeitraumDto) {
     //beantragterUrlaub liegt teilweise rechts in zeitraumDto z.B:
     //beantragterUrlaub = 11:00-12:00, zeitraumDto = 10:30-11:30 ->> Überschneidung
     if (zeitraumDto.getStartUhrzeit()
@@ -156,12 +164,6 @@ public class ChickenService {
             && beantragterUrlaub.getEndUhrzeit()
             .isAfter(zeitraumDto.getStartUhrzeit())) {
       return true;
-//    } else if (
-//      //zeitraumDto liegt innerhalb beantragterUrlaub z.B:
-//      //beantragterUrlaub = 10:00-12:00, zeitraumDto = 10:30-11:30 ->> Überschneidung
-//        beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getStartUhrzeit())
-//            && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraumDto.getEndUhrzeit())) {
-//      return true;
     } else {
       return false;
     }

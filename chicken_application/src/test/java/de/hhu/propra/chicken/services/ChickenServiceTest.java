@@ -10,6 +10,15 @@ import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_08_
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_08_1130_1230;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_1130_1230;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_14_1130_1230;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1000_1030;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1000_1100;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1000_1200;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1015_1100;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1030_1130;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1045_1200;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1100_1200;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1130_1200;
+import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_15_1145_1200;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -23,6 +32,7 @@ import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -193,5 +203,136 @@ public class ChickenServiceTest {
     assertThatExceptionOfType(StudentNichtGefundenException.class)
         .isThrownBy(() -> appService.holeStudent("dehus101"));
   }
+
+  @Test
+  @DisplayName("ueberschneidenSichZeitraeume gibt true bei rechter Überschneidung zurück")
+  void test_12() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean ueberschneidung =
+        appService.ueberschneidenSichZeitraeume(ZEITRAUM_03_15_1100_1200, ZEITRAUM_03_15_1030_1130);
+
+    assertThat(ueberschneidung).isTrue();
+
+  }
+
+  @Test
+  @DisplayName("ueberschneidenSichZeitraeume gibt bei keiner Überschneidung false zurück")
+  void test_13() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean ueberschneidung =
+        appService.ueberschneidenSichZeitraeume(ZEITRAUM_03_15_1145_1200, ZEITRAUM_03_15_1030_1130);
+
+    assertThat(ueberschneidung).isFalse();
+
+  }
+
+  @Test
+  @DisplayName("Reihenfolge ist nicht entscheidend über das Ergebnis")
+  void test_14() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean ueberschneidung =
+        appService.ueberschneidenSichZeitraeume(ZEITRAUM_03_15_1030_1130, ZEITRAUM_03_15_1145_1200);
+
+    assertThat(ueberschneidung).isFalse();
+
+  }
+
+  @Test
+  @DisplayName("ueberschneidenSichZeitraeume gibt true bei linker Überschneidung zurück")
+  void test_15() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean ueberschneidung =
+        appService.ueberschneidenSichZeitraeume(ZEITRAUM_03_15_1015_1100, ZEITRAUM_03_15_1030_1130);
+
+    assertThat(ueberschneidung).isTrue();
+
+  }
+
+  @Test
+  @DisplayName("ueberschneidenSichZeitraeume gibt true bei kompletter Überlappung")
+  void test_16() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean ueberschneidung =
+        appService.ueberschneidenSichZeitraeume(ZEITRAUM_03_15_1000_1200, ZEITRAUM_03_15_1030_1130);
+
+    assertThat(ueberschneidung).isTrue();
+
+  }
+
+  @Test
+  @DisplayName("ueberschneidenSichZeitraeume gibt false bei identischen Zeiträumen")
+  void test_17() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean ueberschneidung =
+        appService.ueberschneidenSichZeitraeume(ZEITRAUM_03_15_1000_1200, ZEITRAUM_03_15_1000_1200);
+
+    assertThat(ueberschneidung).isFalse();
+
+  }
+
+  @Test
+  @DisplayName("berechneZeitraeume gibt nicht ueberlappende Zeiträume zurück. Zeitraum1 beinhaltet Zeitraum2")
+  void test_18() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    Set<ZeitraumDto> neueZeitraeume =
+        appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1000_1200,
+            ZEITRAUM_03_15_1030_1130).collect(
+            Collectors.toSet());
+
+    assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1000_1030,
+        ZEITRAUM_03_15_1130_1200);
+
+  }
+
+  @Test
+  @DisplayName("berechneZeitraeume gibt nicht ueberlappende Zeiträume zurück. Zeitraum2 beinhaltet Zeitraum1")
+  void test_19() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    Set<ZeitraumDto> neueZeitraeume =
+        appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1030_1130,
+                ZEITRAUM_03_15_1000_1200)
+            .collect(Collectors.toSet());
+
+    assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1000_1030,
+        ZEITRAUM_03_15_1130_1200);
+
+  }
+
+  @Test
+  @DisplayName("berechneZeitraeume gibt ueberlappenden Zeitraum rechts zurück.")
+  void test_20() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    Set<ZeitraumDto> neueZeitraeume =
+        appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1045_1200,
+                ZEITRAUM_03_15_1030_1130)
+            .collect(Collectors.toSet());
+
+    assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1130_1200);
+
+  }
+
+  @Test
+  @DisplayName("berechneZeitraeume gibt ueberlappenden Zeitraum links zurück.")
+  void test_21() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    Set<ZeitraumDto> neueZeitraeume =
+        appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1000_1100,
+                ZEITRAUM_03_15_1030_1130)
+            .collect(Collectors.toSet());
+
+    assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1000_1030);
+
+  }
+
 
 }
