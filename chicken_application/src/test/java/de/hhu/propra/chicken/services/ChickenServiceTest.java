@@ -291,20 +291,6 @@ public class ChickenServiceTest {
 
   }
 
-  @Test
-  @DisplayName("berechneZeitraeume gibt nicht ueberlappende Zeiträume zurück. Zeitraum2 beinhaltet Zeitraum1")
-  void test_19() throws StudentNichtGefundenException {
-    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
-
-    Set<ZeitraumDto> neueZeitraeume =
-        appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1030_1130,
-                ZEITRAUM_03_15_1000_1200)
-            .collect(Collectors.toSet());
-
-    assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1000_1030,
-        ZEITRAUM_03_15_1130_1200);
-
-  }
 
   @Test
   @DisplayName("berechneZeitraeume gibt ueberlappenden Zeitraum rechts zurück.")
@@ -313,7 +299,7 @@ public class ChickenServiceTest {
 
     Set<ZeitraumDto> neueZeitraeume =
         appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1045_1200,
-                ZEITRAUM_03_15_1030_1130)
+            ZEITRAUM_03_15_1030_1130)
             .collect(Collectors.toSet());
 
     assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1130_1200);
@@ -327,12 +313,34 @@ public class ChickenServiceTest {
 
     Set<ZeitraumDto> neueZeitraeume =
         appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1000_1100,
-                ZEITRAUM_03_15_1030_1130)
+            ZEITRAUM_03_15_1030_1130)
             .collect(Collectors.toSet());
 
     assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1000_1030);
 
   }
 
+  @Test
+  @DisplayName("liegtUrlaubInZeitraum gibt true bei Zeitraum2 beinhaltet Zeitraum1 zurück")
+  void test_19() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
 
+    boolean b = appService.liegtUrlaubInZeitraum(ZEITRAUM_03_15_1030_1130,
+        ZEITRAUM_03_15_1000_1200);
+
+    assertThat(b).isTrue();
+
+  }
+
+  @Test
+  @DisplayName("liegtUrlaubInZeitraum gibt false bei Zeitraum2 beinhaltet nicht Zeitraum1 zurück")
+  void test_22() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean b = appService.liegtUrlaubInZeitraum(ZEITRAUM_03_15_1030_1130,
+        ZEITRAUM_03_15_1130_1200);
+
+    assertThat(b).isFalse();
+
+  }
 }

@@ -51,34 +51,22 @@ public class ChickenService {
       throw new UrlaubException("Student hat keinen Resturlaub mehr.");
     }
     Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragterUrlaub, student);
+    Set<ZeitraumDto> gebuchteUrlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
 
     if (!belegteKlausurenAmTag.isEmpty()) {
-      //An diesem Tag sind Klausuren belegt
-      Set<ZeitraumDto> neuBerechneteZeitraeume = belegteKlausurenAmTag.stream()
-          .filter(klausur -> ueberschneidenSichZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
-          .flatMap(klausur -> berechneNichtUeberlappendeZeitraeume(beantragterUrlaub,
-              klausur.zeitraumDto()))
-          .collect(Collectors.toSet());
+      Set<ZeitraumDto> neuBerechneteUrlaubszeitraeume =
+          berechneNichtUeberschneidendeUrlaubzeitraumeMitKlausuren(beantragterUrlaub,
+              belegteKlausurenAmTag);
 
-      // falls sich der zu beantragende Urlaub nicht mit der Klausur überschneidet, soll
-      // trotzdem überprüft werden, ob sich schon vorhandene Urlaube schneiden
-      if (neuBerechneteZeitraeume.isEmpty()) {
-        neuBerechneteZeitraeume = Set.of(beantragterUrlaub);
-      }
+      Set<ZeitraumDto> neuBerechneteUrlaube =
+          berechneNichtUeberschneidendeUrlaubzeitrauemeMitUrlauben(gebuchteUrlaubeAmTag,
+              neuBerechneteUrlaubszeitraeume);
 
-      Set<ZeitraumDto> neuBerechneteUrlaube = neuBerechneteZeitraeume
-          .stream()
-          .flatMap(neuerUrlaub -> getUrlaubeAmTag(neuerUrlaub, student).stream()
-              .filter(festerUrlaub -> ueberschneidenSichZeitraeume(festerUrlaub, neuerUrlaub))
-              .flatMap(
-                  festerUrlaub -> berechneNichtUeberlappendeZeitraeume(festerUrlaub, neuerUrlaub))
-              .collect(Collectors.toSet()).stream())
-          .collect(Collectors.toSet());
       neuBerechneteUrlaube.forEach(student::fuegeUrlaubHinzu);
+      studentRepository.speicherStudent(student);
     } else {
       //An diesem Tag sind keine Klausuren
-      Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
-      if (urlaubeAmTag.isEmpty()) {
+      if (gebuchteUrlaubeAmTag.isEmpty()) {
         //Hat keinen Urlaub an dem Tag
         if (dauerDesUrlaubs <= MAXIMALER_URLAUB_AN_EINEM_TAG
             || dauerDesUrlaubs == PRAKTIKUMS_TAG_DAUER) {
@@ -86,9 +74,9 @@ public class ChickenService {
         } else {
           throw new UrlaubException("Urlaubszeitraum nicht korrekt");
         }
-      } else if (urlaubeAmTag.size() == 1) {
+      } else if (gebuchteUrlaubeAmTag.size() == 1) {
         // Es gibt schon einen Urlaub an diesem Tag
-        ZeitraumDto urlaubAmTag = urlaubeAmTag.iterator().next();
+        ZeitraumDto urlaubAmTag = gebuchteUrlaubeAmTag.iterator().next();
         /*
          * Der bereits vorhandene Urlaub fängt um 9:30 Uhr an und der zu belegende Urlaub
          * hört um 13:30 Uhr auf.
@@ -102,6 +90,7 @@ public class ChickenService {
 
         if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
           student.fuegeUrlaubHinzu(beantragterUrlaub);
+          studentRepository.speicherStudent(student);
         } else {
           throw new UrlaubException(
               "Zeit zwischen den zu bereits vorhandenen Urlauben ist weniger als 90 Minuten");
@@ -112,69 +101,99 @@ public class ChickenService {
     }
   }
 
-//  Stream<ZeitraumDto> berechneNichtUeberlappendeZeitraeume(ZeitraumDto zeitraumDto1,
-//                                                           ZeitraumDto zeitraumDto2) {
-//    if (zeitraumDto1.getStartUhrzeit().isBefore(zeitraumDto2.getStartUhrzeit())
-//        && zeitraumDto1.getEndUhrzeit().isAfter(zeitraumDto2.getEndUhrzeit())) {
-//      ZeitraumDto zeitraum1 = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
-//          zeitraumDto1.getStartUhrzeit(), zeitraumDto2.getStartUhrzeit());
-//      ZeitraumDto zeitraum2 = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
-//          zeitraumDto2.getEndUhrzeit(), zeitraumDto1.getEndUhrzeit());
-//      return Stream.of(zeitraum1, zeitraum2);
-//    } else if (zeitraumDto2.getStartUhrzeit().isBefore(zeitraumDto1.getStartUhrzeit())
-//        && zeitraumDto2.getEndUhrzeit().isAfter(zeitraumDto1.getEndUhrzeit())) {
-//      ZeitraumDto zeitraum1 = ZeitraumDto.erstelleZeitraum(zeitraumDto2.getDatum(),
-//          zeitraumDto2.getStartUhrzeit(), zeitraumDto1.getStartUhrzeit());
-//      ZeitraumDto zeitraum2 = ZeitraumDto.erstelleZeitraum(zeitraumDto2.getDatum(),
-//          zeitraumDto1.getEndUhrzeit(), zeitraumDto2.getEndUhrzeit());
-//      return Stream.of(zeitraum1, zeitraum2);
-//    } else {
-//      ZeitraumDto zeitraum;
-//      if (zeitraumDto2.getStartUhrzeit()
-//          .isBefore(zeitraumDto1.getStartUhrzeit())) {
-//        zeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
-//            zeitraumDto2.getEndUhrzeit(), zeitraumDto1.getEndUhrzeit());
-//      } else {
-//        zeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto1.getDatum(),
-//            zeitraumDto1.getStartUhrzeit(), zeitraumDto2.getStartUhrzeit());
-//      }
-//      return Stream.of(zeitraum);
-//    }
-//  }
+  private Set<ZeitraumDto> berechneNichtUeberschneidendeUrlaubzeitrauemeMitUrlauben(
+      Set<ZeitraumDto> gebuchteUrlaubeAmTag,
+      Set<ZeitraumDto> neuBerechneteZeitraeume) {
+    // Gucken ob ein bereits gebuchter Urlaub den Urlaubsantrag komplett überdeckt
+    Set<ZeitraumDto> festerUrlaubDerBeantragtenUrlaubUeberdeckt =
+        neuBerechneteZeitraeume.stream()
+            .flatMap(neuerUrlaub -> gebuchteUrlaubeAmTag
+                .stream()
+                .filter(festerUrlaub -> liegtUrlaubInZeitraum(neuerUrlaub, festerUrlaub))
+                .collect(Collectors.toSet()).stream()
+            ).collect(Collectors.toSet());
+    if (!festerUrlaubDerBeantragtenUrlaubUeberdeckt.isEmpty()) {
+      throw new UrlaubException("Urlaubzeitraum wird komplett von festem Urlaub überdeckt");
+    }
+
+    // Berechne neue Zeiträume die außerhalb vom bereits gebuchten Urlaub liegen
+    Set<ZeitraumDto> neuBerechneteUrlaube = neuBerechneteZeitraeume
+        .stream()
+        .flatMap(neuerUrlaub -> gebuchteUrlaubeAmTag.stream()
+            .filter(festerUrlaub -> ueberschneidenSichZeitraeume(festerUrlaub, neuerUrlaub))
+            .flatMap(
+                festerUrlaub -> berechneNichtUeberlappendeZeitraeume(festerUrlaub, neuerUrlaub))
+            .collect(Collectors.toSet()).stream())
+        .collect(Collectors.toSet());
+
+    // Falls fester Urlaub und berechnete Zeiträume nicht überschneiden, buche berechnete
+    // Zeiträume
+    if (neuBerechneteUrlaube.isEmpty()) {
+      neuBerechneteUrlaube = neuBerechneteZeitraeume;
+    }
+    return neuBerechneteUrlaube;
+  }
+
+  private Set<ZeitraumDto> berechneNichtUeberschneidendeUrlaubzeitraumeMitKlausuren(
+      ZeitraumDto beantragterUrlaub,
+      Set<Klausur> belegteKlausurenAmTag) {
+    // zu buchender Urlaub liegt in gebuchtem Klausurzeitraum -> lösche Urlaubantrag
+    Set<Klausur> klausurenDieBeantragtenUrlaubUeberdecken = belegteKlausurenAmTag
+        .stream()
+        .filter(klausur -> liegtUrlaubInZeitraum(beantragterUrlaub, klausur.zeitraumDto()))
+        .collect(Collectors.toSet());
+    if (!klausurenDieBeantragtenUrlaubUeberdecken.isEmpty()) {
+      throw new UrlaubException("Urlaubzeitraum wird komplett von Klausur überdeckt");
+    }
+
+    // Berechne neue Urlaubszeiträume außerhalb des vorher gebuchten Klausurzeitraums
+    Set<ZeitraumDto> neuBerechneteZeitraeume = belegteKlausurenAmTag.stream()
+        .filter(klausur -> ueberschneidenSichZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
+        .flatMap(klausur -> berechneNichtUeberlappendeZeitraeume(beantragterUrlaub,
+            klausur.zeitraumDto()))
+        .collect(Collectors.toSet());
+
+    // falls sich der zu beantragende Urlaub nicht mit der Klausur überschneidet, soll
+    // trotzdem überprüft werden, ob sich schon vorhandene Urlaube schneiden
+    if (neuBerechneteZeitraeume.isEmpty()) {
+      neuBerechneteZeitraeume = Set.of(beantragterUrlaub);
+    }
+    return neuBerechneteZeitraeume;
+  }
 
   Stream<ZeitraumDto> berechneNichtUeberlappendeZeitraeume(ZeitraumDto urlaub,
-                                                           ZeitraumDto klausur) {
-    // Fall 1: Urlaub liegt komplett außerhalb vor Klausur, wird nicht von Methode gehandhabt
+                                                           ZeitraumDto zeitraum) {
+    // Fall 1: Urlaub liegt komplett vor Klausur, oder endet genau am Start der Klausur
     // Fall 2: Start von neuem Urlaub liegt außerhalb Klausur, Ende liegt in Klausur
-    if (urlaub.getStartUhrzeit().isBefore(klausur.getStartUhrzeit())
-        && urlaub.getEndUhrzeit().isBefore(klausur.getEndUhrzeit())) {
+    if (urlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
+        && urlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())) {
       ZeitraumDto neuerUrlaub = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
           urlaub.getStartUhrzeit(),
-          klausur.getStartUhrzeit());
+          zeitraum.getStartUhrzeit());
       return Stream.of(neuerUrlaub);
     }
-    // Fall 3: Start in Klausur, Ende nach Klausur
-    if (urlaub.getStartUhrzeit().isAfter(klausur.getStartUhrzeit())
-        && urlaub.getEndUhrzeit().isAfter(klausur.getEndUhrzeit())) {
+    // Fall 3: Urlaub Start in Klausur, Urlaub Ende nach Klausur
+    if (urlaub.getStartUhrzeit().isAfter(zeitraum.getStartUhrzeit())
+        && urlaub.getEndUhrzeit().isAfter(zeitraum.getEndUhrzeit())) {
       ZeitraumDto neuerUrlaub = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
-          klausur.getEndUhrzeit(),
+          zeitraum.getEndUhrzeit(),
           urlaub.getEndUhrzeit());
       return Stream.of(neuerUrlaub);
     }
-    // Fall 4: Urlaub liegt komplett in Klausur, wird nicht von Methode gehandhabt (s. Z 184)
-    // Fall 5: Urlaub liegt komplett außerhalb nach Klausur, wird nicht von Methode gehandhabt
+    // Fall 4: Urlaub liegt komplett in Klausur
+    // Fall 5: Urlaub liegt komplett nach Klausur oder startet genau am Ende der Klausur
     // Fall 6: Urlaub fängt vor Klausur an, endet nach Klausur
-    if (urlaub.getStartUhrzeit().isBefore(klausur.getStartUhrzeit())
-        && urlaub.getEndUhrzeit().isAfter(klausur.getEndUhrzeit())) {
+    if (urlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
+        && urlaub.getEndUhrzeit().isAfter(zeitraum.getEndUhrzeit())) {
       ZeitraumDto neuerUrlaubVorKlausur = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
           urlaub.getStartUhrzeit(),
-          klausur.getStartUhrzeit());
+          zeitraum.getStartUhrzeit());
       ZeitraumDto neuerUrlaubNachKlausur = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
-          klausur.getEndUhrzeit(),
+          zeitraum.getEndUhrzeit(),
           urlaub.getEndUhrzeit());
       return Stream.of(neuerUrlaubVorKlausur, neuerUrlaubNachKlausur);
     }
@@ -182,35 +201,44 @@ public class ChickenService {
   }
 
   // Fall 4: Urlaub liegt komplett in Klausur
-  boolean liegtUrlaubInKlausurZeitraum(ZeitraumDto urlaub, ZeitraumDto klausur) {
-    if (urlaub.getStartUhrzeit().isAfter(klausur.getStartUhrzeit())
-        && urlaub.getEndUhrzeit().isBefore(klausur.getEndUhrzeit())) {
+  boolean liegtUrlaubInZeitraum(ZeitraumDto urlaub, ZeitraumDto zeitraum) {
+    if (urlaub.getStartUhrzeit().isAfter(zeitraum.getStartUhrzeit())
+        && urlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())) {
       return true;
     }
     return false;
   }
 
   boolean ueberschneidenSichZeitraeume(ZeitraumDto beantragterUrlaub,
-                                       ZeitraumDto zeitraumDto) {
-    //beantragterUrlaub liegt teilweise rechts in zeitraumDto z.B:
-    //beantragterUrlaub = 11:00-12:00, zeitraumDto = 10:30-11:30 ->> Überschneidung
-    if (zeitraumDto.getStartUhrzeit().isBefore(beantragterUrlaub.getStartUhrzeit())
-        && beantragterUrlaub.getStartUhrzeit().isBefore(zeitraumDto.getEndUhrzeit())) {
-      return true;
-      //beantragterUrlaub liegt nicht zwischen zeitraumDtoStart und zeitraumDtoStart z.B:
-      //beantragterUrlaub = 11:45-12:00, zeitraumDto = 10:30-11:30 ->> keine Überschneidung
-    } else if (zeitraumDto.getStartUhrzeit().isBefore(beantragterUrlaub.getStartUhrzeit())
-        && beantragterUrlaub.getStartUhrzeit().isAfter(zeitraumDto.getEndUhrzeit())) {
-      return false;
-      //beantragterUrlaub liegt teilweise links in zeitraumDto z.B:
-      //beantragterUrlaub = 10:15-11:00, zeitraumDto = 10:30-11:30 ->> Überschneidung
-    } else if (
-        zeitraumDto.getStartUhrzeit().isAfter(beantragterUrlaub.getStartUhrzeit())
-            && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraumDto.getStartUhrzeit())) {
-      return true;
-    } else {
+                                       ZeitraumDto zeitraum) {
+    // Fall 1
+    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
+        && (beantragterUrlaub.getEndUhrzeit().isBefore(zeitraum.getStartUhrzeit())
+        || beantragterUrlaub.getEndUhrzeit().equals(zeitraum.getStartUhrzeit()))) {
       return false;
     }
+    // Fall 2
+    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit()) &&
+        (beantragterUrlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())
+            || beantragterUrlaub.getEndUhrzeit().equals(zeitraum.getEndUhrzeit()))) {
+      return true;
+    }
+    // Fall 3
+    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getEndUhrzeit())
+        && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraum.getEndUhrzeit())) {
+      return true;
+    }
+    // Fall 5
+    if (beantragterUrlaub.getStartUhrzeit().isAfter(zeitraum.getEndUhrzeit())
+        || beantragterUrlaub.getStartUhrzeit().equals(zeitraum.getEndUhrzeit())) {
+      return false;
+    }
+    // Fall 6
+    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
+        && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraum.getEndUhrzeit())) {
+      return true;
+    }
+    return false;
   }
 
   Set<ZeitraumDto> getUrlaubeAmTag(ZeitraumDto zeitraumDto, Student student) {
