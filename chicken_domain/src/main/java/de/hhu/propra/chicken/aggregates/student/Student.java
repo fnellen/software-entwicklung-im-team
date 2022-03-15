@@ -59,7 +59,7 @@ public class Student {
     }
   }
 
-  public void fuegeKlausurHinzufuegen(Klausur klausur) {
+  public void fuegeKlausurHinzu(Klausur klausur) {
     klausuren.add(new KlausurReferenz(klausur.getVeranstaltungsId()));
   }
 
@@ -82,5 +82,9 @@ public class Student {
 
   void setzeKlausuren(Set<KlausurReferenz> klausurenReferenzen) {
     this.klausuren = klausurenReferenzen;
+  }
+
+  public void entferneUrlaub(ZeitraumDto zeitraumDto) {
+    urlaube.remove(zeitraumDto);
   }
 }
