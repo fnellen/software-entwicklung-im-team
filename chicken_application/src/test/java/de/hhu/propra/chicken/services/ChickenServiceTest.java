@@ -101,9 +101,9 @@ public class ChickenServiceTest {
       + " Tag zurück")
   void test_4() {
 
-    dennis.fuegeKlausurHinzufuegen(KL_PROPRA_03_09_1130_1230);
-    dennis.fuegeKlausurHinzufuegen(KL_STOCHASTIK_03_08_0930_1030);
-    dennis.fuegeKlausurHinzufuegen(KL_RECHNERNETZTE_03_07_0930_1030);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_STOCHASTIK_03_08_0930_1030);
+    dennis.fuegeKlausurHinzu(KL_RECHNERNETZTE_03_07_0930_1030);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitId(
@@ -128,9 +128,9 @@ public class ChickenServiceTest {
   @DisplayName("getBelegteKlausurenAmTag gibt keine Klausuren an einem Tag ohne belegte Klausuren"
       + " zurück")
   void test_5() {
-    dennis.fuegeKlausurHinzufuegen(KL_PROPRA_03_09_1130_1230);
-    dennis.fuegeKlausurHinzufuegen(KL_STOCHASTIK_03_08_0930_1030);
-    dennis.fuegeKlausurHinzufuegen(KL_RECHNERNETZTE_03_07_0930_1030);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_STOCHASTIK_03_08_0930_1030);
+    dennis.fuegeKlausurHinzu(KL_RECHNERNETZTE_03_07_0930_1030);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitId(
@@ -356,5 +356,16 @@ public class ChickenServiceTest {
 
     assertThat(b).isFalse();
 
+  }
+
+  @Test
+  @DisplayName("berechneRestUrlaub gibt true ")
+  void test_23() throws StudentNichtGefundenException {
+    ChickenService appService = new ChickenService(studentRepository, klausurRepository);
+
+    boolean b = appService.liegtUrlaubInZeitraum(ZEITRAUM_03_15_1030_1130,
+        ZEITRAUM_03_15_1130_1200);
+
+    assertThat(b).isFalse();
   }
 }
