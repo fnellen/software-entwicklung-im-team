@@ -31,6 +31,31 @@ public class ChickenService {
     this.klausurRepository = klausurRepository;
   }
 
+  public void belegeUrlaub(String githubHandle, ZeitraumDto beantragterUrlaub)
+      throws StudentNichtGefundenException, UrlaubException {
+    //Am Tag bezieht sich auf denselben Tag vom beantragterUrlaub.
+    long dauerDesUrlaubs = beantragterUrlaub.dauerInMinuten();
+    Student student = holeStudent(githubHandle);
+    long resturlaub = student.berechneRestUrlaub();
+
+    ueberpruefeResturlaub(dauerDesUrlaubs, resturlaub);
+    Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragterUrlaub, student);
+    Set<ZeitraumDto> gebuchteUrlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
+
+    if (!belegteKlausurenAmTag.isEmpty()) {
+      belegeUrlaubMitKlausurAmTag(beantragterUrlaub, student, belegteKlausurenAmTag,
+          gebuchteUrlaubeAmTag);
+    } else {
+      if (gebuchteUrlaubeAmTag.isEmpty()) {
+        belegeUrlaubOhneUrlaubAmTag(beantragterUrlaub, dauerDesUrlaubs, student);
+      } else if (gebuchteUrlaubeAmTag.size() == 1) {
+        belegeUrlaubMitUrlaubAmTag(beantragterUrlaub, student, gebuchteUrlaubeAmTag);
+      } else {
+        throw new UrlaubException("Mehr als zwei Urlaube am Tag nicht möglich");
+      }
+    }
+  }
+
   public Student holeStudent(String githubHandle) throws StudentNichtGefundenException {
     Student student = studentRepository.findeStudentMitHandle(githubHandle);
     if (student == null) {
@@ -39,80 +64,69 @@ public class ChickenService {
     return student;
   }
 
-  public void belegeUrlaub(String githubHandle, ZeitraumDto beantragterUrlaub)
-      throws StudentNichtGefundenException, UrlaubException {
-    //Am Tag bezieht sich auf denselben Tag vom beantragterUrlaub.
-    long dauerDesUrlaubs = beantragterUrlaub.dauerInMinuten();
-    Student student = holeStudent(githubHandle);
-    long resturlaub = student.berechneRestUrlaub();
-
-    //Überprüfe, ob Student noch Resturlaub hat
+  private void ueberpruefeResturlaub(long dauerDesUrlaubs, long resturlaub) {
     if (resturlaub <= 0 || resturlaub - dauerDesUrlaubs < 0) {
       throw new UrlaubException("Student hat keinen Resturlaub mehr.");
     }
-    Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragterUrlaub, student);
-    Set<ZeitraumDto> gebuchteUrlaubeAmTag = getUrlaubeAmTag(beantragterUrlaub, student);
+  }
 
-    if (!belegteKlausurenAmTag.isEmpty()) {
-      Set<ZeitraumDto> neuBerechneteUrlaubszeitraeume =
-          berechneNichtUeberschneidendeUrlaubzeitraumeMitKlausuren(beantragterUrlaub,
-              belegteKlausurenAmTag);
+  private void belegeUrlaubMitUrlaubAmTag(ZeitraumDto beantragterUrlaub, Student student,
+                                          Set<ZeitraumDto> gebuchteUrlaubeAmTag) {
+    ZeitraumDto urlaubAmTag = gebuchteUrlaubeAmTag.iterator().next();
+    ZeitraumDto urlaub1 =
+        beantragterUrlaub.getStartUhrzeit()
+            .isBefore(urlaubAmTag.getStartUhrzeit()) ? beantragterUrlaub : urlaubAmTag;
+    ZeitraumDto urlaub2 =
+        beantragterUrlaub.getStartUhrzeit()
+            .isBefore(urlaubAmTag.getStartUhrzeit()) ? urlaubAmTag : beantragterUrlaub;
 
-      Set<ZeitraumDto> neuBerechneteUrlaube =
-          berechneNichtUeberschneidendeUrlaubzeitrauemeMitUrlauben(gebuchteUrlaubeAmTag,
-              neuBerechneteUrlaubszeitraeume);
-
-      neuBerechneteUrlaube.forEach(student::fuegeUrlaubHinzu);
+    if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
+      student.fuegeUrlaubHinzu(beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
-      //An diesem Tag sind keine Klausuren
-      if (gebuchteUrlaubeAmTag.isEmpty()) {
-        //Hat keinen Urlaub an dem Tag
-        if (dauerDesUrlaubs <= MAXIMALER_URLAUB_AN_EINEM_TAG
-            || dauerDesUrlaubs == PRAKTIKUMS_TAG_DAUER) {
-          student.fuegeUrlaubHinzu(beantragterUrlaub);
-        } else {
-          throw new UrlaubException("Urlaubszeitraum nicht korrekt");
-        }
-      } else if (gebuchteUrlaubeAmTag.size() == 1) {
-        // Es gibt schon einen Urlaub an diesem Tag
-        ZeitraumDto urlaubAmTag = gebuchteUrlaubeAmTag.iterator().next();
-        /*
-         * Der bereits vorhandene Urlaub fängt um 9:30 Uhr an und der zu belegende Urlaub
-         * hört um 13:30 Uhr auf.
-         */
-        ZeitraumDto urlaub1 =
-            beantragterUrlaub.getStartUhrzeit()
-                .isBefore(urlaubAmTag.getStartUhrzeit()) ? beantragterUrlaub : urlaubAmTag;
-        ZeitraumDto urlaub2 =
-            beantragterUrlaub.getStartUhrzeit()
-                .isBefore(urlaubAmTag.getStartUhrzeit()) ? urlaubAmTag : beantragterUrlaub;
-
-        if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
-          student.fuegeUrlaubHinzu(beantragterUrlaub);
-          studentRepository.speicherStudent(student);
-        } else {
-          throw new UrlaubException(
-              "Zeit zwischen den bereits vorhandenen Urlauben ist weniger als 90 Minuten");
-        }
-      } else {
-        throw new UrlaubException("Mehr als zwei Urlaube am Tag nicht möglich");
-      }
+      throw new UrlaubException(
+          "Zeit zwischen den bereits vorhandenen Urlauben ist weniger als 90 Minuten");
     }
   }
 
-  private Set<ZeitraumDto> berechneNichtUeberschneidendeUrlaubzeitrauemeMitUrlauben(
+  private void belegeUrlaubOhneUrlaubAmTag(ZeitraumDto beantragterUrlaub, long dauerDesUrlaubs,
+                                           Student student) {
+    if (dauerDesUrlaubs <= MAXIMALER_URLAUB_AN_EINEM_TAG
+        || dauerDesUrlaubs == PRAKTIKUMS_TAG_DAUER) {
+      student.fuegeUrlaubHinzu(beantragterUrlaub);
+      studentRepository.speicherStudent(student);
+    } else {
+      throw new UrlaubException("Urlaubszeitraum nicht korrekt");
+    }
+  }
+
+  private void belegeUrlaubMitKlausurAmTag(ZeitraumDto beantragterUrlaub, Student student,
+                                           Set<Klausur> belegteKlausurenAmTag,
+                                           Set<ZeitraumDto> gebuchteUrlaubeAmTag) {
+    Set<ZeitraumDto> angepassteUrlaubzeitrauemeAnKlausuren = passeUrlaubAnKlausurZeitrauemeAn(
+        beantragterUrlaub, belegteKlausurenAmTag);
+
+    Set<ZeitraumDto> angepassteUrlaubszeitraumeAnVorhandenenUrlauben =
+        passeUrlaubszeitraumeAnVorhandenenUrlaubenAn(gebuchteUrlaubeAmTag,
+            angepassteUrlaubzeitrauemeAnKlausuren);
+
+    angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(student::fuegeUrlaubHinzu);
+    studentRepository.speicherStudent(student);
+  }
+
+  private Set<ZeitraumDto> passeUrlaubszeitraumeAnVorhandenenUrlaubenAn(
       Set<ZeitraumDto> gebuchteUrlaubeAmTag,
       Set<ZeitraumDto> neuBerechneteZeitraeume) {
     // Gucken ob ein bereits gebuchter Urlaub den Urlaubsantrag komplett überdeckt
-    Set<ZeitraumDto> festerUrlaubDerBeantragtenUrlaubUeberdeckt =
+    Set<ZeitraumDto> ueberdeckenSichUrlaubszeitraume =
         neuBerechneteZeitraeume.stream()
             .flatMap(neuerUrlaub -> gebuchteUrlaubeAmTag
                 .stream()
                 .filter(festerUrlaub -> liegtUrlaubInZeitraum(neuerUrlaub, festerUrlaub))
                 .collect(Collectors.toSet()).stream()
             ).collect(Collectors.toSet());
-    if (!festerUrlaubDerBeantragtenUrlaubUeberdeckt.isEmpty()) {
+
+    if (!ueberdeckenSichUrlaubszeitraume.isEmpty()) {
       throw new UrlaubException("Urlaubzeitraum wird komplett von festem Urlaub überdeckt");
     }
 
@@ -120,9 +134,9 @@ public class ChickenService {
     Set<ZeitraumDto> neuBerechneteUrlaube = neuBerechneteZeitraeume
         .stream()
         .flatMap(neuerUrlaub -> gebuchteUrlaubeAmTag.stream()
-            .filter(festerUrlaub -> ueberschneidenSichZeitraeume(festerUrlaub, neuerUrlaub))
+            .filter(festerUrlaub -> ueberschneidenSichZeitraeume(neuerUrlaub, festerUrlaub))
             .flatMap(
-                festerUrlaub -> berechneNichtUeberlappendeZeitraeume(festerUrlaub, neuerUrlaub))
+                festerUrlaub -> berechneNichtUeberlappendeZeitraeume(neuerUrlaub, festerUrlaub))
             .collect(Collectors.toSet()).stream())
         .collect(Collectors.toSet());
 
@@ -134,7 +148,7 @@ public class ChickenService {
     return neuBerechneteUrlaube;
   }
 
-  private Set<ZeitraumDto> berechneNichtUeberschneidendeUrlaubzeitraumeMitKlausuren(
+  private Set<ZeitraumDto> passeUrlaubAnKlausurZeitrauemeAn(
       ZeitraumDto beantragterUrlaub,
       Set<Klausur> belegteKlausurenAmTag) {
     // zu buchender Urlaub liegt in gebuchtem Klausurzeitraum -> lösche Urlaubantrag
@@ -143,7 +157,7 @@ public class ChickenService {
         .filter(klausur -> liegtUrlaubInZeitraum(beantragterUrlaub, klausur.zeitraumDto()))
         .collect(Collectors.toSet());
     if (!klausurenDieBeantragtenUrlaubUeberdecken.isEmpty()) {
-      throw new UrlaubException("Urlaubzeitraum wird komplett von Klausur überdeckt");
+      throw new UrlaubException("Urlaubzeitraum wird komplett von Klausur ueberdeckt");
     }
 
     // Berechne neue Urlaubszeiträume außerhalb des vorher gebuchten Klausurzeitraums
@@ -218,8 +232,8 @@ public class ChickenService {
       return false;
     }
     // Fall 2
-    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit()) &&
-        (beantragterUrlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())
+    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
+        && (beantragterUrlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())
             || beantragterUrlaub.getEndUhrzeit().equals(zeitraum.getEndUhrzeit()))) {
       return true;
     }
@@ -232,11 +246,6 @@ public class ChickenService {
     if (beantragterUrlaub.getStartUhrzeit().isAfter(zeitraum.getEndUhrzeit())
         || beantragterUrlaub.getStartUhrzeit().equals(zeitraum.getEndUhrzeit())) {
       return false;
-    }
-    // Fall 6
-    if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
-        && beantragterUrlaub.getEndUhrzeit().isAfter(zeitraum.getEndUhrzeit())) {
-      return true;
     }
     return false;
   }

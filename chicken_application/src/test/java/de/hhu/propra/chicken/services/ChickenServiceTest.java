@@ -214,7 +214,7 @@ public class ChickenServiceTest {
 
     assertThatExceptionOfType(StudentNichtGefundenException.class)
         .isThrownBy(() -> appService.holeStudent("dehus101"))
-        .withMessageContaining("dehus101 nicht gefunden");
+        .withMessageContaining("dehus101");
   }
 
   @Test
@@ -290,7 +290,8 @@ public class ChickenServiceTest {
   }
 
   @Test
-  @DisplayName("berechneZeitraeume gibt nicht ueberlappende Zeiträume zurück. Zeitraum1 beinhaltet Zeitraum2")
+  @DisplayName("berechneZeitraeume gibt nicht ueberlappende Zeiträume zurück. "
+      + "Zeitraum1 beinhaltet Zeitraum2")
   void test_18() throws StudentNichtGefundenException {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
 
