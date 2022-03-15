@@ -1,8 +1,8 @@
 package de.hhu.propra.chicken.services;
 
-import static de.hhu.propra.chicken.services.KlausurTemplate.klausur1;
-import static de.hhu.propra.chicken.services.KlausurTemplate.klausur2;
-import static de.hhu.propra.chicken.services.KlausurTemplate.klausur3;
+import static de.hhu.propra.chicken.services.KlausurTemplate.KL_PROPRA_03_09_1130_1230;
+import static de.hhu.propra.chicken.services.KlausurTemplate.KL_RECHNERNETZTE_03_07_0930_1030;
+import static de.hhu.propra.chicken.services.KlausurTemplate.KL_STOCHASTIK_03_08_0930_1030;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_07_0930_1030;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_07_1130_1230;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_07_1230_1330;
@@ -101,14 +101,20 @@ public class ChickenServiceTest {
       + " Tag zurück")
   void test_4() {
 
-    dennis.fuegeKlausurHinzufuegen(klausur1);
-    dennis.fuegeKlausurHinzufuegen(klausur2);
-    dennis.fuegeKlausurHinzufuegen(klausur3);
+    dennis.fuegeKlausurHinzufuegen(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzufuegen(KL_STOCHASTIK_03_08_0930_1030);
+    dennis.fuegeKlausurHinzufuegen(KL_RECHNERNETZTE_03_07_0930_1030);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(klausur1.getVeranstaltungsId())).thenReturn(klausur1);
-    when(klausurRepository.findeKlausurMitId(klausur2.getVeranstaltungsId())).thenReturn(klausur2);
-    when(klausurRepository.findeKlausurMitId(klausur3.getVeranstaltungsId())).thenReturn(klausur3);
+    when(klausurRepository.findeKlausurMitId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230);
+    when(klausurRepository.findeKlausurMitId(
+        KL_STOCHASTIK_03_08_0930_1030.getVeranstaltungsId()))
+        .thenReturn(KL_STOCHASTIK_03_08_0930_1030);
+    when(klausurRepository.findeKlausurMitId(
+        KL_RECHNERNETZTE_03_07_0930_1030.getVeranstaltungsId()))
+        .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository);
 
@@ -122,14 +128,20 @@ public class ChickenServiceTest {
   @DisplayName("getBelegteKlausurenAmTag gibt keine Klausuren an einem Tag ohne belegte Klausuren"
       + " zurück")
   void test_5() {
-    dennis.fuegeKlausurHinzufuegen(klausur1);
-    dennis.fuegeKlausurHinzufuegen(klausur2);
-    dennis.fuegeKlausurHinzufuegen(klausur3);
+    dennis.fuegeKlausurHinzufuegen(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzufuegen(KL_STOCHASTIK_03_08_0930_1030);
+    dennis.fuegeKlausurHinzufuegen(KL_RECHNERNETZTE_03_07_0930_1030);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(klausur1.getVeranstaltungsId())).thenReturn(klausur1);
-    when(klausurRepository.findeKlausurMitId(klausur2.getVeranstaltungsId())).thenReturn(klausur2);
-    when(klausurRepository.findeKlausurMitId(klausur3.getVeranstaltungsId())).thenReturn(klausur3);
+    when(klausurRepository.findeKlausurMitId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230);
+    when(klausurRepository.findeKlausurMitId(
+        KL_STOCHASTIK_03_08_0930_1030.getVeranstaltungsId()))
+        .thenReturn(KL_STOCHASTIK_03_08_0930_1030);
+    when(klausurRepository.findeKlausurMitId(
+        KL_RECHNERNETZTE_03_07_0930_1030.getVeranstaltungsId()))
+        .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository);
 
@@ -174,8 +186,8 @@ public class ChickenServiceTest {
       + "Urlaubszeiten")
   void test_9() {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
-    boolean abstand = appService.istGenugZeitZwischen(ZEITRAUM_03_07_1130_1230,
-        ZEITRAUM_03_07_1230_1330);
+    boolean abstand =
+        appService.istGenugZeitZwischen(ZEITRAUM_03_07_1130_1230, ZEITRAUM_03_07_1230_1330);
     assertThat(abstand).isFalse();
   }
 
@@ -201,7 +213,8 @@ public class ChickenServiceTest {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
 
     assertThatExceptionOfType(StudentNichtGefundenException.class)
-        .isThrownBy(() -> appService.holeStudent("dehus101"));
+        .isThrownBy(() -> appService.holeStudent("dehus101"))
+        .withMessageContaining("dehus101 nicht gefunden");
   }
 
   @Test
@@ -299,7 +312,7 @@ public class ChickenServiceTest {
 
     Set<ZeitraumDto> neueZeitraeume =
         appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1045_1200,
-            ZEITRAUM_03_15_1030_1130)
+                ZEITRAUM_03_15_1030_1130)
             .collect(Collectors.toSet());
 
     assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1130_1200);
@@ -313,7 +326,7 @@ public class ChickenServiceTest {
 
     Set<ZeitraumDto> neueZeitraeume =
         appService.berechneNichtUeberlappendeZeitraeume(ZEITRAUM_03_15_1000_1100,
-            ZEITRAUM_03_15_1030_1130)
+                ZEITRAUM_03_15_1030_1130)
             .collect(Collectors.toSet());
 
     assertThat(neueZeitraeume).containsExactlyInAnyOrder(ZEITRAUM_03_15_1000_1030);
