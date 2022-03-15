@@ -47,7 +47,7 @@ public class ChickenService {
     long resturlaub = student.berechneRestUrlaub();
 
     //Überprüfe, ob Student noch Resturlaub hat
-    if (resturlaub <= 0 || dauerDesUrlaubs - resturlaub < 0) {
+    if (resturlaub <= 0 || resturlaub - dauerDesUrlaubs < 0) {
       throw new UrlaubException("Student hat keinen Resturlaub mehr.");
     }
     Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragterUrlaub, student);
@@ -93,7 +93,7 @@ public class ChickenService {
           studentRepository.speicherStudent(student);
         } else {
           throw new UrlaubException(
-              "Zeit zwischen den zu bereits vorhandenen Urlauben ist weniger als 90 Minuten");
+              "Zeit zwischen den bereits vorhandenen Urlauben ist weniger als 90 Minuten");
         }
       } else {
         throw new UrlaubException("Mehr als zwei Urlaube am Tag nicht möglich");
