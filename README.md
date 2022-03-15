@@ -33,19 +33,25 @@ Vll mit HTMLUnit...
 
 ## ToDo:
 #### Service:
-- [ ] Serivce klausurBelegen
+- [ ] Service klausurBelegen
 - [ ] Urlaub Stornieren
 - [ ] Klausur Stornieren
 - [ ] Testing
 - [ ] Logging
 #### Domain:
 - [ ] ArchTest
-- [ ] ZeitraumDto Konfiguration (Praktikumsstart / ende)
+- [ ] ZeitraumDto Konfiguration (Praktikumsstart / Ende)
 #### Datenbank:
 - [ ] Test
 #### Web:
 - [ ] Controller mit Html
 - [ ] Authentifizierung mit Annotationen (ArchTest Überprüfung)
+- [ ] Security
+- [ ] Klausur hinzufügen
+- [ ] Urlaub belegen
+- [ ] Klausur belegen
+- [ ] Resturlaub Übersicht
+- [ ] Organisator und Tutor Übersicht
 #### Spring:
 - [ ] Auth
 - [ ] Integration Tests Ende-zu-Ende
