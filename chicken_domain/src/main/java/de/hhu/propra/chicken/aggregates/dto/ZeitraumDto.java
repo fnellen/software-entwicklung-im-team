@@ -90,4 +90,38 @@ public class ZeitraumDto {
     return zeitraum;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ZeitraumDto that = (ZeitraumDto) o;
+
+    if (!datum.equals(that.datum)) {
+      return false;
+    }
+    if (!startUhrzeit.equals(that.startUhrzeit)) {
+      return false;
+    }
+    return endUhrzeit.equals(that.endUhrzeit);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = datum.hashCode();
+    result = 31 * result + startUhrzeit.hashCode();
+    result = 31 * result + endUhrzeit.hashCode();
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Datum: " + this.getDatum()
+        + " Startzeit: " + this.getStartUhrzeit()
+        + " Enduhrzeit: " + this.getEndUhrzeit();
+  }
 }
