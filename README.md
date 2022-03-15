@@ -29,6 +29,35 @@ Vll mit HTMLUnit...
 
 ### Urlaubüberschneidung
 
+#### Klausur Buchen
+- **Fall 1**: Kein Urlaub an dem Tag
+  - Klausur hinzufügen
+- **Fall 2**: Urlaub an dem Tag
+  - Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
+    - Urlaub schneiden 
+    - alten aus student löschen
+    - geschnittenen Urlaub hinzufügen
+    - Klausur hinzufügen
+  - Fall 2: Urlaub fängt vor der Klausur an und hört vor der Klausur auf
+    - Klausur hinzufügen
+  - Fall 3: Urlaub fängt vor der Klausur an und hört nach der Klausur auf
+    - Urlaub schneiden
+    - alten aus student löschen
+    - geschnittenen Urlaub hinzufügen
+    - Klausur hinzufügen
+  - Fall 4: Urlaub fängt innerhalb der Klausur an und hört nach der Klausur auf
+    - Urlaub schneiden
+    - alten aus student löschen
+    - geschnittenen Urlaub hinzufügen
+    - Klausur hinzufügen
+  - Fall 5: Urlaub fängt innerhalb der Klausur an und hört innerhalb der Klausur auf
+    - vorhandenen Urlaub löschen
+    - Klausur hinzufügen
+  - Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
+    - Klausur hinzufügen 
+- **Fall 3**: **(Optional)** zwei Klausuren schneiden sich
+  - Klausur belegung ablehnen.
+
 
 
 ## ToDo:
