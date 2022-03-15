@@ -143,5 +143,17 @@ public class ZeitraumDtoTemplate {
       LocalDate.of(2022, 03, 15), LocalTime.of(10, 00),
       LocalTime.of(11, 00));
 
+  static final ZeitraumDto ZEITRAUM_03_09_1100_1200 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 9), LocalTime.of(11, 0),
+      LocalTime.of(12, 0));
+
+  static final ZeitraumDto ZEITRAUM_03_09_1200_1330 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 9), LocalTime.of(12, 0),
+      LocalTime.of(13, 30));
+
+  static final ZeitraumDto ZEITRAUM_03_09_1000_1145 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 9), LocalTime.of(10, 0),
+      LocalTime.of(11, 45));
+
 
 }
