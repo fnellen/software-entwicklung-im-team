@@ -6,6 +6,7 @@ import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
+import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import java.time.Duration;
@@ -56,6 +57,75 @@ public class ChickenService {
     }
   }
 
+  public void belegeKlausur(String githubHandle, Klausur klausur) throws KlausurException{
+
+    Student student = holeStudent(githubHandle);
+    ZeitraumDto beantragteKlausur = klausur.zeitraumDto();
+    Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragteKlausur, student);
+    Set<ZeitraumDto> gebuchteUrlaubeAmTag = getUrlaubeAmTag(beantragteKlausur, student);
+
+    if (!belegteKlausurenAmTag.isEmpty()){
+      Set<Klausur> ueberschneidendeKlausuren = belegteKlausurenAmTag.stream().filter(
+          belegteKlausurAmTag -> ueberschneidenSichZeitraeume(belegteKlausurAmTag.zeitraumDto(),
+              beantragteKlausur)).collect(Collectors.toSet());
+      if (ueberschneidendeKlausuren.isEmpty()){
+        student.fuegeKlausurHinzu(klausur);
+        studentRepository.speicherStudent(student);
+      }else {
+        //Es wird außer Acht gelassen, dass eine Klausur zusätzlich Zeit angerechnet bekommt.
+        throw new KlausurException("Es können keine zwei Klausuren am selben Zeitraum geschrieben"
+            + " werden.");
+      }
+    }
+
+    //**Fall 1**: Kein Urlaub an dem Tag
+    if (gebuchteUrlaubeAmTag.isEmpty()) {
+      student.fuegeKlausurHinzu(klausur);
+      studentRepository.speicherStudent(student);
+      return;
+    }
+    //**Fall 2**: Urlaub an dem Tag
+    if (!gebuchteUrlaubeAmTag.isEmpty()) {
+      //Fall 5: Urlaub fängt innerhalb der Klausur an und hört innerhalb der Klausur auf
+      Set<ZeitraumDto> urlaubeInnerhalbKlausur = gebuchteUrlaubeAmTag.stream()
+          .filter(urlaub -> liegtUrlaubInZeitraum(urlaub, beantragteKlausur))
+          .collect(Collectors.toSet());
+
+      if (!urlaubeInnerhalbKlausur.isEmpty()){
+        urlaubeInnerhalbKlausur.stream().forEach(student::entferneUrlaub);
+        student.fuegeKlausurHinzu(klausur);
+        studentRepository.speicherStudent(student);
+        return;
+      }
+
+      Set<ZeitraumDto> ueberschneidendeUrlaube = gebuchteUrlaubeAmTag.stream().filter(urlaub ->
+          ueberschneidenSichZeitraeume(urlaub, beantragteKlausur)).collect(Collectors.toSet());
+
+      //Fall 2: Urlaub fängt vor der Klausur an und hört vor der Klausur auf
+      //Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
+      if (ueberschneidendeUrlaube.isEmpty()){
+        student.fuegeKlausurHinzu(klausur);
+        studentRepository.speicherStudent(student);
+      }else {
+        //Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
+        //Fall 3: Urlaub fängt vor der Klausur an und hört nach der Klausur auf
+        //Fall 4: Urlaub fängt innerhalb der Klausur an und hört nach der Klausur auf
+        Set<ZeitraumDto> angepassteUrlaube =
+            ueberschneidendeUrlaube.stream().flatMap(urlaub -> passeUrlaubAnKlausurAn(urlaub,
+                beantragteKlausur, student)).collect(Collectors.toSet());
+        angepassteUrlaube.forEach(student::fuegeUrlaubHinzu);
+        student.fuegeKlausurHinzu(klausur);
+        studentRepository.speicherStudent(student);
+      }
+    }
+  }
+
+  Stream<ZeitraumDto> passeUrlaubAnKlausurAn(ZeitraumDto urlaub, ZeitraumDto klausur, Student student){
+    Stream<ZeitraumDto> zeitraumDtoStream = berechneNichtUeberlappendeZeitraeume(urlaub, klausur);
+    student.entferneUrlaub(urlaub);
+    return zeitraumDtoStream;
+  }
+
   public Student holeStudent(String githubHandle) throws StudentNichtGefundenException {
     Student student = studentRepository.findeStudentMitHandle(githubHandle);
     if (student == null) {
@@ -64,7 +134,7 @@ public class ChickenService {
     return student;
   }
 
-  private void ueberpruefeResturlaub(long dauerDesUrlaubs, long resturlaub) {
+  void ueberpruefeResturlaub(long dauerDesUrlaubs, long resturlaub) {
     if (resturlaub <= 0 || resturlaub - dauerDesUrlaubs < 0) {
       throw new UrlaubException("Student hat keinen Resturlaub mehr.");
     }
@@ -234,7 +304,7 @@ public class ChickenService {
     // Fall 2
     if (beantragterUrlaub.getStartUhrzeit().isBefore(zeitraum.getStartUhrzeit())
         && (beantragterUrlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())
-            || beantragterUrlaub.getEndUhrzeit().equals(zeitraum.getEndUhrzeit()))) {
+        || beantragterUrlaub.getEndUhrzeit().equals(zeitraum.getEndUhrzeit()))) {
       return true;
     }
     // Fall 3
