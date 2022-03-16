@@ -58,11 +58,16 @@ Vll mit HTMLUnit...
 - **Fall 3**: **(Optional)** zwei Klausuren schneiden sich
   - Klausur belegung ablehnen.
 
+## Stornieren
+Urlaube und Klausuren können bis zum Vortag storniert werden. Die Stornierung am selben Tag ist nicht möglich.
+Urlaube und Klausuren sollen nachträglich nicht storniert werden können.
 
+### Vorgehen
+Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des heutigen Tag zurück gibt.  
 
 ## ToDo:
 #### Service:
-- [ ] Service klausurBelegen
+- [x] Service klausurBelegen
 - [ ] Urlaub Stornieren
 - [ ] Klausur Stornieren
 - [ ] Testing

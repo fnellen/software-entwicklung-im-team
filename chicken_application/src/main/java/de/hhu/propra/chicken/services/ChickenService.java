@@ -57,21 +57,21 @@ public class ChickenService {
     }
   }
 
-  public void belegeKlausur(String githubHandle, Klausur klausur) throws KlausurException{
+  public void belegeKlausur(String githubHandle, Klausur klausur) throws KlausurException {
 
     Student student = holeStudent(githubHandle);
     ZeitraumDto beantragteKlausur = klausur.zeitraumDto();
     Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragteKlausur, student);
     Set<ZeitraumDto> gebuchteUrlaubeAmTag = getUrlaubeAmTag(beantragteKlausur, student);
 
-    if (!belegteKlausurenAmTag.isEmpty()){
+    if (!belegteKlausurenAmTag.isEmpty()) {
       Set<Klausur> ueberschneidendeKlausuren = belegteKlausurenAmTag.stream().filter(
           belegteKlausurAmTag -> ueberschneidenSichZeitraeume(belegteKlausurAmTag.zeitraumDto(),
               beantragteKlausur)).collect(Collectors.toSet());
-      if (ueberschneidendeKlausuren.isEmpty()){
+      if (ueberschneidendeKlausuren.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
         studentRepository.speicherStudent(student);
-      }else {
+      } else {
         //Es wird außer Acht gelassen, dass eine Klausur zusätzlich Zeit angerechnet bekommt.
         throw new KlausurException("Es können keine zwei Klausuren am selben Zeitraum geschrieben"
             + " werden.");
@@ -91,7 +91,7 @@ public class ChickenService {
           .filter(urlaub -> liegtUrlaubInZeitraum(urlaub, beantragteKlausur))
           .collect(Collectors.toSet());
 
-      if (!urlaubeInnerhalbKlausur.isEmpty()){
+      if (!urlaubeInnerhalbKlausur.isEmpty()) {
         urlaubeInnerhalbKlausur.stream().forEach(student::entferneUrlaub);
         student.fuegeKlausurHinzu(klausur);
         studentRepository.speicherStudent(student);
@@ -103,10 +103,10 @@ public class ChickenService {
 
       //Fall 2: Urlaub fängt vor der Klausur an und hört vor der Klausur auf
       //Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
-      if (ueberschneidendeUrlaube.isEmpty()){
+      if (ueberschneidendeUrlaube.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
         studentRepository.speicherStudent(student);
-      }else {
+      } else {
         //Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
         //Fall 3: Urlaub fängt vor der Klausur an und hört nach der Klausur auf
         //Fall 4: Urlaub fängt innerhalb der Klausur an und hört nach der Klausur auf
@@ -120,7 +120,8 @@ public class ChickenService {
     }
   }
 
-  Stream<ZeitraumDto> passeUrlaubAnKlausurAn(ZeitraumDto urlaub, ZeitraumDto klausur, Student student){
+  Stream<ZeitraumDto> passeUrlaubAnKlausurAn(ZeitraumDto urlaub, ZeitraumDto klausur,
+                                             Student student) {
     Stream<ZeitraumDto> zeitraumDtoStream = berechneNichtUeberlappendeZeitraeume(urlaub, klausur);
     student.entferneUrlaub(urlaub);
     return zeitraumDtoStream;

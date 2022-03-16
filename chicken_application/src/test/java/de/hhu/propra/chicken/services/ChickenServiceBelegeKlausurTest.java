@@ -3,7 +3,6 @@ package de.hhu.propra.chicken.services;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_03_09_1000_1100;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_03_09_1000_1145;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_PROPRA_03_09_1130_1230;
-import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_08_0930_1030;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_0930_0945;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_0930_1130;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_0930_1330;
@@ -39,7 +38,7 @@ public class ChickenServiceBelegeKlausurTest {
 
   @Test
   @DisplayName("Kein Urlaub am Tag. Klausur hinzufügen möglich.")
-  void test_1(){
+  void test_1() {
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
@@ -52,13 +51,14 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub und Klausur ueberschneiden sich nicht. "
       + "Klausur hinzufügen möglich.")
-  void test_2(){
+  void test_2() {
     /*
      * Fall 2: Urlaub fängt vor der Klausur an und hört vor der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -81,14 +81,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_0930_0945);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub und Klausur ueberschneiden sich nicht. "
       + "Klausur hinzufügen möglich.")
-  void test_3(){
+  void test_3() {
     /*
      * Fall 2: Urlaub fängt vor der Klausur an und hört exakt vor der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -111,14 +112,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_0930_1130);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub und Klausur ueberschneiden sich nicht. "
       + "Klausur hinzufügen möglich.")
-  void test_4(){
+  void test_4() {
     /*
      * Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -141,14 +143,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1230_1330);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub und Klausur ueberschneiden sich nicht. "
       + "Klausur hinzufügen möglich.")
-  void test_5(){
+  void test_5() {
     /*
      * Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -171,14 +174,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1300_1330);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub und Klausur ueberschneiden sich. Urlaub wird verändert. "
       + "Klausur hinzufügen möglich.")
-  void test_6(){
+  void test_6() {
     /*
      * Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
      * Zu buchende Klausur 11:30->12:30
@@ -202,14 +206,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1100_1130);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub und Klausur ueberschneiden sich. Urlaub wird verändert. "
       + "Klausur hinzufügen möglich.")
-  void test_7(){
+  void test_7() {
     /*
      * Fall 4: Urlaub fängt innerhalb der Klausur an und hört nach der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -233,14 +238,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1230_1330);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub befindet sich innerhalb der Klausur. "
       + "Urlaub wird gelöscht. Klausur hinzufügen möglich.")
-  void test_8(){
+  void test_8() {
     /*
      * Fall 5: Urlaub fängt innerhalb der Klausur an und hört innerhalb der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -264,14 +270,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).isEmpty();
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub befindet sich innerhalb der Klausur. "
       + "Urlaub wird gelöscht. Klausur hinzufügen möglich.")
-  void test_9(){
+  void test_9() {
     /*
      * Fall 5: Urlaub fängt innerhalb der Klausur an und hört innerhalb der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -296,14 +303,15 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1230_1330);
   }
 
   @Test
   @DisplayName("Urlaub an dem Tag. Urlaub befindet sich innerhalb der Klausur. "
       + "Urlaub wird gelöscht. Klausur hinzufügen möglich.")
-  void test_10(){
+  void test_10() {
     /*
      * Fall 3: Urlaub fängt vor der Klausur an und hört nach der Klausur auf
      * Zu buchende Klausur 11:30->12:30
@@ -327,7 +335,8 @@ public class ChickenServiceBelegeKlausurTest {
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
-    assertThat(dennis.getKlausuren()).contains(new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+    assertThat(dennis.getKlausuren()).contains(
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactlyInAnyOrder(ZEITRAUM_03_09_0930_1130,
         ZEITRAUM_03_09_1230_1330);
   }
@@ -335,7 +344,7 @@ public class ChickenServiceBelegeKlausurTest {
   @Test
   @DisplayName("Kein Urlaub an dem Tag. Klausur an dem Tag. Klausuren ueberschneiden sich nicht. "
       + " Klausur hinzufügen möglich.")
-  void test_11(){
+  void test_11() {
     /*
      * Fall 3: (Optional) zwei Klausuren schneiden sich Klausur belegung ablehnen.
      * Zu buchende Klausur 11:30->12:30
@@ -368,7 +377,7 @@ public class ChickenServiceBelegeKlausurTest {
   @Test
   @DisplayName("Kein Urlaub an dem Tag. Klausur an dem Tag. Klausuren ueberschneiden sich. "
       + " Klausur hinzufügen nicht möglich.")
-  void test_12(){
+  void test_12() {
     /*
      * Fall 3: (Optional) zwei Klausuren schneiden sich Klausur belegung ablehnen.
      * Zu buchende Klausur 11:30->12:30
@@ -391,7 +400,7 @@ public class ChickenServiceBelegeKlausurTest {
     ChickenService appService = new ChickenService(studentRepository, klausurRepository);
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
-      appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
+        appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
     ).withMessageContaining("zwei Klausuren");
 
     assertThat(dennis.getKlausuren()).contains(

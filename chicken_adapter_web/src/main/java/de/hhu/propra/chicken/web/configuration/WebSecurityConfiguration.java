@@ -1,6 +1,5 @@
 package de.hhu.propra.chicken.web.configuration;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +59,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
           throws OAuth2AuthenticationException {
         OAuth2User oauth2User = defaultService.loadUser(userRequest);
 
-        Map<String, Object> attributes = oauth2User.getAttributes(); //keep existing attributes
-        Map<String, Object> extendedAttributes = new HashMap<>(attributes);
+        Map<String, Object> attributes = oauth2User.getAttributes();
 
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -75,7 +73,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
           authorities.add(new SimpleGrantedAuthority("ROLE_LEADER"));
         }
 
-        return new DefaultOAuth2User(authorities, extendedAttributes, "login");
+        return new DefaultOAuth2User(authorities, attributes, "login");
       }
 
 
