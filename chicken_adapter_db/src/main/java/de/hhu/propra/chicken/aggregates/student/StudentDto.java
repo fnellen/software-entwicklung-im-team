@@ -5,7 +5,9 @@ import de.hhu.propra.chicken.aggregates.klausur.VeranstaltungsIdDto;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table("student")
 public record StudentDto(@Id Long id,
                          String githubhandle,
                          Set<ZeitraumDto> urlaube,

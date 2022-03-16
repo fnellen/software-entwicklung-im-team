@@ -11,7 +11,7 @@ public interface KlausurDao extends CrudRepository<KlausurDto, String> {
 
   @Query(
       """
-          SELECT * FROM klausur_dto
+          SELECT * FROM klausur
           WHERE date = :datum;
           """
   )
