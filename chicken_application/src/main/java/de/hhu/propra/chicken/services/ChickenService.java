@@ -6,9 +6,11 @@ import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
+import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
+import de.hhu.propra.chicken.services.fehler.VeranstaltungsIdException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -22,18 +24,49 @@ public class ChickenService {
   public static final long PRAKTIKUMS_TAG_DAUER = 240L;
   public static final long MAXIMALER_URLAUB_AN_EINEM_TAG = 150L;
   public static final int MINDESTARBEITSAUFWAND = 90;
+
   private final StudentRepository studentRepository;
   private final KlausurRepository klausurRepository;
-
+  private final HeutigesDatum heutigesDatum;
+  private final VeranstaltungsIdRepository veranstaltungsIdRepository;
 
   public ChickenService(StudentRepository studentRepository,
-                        KlausurRepository klausurRepository) {
+                        KlausurRepository klausurRepository,
+                        HeutigesDatum heutigesDatum,
+                        VeranstaltungsIdRepository veranstaltungsIdRepository) {
     this.studentRepository = studentRepository;
     this.klausurRepository = klausurRepository;
+    this.heutigesDatum = heutigesDatum;
+    this.veranstaltungsIdRepository = veranstaltungsIdRepository;
+  }
+
+  public void klausurAnmelden(String veranstaltungsId, String veranstaltungsName,
+                              ZeitraumDto zeitraumDto, Boolean praesenz)
+      throws VeranstaltungsIdException {
+    boolean valideId = veranstaltungsIdRepository.webCheck(veranstaltungsId);
+    if (!valideId) {
+      throw new VeranstaltungsIdException("Veranstaltungs ID nicht gültig");
+    } else {
+      ZeitraumDto neuerZeitraum;
+      if (praesenz) {
+        neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(),
+            zeitraumDto.getStartUhrzeit().minus(Duration.of(120, ChronoUnit.MINUTES)),
+            zeitraumDto.getEndUhrzeit().plus(Duration.of(120, ChronoUnit.MINUTES)));
+      } else {
+        neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(),
+            zeitraumDto.getStartUhrzeit().minus(Duration.of(30, ChronoUnit.MINUTES)),
+            zeitraumDto.getEndUhrzeit());
+      }
+      Klausur klausur = new Klausur(veranstaltungsId, veranstaltungsName, neuerZeitraum, praesenz);
+      klausurRepository.speicherKlausur(klausur);
+    }
   }
 
   public void belegeUrlaub(String githubHandle, ZeitraumDto beantragterUrlaub)
       throws StudentNichtGefundenException, UrlaubException {
+
+    istUrlaubsDatumKorrekt(beantragterUrlaub);
+
     //Am Tag bezieht sich auf denselben Tag vom beantragterUrlaub.
     long dauerDesUrlaubs = beantragterUrlaub.dauerInMinuten();
     Student student = holeStudent(githubHandle);
@@ -57,7 +90,34 @@ public class ChickenService {
     }
   }
 
+  public void storniereUrlaub(String githubHandle, ZeitraumDto urlaub) {
+    istUrlaubsDatumKorrekt(urlaub);
+    Student student = holeStudent(githubHandle);
+    student.entferneUrlaub(urlaub);
+    studentRepository.speicherStudent(student);
+  }
+
+  public void storniereKlausur(String githubHandle, Klausur klausur) {
+    istKlausurDatumKorrekt(klausur);
+    Student student = holeStudent(githubHandle);
+    student.entferneKlausur(klausur);
+    Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(klausur.zeitraumDto(), student);
+    urlaubeAmTag.forEach(student::entferneUrlaub);
+    studentRepository.speicherStudent(student);
+  }
+
+  void istUrlaubsDatumKorrekt(ZeitraumDto beantragterUrlaub) {
+    if (beantragterUrlaub.getDatum().equals(heutigesDatum.getDatum())) {
+      throw new UrlaubException("Urlaub kann nicht am selben Tag geaendert werden.");
+    }
+    if (beantragterUrlaub.getDatum().isBefore(heutigesDatum.getDatum())) {
+      throw new UrlaubException("Urlaub kann nicht im nachhinein geaendert werden");
+    }
+  }
+
   public void belegeKlausur(String githubHandle, Klausur klausur) throws KlausurException {
+
+    istKlausurDatumKorrekt(klausur);
 
     Student student = holeStudent(githubHandle);
     ZeitraumDto beantragteKlausur = klausur.zeitraumDto();
@@ -115,6 +175,15 @@ public class ChickenService {
         student.fuegeKlausurHinzu(klausur);
         studentRepository.speicherStudent(student);
       }
+    }
+  }
+
+  void istKlausurDatumKorrekt(Klausur klausur) {
+    if (klausur.zeitraumDto().getDatum().equals(heutigesDatum.getDatum())) {
+      throw new KlausurException("Klausur kann nicht am selben Tag geaendert werden.");
+    }
+    if (klausur.zeitraumDto().getDatum().isBefore(heutigesDatum.getDatum())) {
+      throw new KlausurException("Klausur kann nicht im nachhinein geaendert werden.");
     }
   }
 
@@ -183,9 +252,9 @@ public class ChickenService {
     studentRepository.speicherStudent(student);
   }
 
-  private Set<ZeitraumDto> passeUrlaubszeitraumeAnVorhandenenUrlaubenAn(
+  Set<ZeitraumDto> passeUrlaubszeitraumeAnVorhandenenUrlaubenAn(
       Set<ZeitraumDto> gebuchteUrlaubeAmTag,
-      Set<ZeitraumDto> neuBerechneteZeitraeume) {
+      Set<ZeitraumDto> neuBerechneteZeitraeume) throws UrlaubException {
     // Gucken ob ein bereits gebuchter Urlaub den Urlaubsantrag komplett überdeckt
     Set<ZeitraumDto> ueberdeckenSichUrlaubszeitraume =
         neuBerechneteZeitraeume.stream()
@@ -196,7 +265,7 @@ public class ChickenService {
             ).collect(Collectors.toSet());
 
     if (!ueberdeckenSichUrlaubszeitraume.isEmpty()) {
-      throw new UrlaubException("Urlaubzeitraum wird komplett von festem Urlaub überdeckt");
+      throw new UrlaubException("Urlaubzeitraum wird komplett von festem Urlaub ueberdeckt");
     }
 
     // Berechne neue Zeiträume die außerhalb vom bereits gebuchten Urlaub liegen
@@ -285,8 +354,10 @@ public class ChickenService {
 
   // Fall 4: Urlaub liegt komplett in Klausur
   boolean liegtUrlaubInZeitraum(ZeitraumDto urlaub, ZeitraumDto zeitraum) {
-    if (urlaub.getStartUhrzeit().isAfter(zeitraum.getStartUhrzeit())
-        && urlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit())) {
+    if ((urlaub.getStartUhrzeit().isAfter(zeitraum.getStartUhrzeit()) || urlaub.getStartUhrzeit()
+        .equals(zeitraum.getStartUhrzeit()))
+        && (urlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit()) || urlaub.getEndUhrzeit()
+        .equals(zeitraum.getEndUhrzeit()))) {
       return true;
     }
     return false;
