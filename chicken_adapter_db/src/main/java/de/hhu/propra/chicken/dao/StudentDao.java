@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public interface StudentDao extends CrudRepository<StudentDto, Long> {
   @Query("""
-          SELECT * from student WHERE handle = :githubHandle
+          SELECT * from student_dto WHERE githubhandle = :githubHandle
       """)
   Optional<StudentDto> findeStudentMitHandle(@Param("githubHandle") String githubHandle);
 

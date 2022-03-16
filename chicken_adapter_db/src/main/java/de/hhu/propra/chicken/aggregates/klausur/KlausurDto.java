@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("klausur")
+//@Table("klausur")
 public record KlausurDto(@Id
                          @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL) VeranstaltungsId id,
                          String veranstaltungsName,

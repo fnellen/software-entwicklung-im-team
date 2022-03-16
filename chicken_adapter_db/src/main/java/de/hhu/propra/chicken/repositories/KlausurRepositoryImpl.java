@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class KlausurRepositoryImpl implements KlausurRepository {
 
-  KlausurDao klausurDao;
+  final KlausurDao klausurDao;
 
   public KlausurRepositoryImpl(KlausurDao klausurDao) {
     this.klausurDao = klausurDao;

@@ -6,12 +6,14 @@ import java.util.Set;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface KlausurDao extends CrudRepository<KlausurDto, String> {
 
   @Query(
       """
-          SELECT * FROM klausur
+          SELECT * FROM klausur_dto
           WHERE date = :datum;
           """
   )
