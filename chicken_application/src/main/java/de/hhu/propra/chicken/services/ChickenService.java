@@ -82,10 +82,8 @@ public class ChickenService {
     if (gebuchteUrlaubeAmTag.isEmpty()) {
       student.fuegeKlausurHinzu(klausur);
       studentRepository.speicherStudent(student);
-      return;
-    }
-    //**Fall 2**: Urlaub an dem Tag
-    if (!gebuchteUrlaubeAmTag.isEmpty()) {
+    } else {
+      //**Fall 2**: Urlaub an dem Tag
       //Fall 5: Urlaub fängt innerhalb der Klausur an und hört innerhalb der Klausur auf
       Set<ZeitraumDto> urlaubeInnerhalbKlausur = gebuchteUrlaubeAmTag.stream()
           .filter(urlaub -> liegtUrlaubInZeitraum(urlaub, beantragteKlausur))
