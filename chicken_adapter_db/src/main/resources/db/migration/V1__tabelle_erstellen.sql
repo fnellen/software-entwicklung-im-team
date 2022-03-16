@@ -1,17 +1,23 @@
-create table student_dto
+DROP TABLE IF EXISTS klausur_referenz;
+DROP TABLE IF EXISTS klausur;
+DROP TABLE IF EXISTS zeitraum_dto;
+DROP TABLE IF EXISTS student;
+
+
+create table student
 (
-    id     serial primary key,
+    id     int auto_increment primary key,
     handle varchar(40) unique not null
 );
 
-create table klausur_referenz_dto
+create table klausur_referenz
 (
-    student_dto       int,
+    student           int,
     veranstaltungs_id int,
-    primary key (student_dto, veranstaltungs_id)
+    primary key (student, veranstaltungs_id)
 );
 
-create table klausur_dto
+create table klausur
 (
     veranstaltungs_id   int primary key,
     veranstaltungs_name varchar(260),
@@ -21,11 +27,11 @@ create table klausur_dto
     praesenz            bool
 );
 
-create table urlaub_zeitraum_dto
+create table zeitraum_dto
 (
-    student_dto   int references student_dto (id),
+    student       int references student (id),
     datum         date not null,
     start_uhrzeit time not null,
     end_uhrzeit   time not null,
-    primary key (student_dto, datum, start_uhrzeit, end_uhrzeit)
+    primary key (student, datum, start_uhrzeit, end_uhrzeit)
 );
