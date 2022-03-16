@@ -106,4 +106,8 @@ public class Student {
   public int hashCode() {
     return githubHandle.hashCode();
   }
+
+  public void entferneKlausur(Klausur klausur) {
+    klausuren.remove(new KlausurReferenz(klausur.getVeranstaltungsId()));
+  }
 }
