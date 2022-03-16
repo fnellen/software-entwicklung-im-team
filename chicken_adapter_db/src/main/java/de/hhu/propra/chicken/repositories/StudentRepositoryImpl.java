@@ -14,10 +14,6 @@ public class StudentRepositoryImpl implements StudentRepository {
     this.studentDao = studentDao;
   }
 
-  @Override
-  public Student findeStudentMitId(Long id) {
-    return null;
-  }
 
   @Override
   public Student findeStudentMitHandle(String githubHandle) {

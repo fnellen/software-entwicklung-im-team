@@ -10,8 +10,6 @@ public interface KlausurRepository {
 
   Klausur findeKlausurMitId(String id);
 
-  Klausur findeKlausurMitName(String veranstaltungsName);
-
   void speicherKlausur(Klausur klausur);
 
 }
