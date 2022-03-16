@@ -8,14 +8,15 @@ import org.springframework.data.relational.core.mapping.Table;
 
 //@Table("klausur")
 public record KlausurDto(@Id
-                         @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL) VeranstaltungsId id,
+                         @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL) VeranstaltungsId veranstaltungsId,
                          String veranstaltungsName,
                          @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
                          ZeitraumDto klausurZeitraum,
                          boolean praesenz) {
 
   public Klausur konvertiereZuKlausur() {
-    return new Klausur(this.id, this.veranstaltungsName, this.klausurZeitraum(), this.praesenz);
+    return new Klausur(this.veranstaltungsId, this.veranstaltungsName, this.klausurZeitraum(),
+        this.praesenz);
   }
 
   public static KlausurDto konvertiereZuKlausurDto(Klausur klausur) {

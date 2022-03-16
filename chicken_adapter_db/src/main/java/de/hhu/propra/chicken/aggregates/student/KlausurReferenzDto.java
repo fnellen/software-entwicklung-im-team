@@ -6,9 +6,9 @@ import org.springframework.data.relational.core.mapping.Table;
 
 //@Table("klausur_referenz")
 public record KlausurReferenzDto(
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL) VeranstaltungsIdDto id) {
+    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL) VeranstaltungsIdDto veranstaltungsId) {
 
   public KlausurReferenz konvertiereZuKlausurReferenz() {
-    return new KlausurReferenz(id.id());
+    return new KlausurReferenz(veranstaltungsId.veranstaltungsId());
   }
 }

@@ -12,14 +12,14 @@ create table student_dto
 
 create table klausur_referenz_dto
 (
-    student_dto int,
-    id          int,
-    primary key (student_dto, id)
+    student_dto       int,
+    veranstaltungs_id varchar(260),
+    primary key (student_dto, veranstaltungs_id)
 );
 
 create table klausur_dto
 (
-    id                  int primary key,
+    veranstaltungs_id   varchar(260) primary key,
     veranstaltungs_name varchar(260),
     datum               date not null,
     start_uhrzeit       time not null,

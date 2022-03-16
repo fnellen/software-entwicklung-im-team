@@ -18,7 +18,8 @@ public class StudentRepositoryImpl implements StudentRepository {
   @Override
   public Student findeStudentMitHandle(String githubHandle) {
     StudentDto studentDto = studentDao.findeStudentMitHandle(githubHandle)
-        .orElseThrow(() -> new NoSuchElementException(githubHandle));
+        .orElseThrow(() -> new NoSuchElementException("Student mit " + githubHandle + " konnte " +
+            "nicht gefunden werden!"));
     return studentDto.konvertiereZuStudent();
   }
 
