@@ -26,8 +26,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private final List<String> organisatoren;
 
   public WebSecurityConfiguration(
-      @Value("${gruppen.tutoren}") List<String> tutoren,
-      @Value("${gruppen.organisatoren}") List<String> organisatoren) {
+      @Value("${rollen.tutoren") List<String> tutoren,
+      @Value("${rollen.organisatoren}") List<String> organisatoren) {
     this.tutoren = tutoren;
     this.organisatoren = organisatoren;
   }
