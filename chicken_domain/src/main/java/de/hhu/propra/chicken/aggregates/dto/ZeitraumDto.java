@@ -1,5 +1,6 @@
 package de.hhu.propra.chicken.aggregates.dto;
 
+import de.hhu.propra.chicken.stereotypes.ValueObject;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalTime;
  * Daten Transfer Objekt für die Darstellung eines Zeitraums. Enthält einfache Validierung
  * des Zeitraums.
  */
+@ValueObject
 public class ZeitraumDto {
   private final LocalDate datum;
   private final LocalTime startUhrzeit;
