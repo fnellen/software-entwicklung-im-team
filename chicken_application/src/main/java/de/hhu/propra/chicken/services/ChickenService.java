@@ -49,12 +49,25 @@ public class ChickenService {
     } else {
       ZeitraumDto neuerZeitraum;
       if (praesenz) {
-        neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(),
-            zeitraumDto.getStartUhrzeit().minus(Duration.of(120, ChronoUnit.MINUTES)),
-            zeitraumDto.getEndUhrzeit().plus(Duration.of(120, ChronoUnit.MINUTES)));
+        LocalTime neueStartuhrzeit =
+            zeitraumDto.getStartUhrzeit().minus(Duration.of(120, ChronoUnit.MINUTES));
+        LocalTime neueEndUhrzeit =
+            zeitraumDto.getEndUhrzeit().plus(Duration.of(120, ChronoUnit.MINUTES));
+        if (neueStartuhrzeit.isBefore(LocalTime.of(9, 30))) {
+          neueStartuhrzeit = LocalTime.of(9, 30);
+        }
+        if (neueEndUhrzeit.isAfter(LocalTime.of(13, 30))) {
+          neueEndUhrzeit = LocalTime.of(13, 30);
+        }
+        neuerZeitraum =
+            ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit, neueEndUhrzeit);
       } else {
-        neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(),
-            zeitraumDto.getStartUhrzeit().minus(Duration.of(30, ChronoUnit.MINUTES)),
+        LocalTime neueStartuhrzeit = zeitraumDto.getStartUhrzeit().minus(Duration.of(30,
+            ChronoUnit.MINUTES));
+        if (neueStartuhrzeit.isBefore(LocalTime.of(9, 30))) {
+          neueStartuhrzeit = LocalTime.of(9, 30);
+        }
+        neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit,
             zeitraumDto.getEndUhrzeit());
       }
       Klausur klausur = new Klausur(veranstaltungsId, veranstaltungsName, neuerZeitraum, praesenz);
