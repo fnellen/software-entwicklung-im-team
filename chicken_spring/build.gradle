@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation project(':chicken_application')
+    implementation project(':chicken_adapter_lsfid')
     implementation project(':chicken_adapter_db')
     implementation project(':chicken_adapter_web')
     implementation 'org.springframework.boot:spring-boot-starter'

@@ -1,10 +1,9 @@
 package de.hhu.propra.chicken.repository;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
-import java.io.IOException;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class VeranstaltungsIdRepositoryImpl implements VeranstaltungsIdRepository {
 
   private final WebPageContentProvider provider;

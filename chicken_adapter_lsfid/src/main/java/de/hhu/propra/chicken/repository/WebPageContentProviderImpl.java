@@ -3,7 +3,9 @@ package de.hhu.propra.chicken.repository;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.io.IOException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WebPageContentProviderImpl implements WebPageContentProvider {
 
   @Override
