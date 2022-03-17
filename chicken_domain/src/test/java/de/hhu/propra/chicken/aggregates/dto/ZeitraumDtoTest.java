@@ -15,7 +15,7 @@ public class ZeitraumDtoTest {
   void test_1() {
     ZeitraumDto
         zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 9),
-        LocalTime.of(9, 15),
+        LocalTime.of(9, 30),
         LocalTime.of(10, 30));
     assertThat(zeitraumDto).isNotNull();
   }
@@ -26,7 +26,7 @@ public class ZeitraumDtoTest {
   void test_1a() {
     ZeitraumDto
         zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
-        LocalTime.of(9, 15),
+        LocalTime.of(9, 30),
         LocalTime.of(10, 30));
     assertThat(zeitraumDto).isNotNull();
   }
@@ -37,7 +37,7 @@ public class ZeitraumDtoTest {
   void test_1b() {
     ZeitraumDto
         zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 25),
-        LocalTime.of(9, 15),
+        LocalTime.of(9, 30),
         LocalTime.of(10, 30));
     assertThat(zeitraumDto).isNotNull();
   }
@@ -48,7 +48,7 @@ public class ZeitraumDtoTest {
   void test_2a() {
     ZeitraumDto
         zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 1),
-        LocalTime.of(9, 15),
+        LocalTime.of(9, 30),
         LocalTime.of(10, 30));
     assertThat(zeitraumDto).isNull();
   }
@@ -59,7 +59,7 @@ public class ZeitraumDtoTest {
   void test_2b() {
     ZeitraumDto
         zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 30),
-        LocalTime.of(9, 15),
+        LocalTime.of(9, 30),
         LocalTime.of(10, 30));
     assertThat(zeitraumDto).isNull();
   }
@@ -70,7 +70,7 @@ public class ZeitraumDtoTest {
   void test_3() {
     ZeitraumDto
         zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 9),
-        LocalTime.of(9, 12),
+        LocalTime.of(9, 32),
         LocalTime.of(10, 30));
     assertThat(zeitraumDto).isNull();
   }
@@ -116,6 +116,26 @@ public class ZeitraumDtoTest {
         LocalTime.of(10, 30));
     long dauer = zeitraumDto.dauerInMinuten();
     assertThat(dauer).isEqualTo(60);
+  }
+
+  @Test
+  @DisplayName("Wenn die Uhrzeit vor Praktikumsbeginn liegt, erstelle kein Zeitraum.")
+  void test_8() {
+    ZeitraumDto
+        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
+        LocalTime.of(9, 15),
+        LocalTime.of(10, 30));
+    assertThat(zeitraumDto).isNull();
+  }
+
+  @Test
+  @DisplayName("Wenn die Uhrzeit nach Praktikumsende liegt, erstelle kein Zeitraum.")
+  void test_9() {
+    ZeitraumDto
+        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
+        LocalTime.of(9, 30),
+        LocalTime.of(14, 30));
+    assertThat(zeitraumDto).isNull();
   }
 
 }
