@@ -22,18 +22,6 @@ public class ZeitraumDto {
     this.endUhrzeit = endUhrzeit;
   }
 
-  public LocalDate getDatum() {
-    return datum;
-  }
-
-  public LocalTime getStartUhrzeit() {
-    return startUhrzeit;
-  }
-
-  public LocalTime getEndUhrzeit() {
-    return endUhrzeit;
-  }
-
   /**
    * Statische factory Methode zur Erstellung eines Zeitraums mit Validierung der Daten.
    *
@@ -56,6 +44,9 @@ public class ZeitraumDto {
     if (!validiereUhrzeitBlock(startUhrzeit, endUhrzeit)) {
       return null;
     }
+    if (!inPraktikumsZeit(startUhrzeit, endUhrzeit)) {
+      return null;
+    }
     return new ZeitraumDto(datum, startUhrzeit, endUhrzeit);
   }
 
@@ -67,6 +58,14 @@ public class ZeitraumDto {
       return false;
     }
     return true;
+  }
+
+  private static boolean inPraktikumsZeit(LocalTime startUhrzeit, LocalTime endUhrzeit) {
+    if (startUhrzeit.isBefore(LocalTime.of(9, 30)) || endUhrzeit.isAfter(LocalTime.of(13, 30))) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private static boolean validiereObAnWochenende(LocalDate datum) {
@@ -85,6 +84,18 @@ public class ZeitraumDto {
       return false;
     }
     return true;
+  }
+
+  public LocalDate getDatum() {
+    return datum;
+  }
+
+  public LocalTime getStartUhrzeit() {
+    return startUhrzeit;
+  }
+
+  public LocalTime getEndUhrzeit() {
+    return endUhrzeit;
   }
 
   public long dauerInMinuten() {
