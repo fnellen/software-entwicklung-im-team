@@ -1,11 +1,9 @@
 package de.hhu.propra.chicken.services;
 
 import java.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 public interface HeutigesDatum {
 
-  default LocalDate getDatum() {
-    return LocalDate.now();
-  }
-
+  LocalDate getDatum();
 }
