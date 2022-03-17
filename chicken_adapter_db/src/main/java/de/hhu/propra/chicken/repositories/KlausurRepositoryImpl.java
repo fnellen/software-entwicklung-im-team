@@ -21,9 +21,13 @@ public class KlausurRepositoryImpl implements KlausurRepository {
 
   @Override
   public Set<Klausur> findeKlausurenAmTag(ZeitraumDto zeitraumDto) {
+    /*
     return klausurDao.findeKlausurenAmTag(zeitraumDto.getDatum()).stream()
         .map(KlausurDto::konvertiereZuKlausur).collect(
             Collectors.toSet());
+
+     */
+    return null;
   }
 
   @Override
@@ -37,6 +41,6 @@ public class KlausurRepositoryImpl implements KlausurRepository {
   @Override
   public void speicherKlausur(Klausur klausur) {
     KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
-    klausurDao.save(klausurDto);
+    KlausurDto klausurDto1 = klausurDao.save(klausurDto);
   }
 }

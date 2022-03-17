@@ -2,11 +2,13 @@ package de.hhu.propra.chicken.aggregates.klausur;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.stereotypes.AggregateRoot;
+import de.hhu.propra.chicken.stereotypes.EntityObject;
 
 /**
  * Darstellung einer Klausur.
  */
 @AggregateRoot
+@EntityObject
 public record Klausur(VeranstaltungsId id,
                       String veranstaltungsName,
                       ZeitraumDto zeitraumDto, Boolean praesenz) {
@@ -15,6 +17,7 @@ public record Klausur(VeranstaltungsId id,
     this(VeranstaltungsId.erstelle(id), veranstaltungsName, zeitraum, praesenz);
 
   }
+
 
   @Override
   public boolean equals(Object o) {

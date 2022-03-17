@@ -2,11 +2,13 @@ package de.hhu.propra.chicken.aggregates.klausur;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.hhu.propra.chicken.stereotypes.ValueObject;
 import java.io.IOException;
 
 /**
  * Darstellung einer gültigen VeranstaltungsId aus dem LSF.
  */
+@ValueObject
 class VeranstaltungsId {
 
   private final String veranstaltungsId;
@@ -22,6 +24,25 @@ class VeranstaltungsId {
 
   public static VeranstaltungsId erstelle(String veranstaltungsId) {
     return new VeranstaltungsId(veranstaltungsId);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    VeranstaltungsId that = (VeranstaltungsId) o;
+
+    return veranstaltungsId.equals(that.veranstaltungsId);
+  }
+
+  @Override
+  public int hashCode() {
+    return veranstaltungsId.hashCode();
   }
 
   /*private static boolean webCheck(String veranstaltungsId) {

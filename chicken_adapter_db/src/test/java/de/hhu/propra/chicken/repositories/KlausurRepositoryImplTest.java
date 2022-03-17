@@ -1,10 +1,14 @@
 package de.hhu.propra.chicken.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.dao.KlausurDao;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,28 @@ public class KlausurRepositoryImplTest {
     Klausur klausur = klausurRepository.findeKlausurMitId("215783");
     assertThat(klausur).isNotNull();
     assertThat(klausur.getVeranstaltungsId()).isEqualTo("215783");
+  }
 
+  @Test
+  @DisplayName("Eine nicht vorhandene Klausur wird nicht aus der Datenbank geladen.")
+  void test_2() {
+    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao);
+    assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(() ->
+        klausurRepository.findeKlausurMitId("456654")
+    );
+  }
+
+  @Test
+  @DisplayName("Eine Klausur wird richtig in der Datenbank gespeichert.")
+  void test_3() {
+    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao);
+    Klausur klausur = new Klausur("", "RDB", ZeitraumDto.erstelleZeitraum(
+        LocalDate.of(2022, 3,9),
+        LocalTime.of(10,30),
+        LocalTime.of(11,30)), true);
+    klausurRepository.speicherKlausur(klausur);
+    Klausur geladeneKlausur = klausurRepository.findeKlausurMitId("224568");
+    assertThat(geladeneKlausur).isNotNull();
+    assertThat(geladeneKlausur).isEqualTo(klausur);
   }
 }
