@@ -31,7 +31,7 @@ public class KlausurRepositoryImpl implements KlausurRepository {
   @Override
   public void speicherKlausur(Klausur klausur) {
     KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
-    KlausurDto klausurDto1 = klausurDao.save(klausurDto);
+    klausurDao.save(klausurDto);
   }
 
 
