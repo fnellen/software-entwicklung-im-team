@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':chicken_domain')
+    implementation project(':chicken_application')
+    implementation 'net.sourceforge.htmlunit:htmlunit:2.59.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
