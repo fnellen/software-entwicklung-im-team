@@ -8,8 +8,8 @@ spring:
       client:
         registration:
           github:
-            client-id: ***REMOVED***
-            client-secret: ***REMOVED***
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
             authorization-grant-type: authorization_code
             scope: user
 
