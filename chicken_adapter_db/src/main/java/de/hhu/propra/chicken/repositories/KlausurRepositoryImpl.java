@@ -19,20 +19,10 @@ public class KlausurRepositoryImpl implements KlausurRepository {
     this.klausurDao = klausurDao;
   }
 
-  @Override
-  public Set<Klausur> findeKlausurenAmTag(ZeitraumDto zeitraumDto) {
-    /*
-    return klausurDao.findeKlausurenAmTag(zeitraumDto.getDatum()).stream()
-        .map(KlausurDto::konvertiereZuKlausur).collect(
-            Collectors.toSet());
-
-     */
-    return null;
-  }
 
   @Override
-  public Klausur findeKlausurMitId(String id) {
-    KlausurDto klausurDto = klausurDao.findById(id)
+  public Klausur findeKlausurMitVeranstaltungsId(String id) {
+    KlausurDto klausurDto = klausurDao.findeKlausurMitVeranstaltungsId(id)
         .orElseThrow(() -> new NoSuchElementException(id));
     return klausurDto.konvertiereZuKlausur();
   }
@@ -43,4 +33,6 @@ public class KlausurRepositoryImpl implements KlausurRepository {
     KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
     KlausurDto klausurDto1 = klausurDao.save(klausurDto);
   }
+
+
 }

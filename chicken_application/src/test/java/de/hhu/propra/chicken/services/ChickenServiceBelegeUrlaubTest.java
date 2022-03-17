@@ -74,7 +74,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -101,7 +102,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -128,7 +130,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -161,7 +164,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_03_09_1000_1100.getVeranstaltungsId()))
+    when(
+        klausurRepository.findeKlausurMitVeranstaltungsId(KL_03_09_1000_1100.getVeranstaltungsId()))
         .thenReturn(KL_03_09_1000_1100);
 
     ChickenService appService =
@@ -188,7 +192,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -215,7 +220,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -249,7 +255,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_03_09_1000_1100.getVeranstaltungsId()))
+    when(
+        klausurRepository.findeKlausurMitVeranstaltungsId(KL_03_09_1000_1100.getVeranstaltungsId()))
         .thenReturn(KL_03_09_1000_1100);
 
     ChickenService appService =
@@ -277,7 +284,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -311,7 +319,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_0945);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_03_09_1000_1100.getVeranstaltungsId()))
+    when(
+        klausurRepository.findeKlausurMitVeranstaltungsId(KL_03_09_1000_1100.getVeranstaltungsId()))
         .thenReturn(KL_03_09_1000_1100);
 
     ChickenService appService =
@@ -342,7 +351,8 @@ public class ChickenServiceBelegeUrlaubTest {
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
 
     ChickenService appService =
@@ -374,7 +384,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_0945);
 
@@ -401,7 +411,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
@@ -426,7 +436,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
@@ -452,7 +462,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
@@ -478,7 +488,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
@@ -503,7 +513,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
@@ -522,7 +532,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_1130);
 
@@ -547,7 +557,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_1130);
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_07_1230_1330);
@@ -569,7 +579,7 @@ public class ChickenServiceBelegeUrlaubTest {
     studentRepository = mock(StudentRepository.class);
     klausurRepository = mock(KlausurRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    when(klausurRepository.findeKlausurMitId(anyString())).thenReturn(null);
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(anyString())).thenReturn(null);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_0945);
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1300_1330);
@@ -594,9 +604,11 @@ public class ChickenServiceBelegeUrlaubTest {
     when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
-    when(klausurRepository.findeKlausurMitId(KL_03_09_1000_1145.getVeranstaltungsId()))
+    when(
+        klausurRepository.findeKlausurMitVeranstaltungsId(KL_03_09_1000_1145.getVeranstaltungsId()))
         .thenReturn(KL_03_09_1000_1145);
 
     ChickenService appService =
@@ -619,9 +631,11 @@ public class ChickenServiceBelegeUrlaubTest {
     when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 15));
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
+        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
-    when(klausurRepository.findeKlausurMitId(KL_03_09_1000_1145.getVeranstaltungsId()))
+    when(
+        klausurRepository.findeKlausurMitVeranstaltungsId(KL_03_09_1000_1145.getVeranstaltungsId()))
         .thenReturn(KL_03_09_1000_1145);
 
     ChickenService appService =

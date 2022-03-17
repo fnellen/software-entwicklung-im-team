@@ -9,12 +9,14 @@ import de.hhu.propra.chicken.stereotypes.EntityObject;
  */
 @AggregateRoot
 @EntityObject
-public record Klausur(VeranstaltungsId id,
+public record Klausur(Long id, VeranstaltungsId veranstaltungsId,
                       String veranstaltungsName,
                       ZeitraumDto zeitraumDto, Boolean praesenz) {
 
-  public Klausur(String id, String veranstaltungsName, ZeitraumDto zeitraum, Boolean praesenz) {
-    this(VeranstaltungsId.erstelle(id), veranstaltungsName, zeitraum, praesenz);
+
+  public Klausur(Long id, String veranstaltungsId, String veranstaltungsName,
+                 ZeitraumDto zeitraum, Boolean praesenz) {
+    this(id, VeranstaltungsId.erstelle(veranstaltungsId), veranstaltungsName, zeitraum, praesenz);
 
   }
 
@@ -30,15 +32,15 @@ public record Klausur(VeranstaltungsId id,
 
     Klausur klausur = (Klausur) o;
 
-    return id.equals(klausur.id);
+    return veranstaltungsId.equals(klausur.veranstaltungsId);
   }
 
   public String getVeranstaltungsId() {
-    return id.getVeranstaltungsId();
+    return veranstaltungsId.getVeranstaltungsId();
   }
 
   @Override
   public int hashCode() {
-    return id.hashCode();
+    return veranstaltungsId.hashCode();
   }
 }

@@ -1,7 +1,9 @@
 package de.hhu.propra.chicken.dao;
 
 import de.hhu.propra.chicken.aggregates.klausur.KlausurDto;
+import de.hhu.propra.chicken.aggregates.klausur.VeranstaltungsIdDto;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,5 +20,14 @@ public interface KlausurDao extends CrudRepository<KlausurDto, String> {
           """
   )
   Set<KlausurDto> findeKlausurenAmTag(@Param("datum") LocalDate datum);
+
+  @Query("""
+      SELECT * FROM klausur_dto
+      WHERE veranstaltungs_id = :veranstaltungsId
+      """
+  )
+  Optional<KlausurDto> findeKlausurMitVeranstaltungsId(
+      @Param("veranstaltungsId") String veranstaltungsId);
+
 
 }

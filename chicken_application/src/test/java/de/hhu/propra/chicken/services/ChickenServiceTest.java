@@ -128,13 +128,13 @@ public class ChickenServiceTest {
     dennis.fuegeKlausurHinzu(KL_RECHNERNETZTE_03_07_0930_1030);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
         KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
-    when(klausurRepository.findeKlausurMitId(
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
         KL_STOCHASTIK_03_08_0930_1030.getVeranstaltungsId()))
         .thenReturn(KL_STOCHASTIK_03_08_0930_1030);
-    when(klausurRepository.findeKlausurMitId(
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
         KL_RECHNERNETZTE_03_07_0930_1030.getVeranstaltungsId()))
         .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
@@ -156,13 +156,13 @@ public class ChickenServiceTest {
     dennis.fuegeKlausurHinzu(KL_RECHNERNETZTE_03_07_0930_1030);
 
     klausurRepository = mock(KlausurRepository.class);
-    when(klausurRepository.findeKlausurMitId(
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
         KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
         .thenReturn(KL_PROPRA_03_09_1130_1230);
-    when(klausurRepository.findeKlausurMitId(
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
         KL_STOCHASTIK_03_08_0930_1030.getVeranstaltungsId()))
         .thenReturn(KL_STOCHASTIK_03_08_0930_1030);
-    when(klausurRepository.findeKlausurMitId(
+    when(klausurRepository.findeKlausurMitVeranstaltungsId(
         KL_RECHNERNETZTE_03_07_0930_1030.getVeranstaltungsId()))
         .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =

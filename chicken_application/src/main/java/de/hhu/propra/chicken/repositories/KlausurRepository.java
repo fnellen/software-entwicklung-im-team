@@ -6,9 +6,8 @@ import java.util.Set;
 
 public interface KlausurRepository {
 
-  Set<Klausur> findeKlausurenAmTag(ZeitraumDto zeitraumDto);
 
-  Klausur findeKlausurMitId(String id);
+  Klausur findeKlausurMitVeranstaltungsId(String id);
 
   void speicherKlausur(Klausur klausur);
 

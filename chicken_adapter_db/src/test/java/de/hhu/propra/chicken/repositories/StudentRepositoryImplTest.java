@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.dao.StudentDao;
 import de.hhu.propra.chicken.repositories.StudentRepositoryImpl;
@@ -48,7 +50,7 @@ public class StudentRepositoryImplTest {
   void test_2() {
     StudentRepositoryImpl studentRepository = new StudentRepositoryImpl(studentDao);
     assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(
-        () -> studentRepository.findeStudentMitHandle("ernaz99"))
+            () -> studentRepository.findeStudentMitHandle("ernaz99"))
         .withMessageContaining("ernaz99");
   }
 
@@ -107,5 +109,23 @@ public class StudentRepositoryImplTest {
     Student geladen = studentRepository.findeStudentMitHandle("dehus101");
     assertThat(geladen.getGithubHandle()).isEqualTo("dehus101");
     assertThat(geladen.getUrlaube()).isEmpty();
+  }
+
+  @Test
+  @DisplayName("Eine vom Student belegte Klausur wird in der Datenbank gespeichert")
+  void test_7() {
+    StudentRepositoryImpl studentRepository = new StudentRepositoryImpl(studentDao);
+    Student dennis = studentRepository.findeStudentMitHandle("dehus101");
+    Klausur klausur = new Klausur(null, "215783", "RDB",
+        ZeitraumDto.erstelleZeitraum(
+            LocalDate.of(2022, 3, 9),
+            LocalTime.of(10, 30),
+            LocalTime.of(11, 30)), true);
+    dennis.fuegeKlausurHinzu(klausur);
+    studentRepository.speicherStudent(dennis);
+    Student geladen = studentRepository.findeStudentMitHandle("dehus101");
+    assertThat(geladen.getKlausuren())
+        .containsExactly(new KlausurReferenz(klausur.getVeranstaltungsId()));
+
   }
 }

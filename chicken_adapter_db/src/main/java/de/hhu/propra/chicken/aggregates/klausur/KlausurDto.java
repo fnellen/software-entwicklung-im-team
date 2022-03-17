@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Embedded;
 
 //@Table("klausur")
-public record KlausurDto(@Id
+public record KlausurDto(@Id Long id,
                          @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
                          VeranstaltungsId veranstaltungsId,
                          String veranstaltungsName,
@@ -14,12 +14,13 @@ public record KlausurDto(@Id
                          boolean praesenz) {
 
   public static KlausurDto konvertiereZuKlausurDto(Klausur klausur) {
-    return new KlausurDto(klausur.id(), klausur.veranstaltungsName(),
+    return new KlausurDto(klausur.id(), klausur.veranstaltungsId(), klausur.veranstaltungsName(),
         klausur.zeitraumDto(), klausur.praesenz());
   }
 
   public Klausur konvertiereZuKlausur() {
-    return new Klausur(this.veranstaltungsId, this.veranstaltungsName, this.klausurZeitraum(),
+    return new Klausur(this.id, this.veranstaltungsId, this.veranstaltungsName,
+        this.klausurZeitraum(),
         this.praesenz);
   }
 }

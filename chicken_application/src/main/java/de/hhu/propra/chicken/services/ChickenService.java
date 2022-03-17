@@ -70,7 +70,8 @@ public class ChickenService {
         neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit,
             zeitraumDto.getEndUhrzeit());
       }
-      Klausur klausur = new Klausur(veranstaltungsId, veranstaltungsName, neuerZeitraum, praesenz);
+      Klausur klausur =
+          new Klausur(null, veranstaltungsId, veranstaltungsName, neuerZeitraum, praesenz);
       klausurRepository.speicherKlausur(klausur);
     }
   }
@@ -412,7 +413,7 @@ public class ChickenService {
   Set<Klausur> getBelegteKlausurenAmTag(ZeitraumDto zeitraumDto, Student student) {
     Set<Klausur> belegteKlausurenVomStudenten =
         student.getKlausuren().stream().map(KlausurReferenz::id).map(
-            klausurRepository::findeKlausurMitId).collect(Collectors.toSet());
+            klausurRepository::findeKlausurMitVeranstaltungsId).collect(Collectors.toSet());
     return belegteKlausurenVomStudenten.stream()
         .filter(e -> e.zeitraumDto().getDatum().equals(zeitraumDto.getDatum())).collect(
             Collectors.toSet());

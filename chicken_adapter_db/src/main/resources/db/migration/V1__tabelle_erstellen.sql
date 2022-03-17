@@ -19,6 +19,7 @@ create table klausur_referenz_dto
 
 create table klausur_dto
 (
+    id                  int auto_increment not null,
     veranstaltungs_id   varchar(260) primary key,
     veranstaltungs_name varchar(260),
     datum               date not null,
