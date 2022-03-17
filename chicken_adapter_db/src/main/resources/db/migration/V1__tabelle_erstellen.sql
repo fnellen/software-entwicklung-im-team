@@ -19,12 +19,12 @@ create table klausur_referenz_dto
 
 create table klausur_dto
 (
-    id                  int auto_increment not null,
-    veranstaltungs_id   varchar(260) primary key,
+    id                  int auto_increment not null primary key,
+    veranstaltungs_id   varchar(260),
     veranstaltungs_name varchar(260),
-    datum               date not null,
-    start_uhrzeit       time not null,
-    end_uhrzeit         time not null,
+    datum               date               not null,
+    start_uhrzeit       time               not null,
+    end_uhrzeit         time               not null,
     praesenz            bool
 );
 
