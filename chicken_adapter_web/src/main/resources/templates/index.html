@@ -75,12 +75,13 @@
                 <td th:text="${klausur.veranstaltungsName()}"> Propra</td>
                 <td th:text="${klausur.zeitraumDto().getDatum()}">21.03.2022</td>
                 <td th:text="${klausur.zeitraumDto().toString()}"> 09:30 - 11:00 Uhr</td>
+                <td th:text="${klausur.getVeranstaltungsId()}"></td>
                 <td>
-                    <form method="post"
-                          th:action="@{/klausurstornieren}">
-                        <input type="hidden" th:value="${klausur.getVeranstaltungsId()}">
-                        <input type="hidden" th:value="${details.student.getGithubHandle()}">
-                        <button class="btn btn-danger">Stornieren</button>
+                    <form method="post" th:action="@{/klausurstornieren}">
+                        <input type="hidden" name="veranstaltungsId" th:value="${klausur.getVeranstaltungsId()}">
+                        <input type="hidden" name="handle" th:value="${details.student.getGithubHandle()}">
+                        <button type="submit" class="btn btn-danger">Stornieren</button>
+
                     </form>
                 </td>
             </tr>

@@ -1,14 +1,17 @@
 package de.hhu.propra.chicken.web.controller;
 
+import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.dto.StudentDetails;
+import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import java.security.Principal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class StudentController {
@@ -39,5 +42,20 @@ public class StudentController {
 
     return "index";
   }
+
+  @PostMapping("/klausurstornieren")
+  public String klausurStornieren(Model model,
+                                  @ModelAttribute("handle") String handle,
+                                  String veranstaltungsId) {
+    System.out.println(veranstaltungsId);
+    Klausur klausur = service.holeKlausur(veranstaltungsId);
+    try {
+      service.storniereKlausur(handle, klausur);
+    } catch (KlausurException e) {
+      System.out.println(e.getMessage());
+    }
+    return "redirect:/";
+  }
+
 
 }
