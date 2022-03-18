@@ -7,6 +7,7 @@ import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
+import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
@@ -38,6 +39,22 @@ public class ChickenService {
     this.klausurRepository = klausurRepository;
     this.heutigesDatum = heutigesDatum;
     this.veranstaltungsIdRepository = veranstaltungsIdRepository;
+  }
+
+  public StudentDetails studentDetails(String handle) {
+    Student student = studentRepository.findeStudentMitHandle(handle);
+    if (student == null) {
+      throw new StudentNichtGefundenException(handle);
+    }
+    Set<KlausurReferenz> klausuren = student.getKlausuren();
+    Set<Klausur> klausuren1 = klausuren.stream()
+        .map(KlausurReferenz::id)
+        .map(klausurRepository::findeKlausurMitVeranstaltungsId).collect(Collectors.toSet());
+    return StudentDetails.von(student, klausuren1);
+  }
+
+  public void studentSpeichern(Student student) {
+    studentRepository.speicherStudent(student);
   }
 
   public void klausurAnmelden(String veranstaltungsId, String veranstaltungsName,
