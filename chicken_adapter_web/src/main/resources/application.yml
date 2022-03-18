@@ -1,8 +1,18 @@
 rollen:
-  tutoren: bendisposto
-  organisatoren: donald, daisy, minnie, mickey, gundel, dagobert, bendisposto
+  tutoren: dehus101
+  organisatoren: dehus101, daisy, minnie, mickey, gundel, dagobert, bendisposto
 
 spring:
+  flyway:
+    schemas: chicken
+    create-schemas: true
+    url: jdbc:mariadb://localhost:3332
+    user: ${DB_USER}
+    password: ${MYSQL_ROOT_PASSWORD}
+  datasource:
+    url: jdbc:mariadb://localhost:3332/chicken
+    username: ${DB_USER}
+    password: ${MYSQL_ROOT_PASSWORD}
   security:
     oauth2:
       client:
