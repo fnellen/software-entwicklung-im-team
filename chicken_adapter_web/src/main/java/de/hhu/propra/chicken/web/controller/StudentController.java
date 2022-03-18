@@ -79,5 +79,14 @@ public class StudentController {
     return "redirect:/";
   }
 
+  @GetMapping("/urlaubbelegen")
+  public String urlaubBelegen(Model model) {
+    return "urlaubbelegen";
+  }
+
+  @GetMapping("/klausurbelegen")
+  public String klausurBelegen(Model model) {
+    return "klausurbelegen";
+  }
 
 }
