@@ -29,11 +29,10 @@ public class StudentController {
 
   @GetMapping("/")
   public String index(Model model, @ModelAttribute("handle") String handle) {
-    Student student;
     try {
-      student = service.holeStudent(handle);
+      service.holeStudent(handle);
     } catch (Exception e) {
-      student = new Student(null, handle);
+      Student student = new Student(null, handle);
       service.studentSpeichern(student);
     }
     StudentDetails studentDetails = service.studentDetails(handle);
