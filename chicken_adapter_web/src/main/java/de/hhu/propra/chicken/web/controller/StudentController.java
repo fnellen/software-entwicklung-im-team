@@ -2,6 +2,7 @@ package de.hhu.propra.chicken.web.controller;
 
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
+import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import java.security.Principal;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,11 @@ public class StudentController {
       student = service.holeStudent(handle);
     } catch (Exception e) {
       student = new Student(null, handle);
+      service.studentSpeichern(student);
     }
-    System.out.println(student.getGithubHandle());
+    StudentDetails studentDetails = service.studentDetails(handle);
+    model.addAttribute("details", studentDetails);
+
 
     return "index";
   }
