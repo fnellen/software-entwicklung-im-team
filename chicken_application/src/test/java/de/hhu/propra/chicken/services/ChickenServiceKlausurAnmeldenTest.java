@@ -39,13 +39,13 @@ public class ChickenServiceKlausurAnmeldenTest {
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
 
-  Student dennis = new Student(1L, "dehus101");
+  // Student dennis = new Student(1L, "dehus101");
 
   @Test
   @DisplayName("Eine Klausur, die in Präsenz geschrieben wird, erhält 2 Stunden vorher und "
       + "nachher frei.")
   void test_1() throws StudentNichtGefundenException {
-    /**
+    /*
      * 11:30->12:30 zu 09:30->13:30
      */
     veranstaltungsIdRepository = mock(VeranstaltungsIdRepository.class);

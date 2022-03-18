@@ -14,7 +14,6 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'net.sourceforge.htmlunit:htmlunit:2.59.0'
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
