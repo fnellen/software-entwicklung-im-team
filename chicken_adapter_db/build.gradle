@@ -7,12 +7,19 @@ dependencies {
     implementation project(':chicken_domain')
     implementation project(':chicken_application')
 
-    testImplementation "org.testcontainers:mariadb:1.16.3"
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    runtimeOnly 'com.h2database:h2'
     implementation 'org.flywaydb:flyway-core'
+    testRuntimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mariadb'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.testcontainers:testcontainers-bom:1.16.3'
+    }
 }
 
 bootJar {
