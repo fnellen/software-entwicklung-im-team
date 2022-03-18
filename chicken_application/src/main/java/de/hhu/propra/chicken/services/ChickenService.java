@@ -233,6 +233,14 @@ public class ChickenService {
     return student;
   }
 
+  public Klausur holeKlausur(String veranstaltungsId) throws KlausurException {
+    Klausur klausur = klausurRepository.findeKlausurMitVeranstaltungsId(veranstaltungsId);
+    if (klausur == null) {
+      throw new KlausurException(veranstaltungsId);
+    }
+    return klausur;
+  }
+
   void ueberpruefeResturlaub(long dauerDesUrlaubs, long resturlaub) {
     if (resturlaub <= 0 || resturlaub - dauerDesUrlaubs < 0) {
       throw new UrlaubException("Student hat keinen Resturlaub mehr.");
