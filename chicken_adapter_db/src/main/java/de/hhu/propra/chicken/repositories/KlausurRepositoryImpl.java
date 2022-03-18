@@ -8,6 +8,7 @@ import de.hhu.propra.chicken.dao.KlausurDao;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -30,8 +31,13 @@ public class KlausurRepositoryImpl implements KlausurRepository {
 
   @Override
   public void speicherKlausur(Klausur klausur) {
-    KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
-    klausurDao.save(klausurDto);
+    try {
+      findeKlausurMitVeranstaltungsId(klausur.getVeranstaltungsId());
+      throw new RuntimeException("fehler");
+    } catch (NoSuchElementException e) {
+      KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
+      klausurDao.save(klausurDto);
+    }
   }
 
 

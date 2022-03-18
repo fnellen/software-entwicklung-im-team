@@ -68,7 +68,7 @@ public class KlausurRepositoryImplTest {
             LocalDate.of(2022, 3, 9),
             LocalTime.of(10, 30),
             LocalTime.of(11, 30)), true);
-    assertThatExceptionOfType(DbActionExecutionException.class)
+    assertThatExceptionOfType(RuntimeException.class)
         .isThrownBy(() -> klausurRepository.speicherKlausur(klausur));
   }
 
