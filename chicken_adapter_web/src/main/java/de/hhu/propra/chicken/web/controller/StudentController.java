@@ -1,5 +1,6 @@
 package de.hhu.propra.chicken.web.controller;
 
+import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
@@ -7,6 +8,8 @@ import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +43,26 @@ public class StudentController {
 
 
     return "index";
+  }
+
+  @PostMapping("/urlaubstornieren")
+  public String urlaubStornieren(Model model,
+                                 @ModelAttribute("handle") String handle,
+                                 String urlaubdatum,
+                                 String urlaubstart,
+                                 String urlaubende) {
+
+    LocalDate datum = LocalDate.parse(urlaubdatum);
+    LocalTime start = LocalTime.parse(urlaubstart);
+    LocalTime ende = LocalTime.parse(urlaubende);
+    ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(datum, start, ende);
+    System.out.println(urlaub);
+    try {
+      service.storniereUrlaub(handle, urlaub);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    return "redirect:/";
   }
 
   @PostMapping("/klausurstornieren")

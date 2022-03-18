@@ -31,9 +31,11 @@
             <td>
                 <form method="post"
                       th:action="@{/urlaubstornieren}">
-                    <input type="hidden" th:value="${urlaub}">
-                    <input type="hidden" th:value="${details.student.getGithubHandle()}">
-                    <button class="btn btn-danger">Stornieren</button>
+                    <input type="hidden" name="urlaubdatum" th:value="${urlaub.getDatum()}">
+                    <input type="hidden" name="urlaubstart" th:value="${urlaub.getStartUhrzeit()}">
+                    <input type="hidden" name="urlaubende" th:value="${urlaub.getEndUhrzeit()}">
+                    <input type="hidden" name="handle" th:value="${details.student.getGithubHandle()}">
+                    <button type="submit" class="btn btn-danger">Stornieren</button>
                 </form>
             </td>
         </tr>
