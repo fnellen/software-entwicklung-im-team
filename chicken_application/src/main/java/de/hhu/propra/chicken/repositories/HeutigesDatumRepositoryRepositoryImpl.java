@@ -1,11 +1,11 @@
-package de.hhu.propra.chicken.services;
+package de.hhu.propra.chicken.repositories;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HeutigesDatumImpl implements HeutigesDatum {
+public class HeutigesDatumRepositoryRepositoryImpl implements HeutigesDatumRepository {
   @Override
   public LocalDate getDatum() {
     return LocalDate.now();
