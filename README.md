@@ -81,7 +81,8 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 - [x] Urlaub Stornieren
 - [x] Klausur Stornieren
 - [x] Testing
-- [ ] Logging
+- [x] Logging
+    - [ ] Testing
 
 #### Domain:
 
@@ -90,17 +91,19 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 
 #### Datenbank:
 
-- [ ] Test
+- [x] Test
 
 #### Web:
 
 - [ ] Controller mit Html
 - [ ] Authentifizierung mit Annotationen (ArchTest Überprüfung)
 - [ ] Security
-- [x] Klausur hinzufügen
-- [x] Urlaub belegen
-- [x] Klausur belegen
-- [ ] Resturlaub Übersicht
+- [ ] Klausur hinzufügen
+- [ ] Urlaub belegen
+- [ ] Klausur belegen
+- [x] Urlaub stornieren
+- [x] Klausur stornieren
+- [x] Resturlaub Übersicht
 - [ ] Organisator und Tutor Übersicht
 
 #### Spring:
@@ -110,4 +113,4 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 
 #### LSF-ID:
 
-- [ ] In anderen Layer schieben
+- [x] In anderen Layer schieben
