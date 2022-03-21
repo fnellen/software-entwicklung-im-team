@@ -27,11 +27,14 @@ import static org.mockito.Mockito.when;
 
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
+import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,12 +54,18 @@ public class ChickenServiceBelegeUrlaubTest {
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
 
+  @Mock
+  LoggingRepository logging;
+
   Student dennis = new Student(1L, "dehus101");
 
   @BeforeEach
   void setup() {
     heutigesDatum = mock(HeutigesDatum.class);
     when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
+        LocalTime.of(10, 15)));
+    logging = mock(LoggingRepository.class);
   }
 
   @Test
@@ -80,7 +89,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_0945);
 
@@ -108,7 +117,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1130);
 
@@ -136,7 +145,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1030_1145);
 
@@ -170,7 +179,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1030_1145);
 
@@ -198,7 +207,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
         () -> appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1145_1215)
@@ -226,7 +235,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1300_1330);
 
@@ -261,7 +270,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1145_1330);
 
@@ -290,7 +299,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1230_1330);
 
@@ -325,7 +334,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1145_1330);
 
@@ -357,7 +366,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1330);
 
@@ -390,7 +399,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1145_1330);
 
@@ -415,7 +424,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1145_1330);
 
@@ -440,7 +449,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1330);
 
@@ -466,7 +475,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1200);
 
@@ -492,7 +501,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1130);
 
@@ -517,7 +526,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1215)
@@ -538,7 +547,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
         () -> appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1145_1330)
@@ -565,7 +574,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
         () -> appService.belegeUrlaub("dehus101", ZEITRAUM_03_14_1130_1230)
@@ -586,7 +595,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
         () -> appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_1130_1230)
@@ -613,7 +622,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1130)
@@ -640,7 +649,7 @@ public class ChickenServiceBelegeUrlaubTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         appService.belegeUrlaub("dehus101", ZEITRAUM_03_09_0930_1130)

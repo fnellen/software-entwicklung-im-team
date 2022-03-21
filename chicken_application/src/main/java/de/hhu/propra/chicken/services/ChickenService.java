@@ -1,10 +1,15 @@
 package de.hhu.propra.chicken.services;
 
+import static de.hhu.propra.chicken.services.LogOperation.DELETE;
+import static de.hhu.propra.chicken.services.LogOperation.INSERT;
+import static de.hhu.propra.chicken.services.LogOperation.UPDATE;
+
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
+import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.dto.StudentDetails;
@@ -30,15 +35,18 @@ public class ChickenService {
   private final KlausurRepository klausurRepository;
   private final HeutigesDatum heutigesDatum;
   private final VeranstaltungsIdRepository veranstaltungsIdRepository;
+  private final LoggingRepository logging;
 
   public ChickenService(StudentRepository studentRepository,
                         KlausurRepository klausurRepository,
                         HeutigesDatum heutigesDatum,
-                        VeranstaltungsIdRepository veranstaltungsIdRepository) {
+                        VeranstaltungsIdRepository veranstaltungsIdRepository,
+                        LoggingRepository logging) {
     this.studentRepository = studentRepository;
     this.klausurRepository = klausurRepository;
     this.heutigesDatum = heutigesDatum;
     this.veranstaltungsIdRepository = veranstaltungsIdRepository;
+    this.logging = logging;
   }
 
   public StudentDetails studentDetails(String handle) {
@@ -125,6 +133,8 @@ public class ChickenService {
     istUrlaubsDatumKorrekt(urlaub);
     Student student = holeStudent(githubHandle);
     student.entferneUrlaub(urlaub);
+    logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+        "URLAUB", student.getGithubHandle(), urlaub, null);
     studentRepository.speicherStudent(student);
   }
 
@@ -132,8 +142,12 @@ public class ChickenService {
     istKlausurDatumKorrekt(klausur);
     Student student = holeStudent(githubHandle);
     student.entferneKlausur(klausur);
+    logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+        "KLAUSUR", student.getGithubHandle(), klausur.zeitraumDto(), null);
     Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(klausur.zeitraumDto(), student);
     urlaubeAmTag.forEach(student::entferneUrlaub);
+    urlaubeAmTag.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+        "URLAUB", student.getGithubHandle(), urlaub, null));
     studentRepository.speicherStudent(student);
   }
 
@@ -161,6 +175,8 @@ public class ChickenService {
               beantragteKlausur)).collect(Collectors.toSet());
       if (ueberschneidendeKlausuren.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
+        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       } else {
         //Es wird außer Acht gelassen, dass eine Klausur zusätzlich Zeit angerechnet bekommt.
@@ -172,6 +188,8 @@ public class ChickenService {
     //**Fall 1**: Kein Urlaub an dem Tag
     if (gebuchteUrlaubeAmTag.isEmpty()) {
       student.fuegeKlausurHinzu(klausur);
+      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+          "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
       studentRepository.speicherStudent(student);
     } else {
       //**Fall 2**: Urlaub an dem Tag
@@ -181,8 +199,13 @@ public class ChickenService {
           .collect(Collectors.toSet());
 
       if (!urlaubeInnerhalbKlausur.isEmpty()) {
-        urlaubeInnerhalbKlausur.stream().forEach(student::entferneUrlaub);
+        urlaubeInnerhalbKlausur.forEach(student::entferneUrlaub);
+        urlaubeInnerhalbKlausur.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit()
+            , DELETE,
+            "URLAUB", student.getGithubHandle(), urlaub, null));
         student.fuegeKlausurHinzu(klausur);
+        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
         return;
       }
@@ -194,6 +217,8 @@ public class ChickenService {
       //Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
       if (ueberschneidendeUrlaube.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
+        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       } else {
         //Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
@@ -203,7 +228,12 @@ public class ChickenService {
             ueberschneidendeUrlaube.stream().flatMap(urlaub -> passeUrlaubAnKlausurAn(urlaub,
                 beantragteKlausur, student)).collect(Collectors.toSet());
         angepassteUrlaube.forEach(student::fuegeUrlaubHinzu);
+        angepassteUrlaube.forEach(
+            urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+                "URLAUB", student.getGithubHandle(), null, urlaub));
         student.fuegeKlausurHinzu(klausur);
+        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       }
     }
@@ -220,9 +250,16 @@ public class ChickenService {
 
   Stream<ZeitraumDto> passeUrlaubAnKlausurAn(ZeitraumDto urlaub, ZeitraumDto klausur,
                                              Student student) {
-    Stream<ZeitraumDto> zeitraumDtoStream = berechneNichtUeberlappendeZeitraeume(urlaub, klausur);
+    Set<ZeitraumDto> zeitraumDtoStream =
+        berechneNichtUeberlappendeZeitraeume(urlaub, klausur).collect(
+            Collectors.toSet());
+    zeitraumDtoStream.forEach(neuerUrlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(),
+        UPDATE,
+        "URLAUB", student.getGithubHandle(), urlaub, neuerUrlaub));
     student.entferneUrlaub(urlaub);
-    return zeitraumDtoStream;
+    logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+        "URLAUB", student.getGithubHandle(), urlaub, null);
+    return zeitraumDtoStream.stream();
   }
 
   public Student holeStudent(String githubHandle) throws StudentNichtGefundenException {
@@ -259,6 +296,8 @@ public class ChickenService {
 
     if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
       student.fuegeUrlaubHinzu(beantragterUrlaub);
+      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, "URLAUB",
+          student.getGithubHandle(), null, beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
       throw new UrlaubException(
@@ -271,6 +310,8 @@ public class ChickenService {
     if (dauerDesUrlaubs <= MAXIMALER_URLAUB_AN_EINEM_TAG
         || dauerDesUrlaubs == PRAKTIKUMS_TAG_DAUER) {
       student.fuegeUrlaubHinzu(beantragterUrlaub);
+      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+          "URLAUB", student.getGithubHandle(), null, beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
       throw new UrlaubException("Urlaubszeitraum nicht korrekt");
@@ -288,6 +329,9 @@ public class ChickenService {
             angepassteUrlaubzeitrauemeAnKlausuren);
 
     angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(student::fuegeUrlaubHinzu);
+    angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(
+        urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, "URLAUB",
+            student.getGithubHandle(), null, urlaub));
     studentRepository.speicherStudent(student);
   }
 
@@ -393,13 +437,10 @@ public class ChickenService {
 
   // Fall 4: Urlaub liegt komplett in Klausur
   boolean liegtUrlaubInZeitraum(ZeitraumDto urlaub, ZeitraumDto zeitraum) {
-    if ((urlaub.getStartUhrzeit().isAfter(zeitraum.getStartUhrzeit()) || urlaub.getStartUhrzeit()
+    return (urlaub.getStartUhrzeit().isAfter(zeitraum.getStartUhrzeit()) || urlaub.getStartUhrzeit()
         .equals(zeitraum.getStartUhrzeit()))
         && (urlaub.getEndUhrzeit().isBefore(zeitraum.getEndUhrzeit()) || urlaub.getEndUhrzeit()
-        .equals(zeitraum.getEndUhrzeit()))) {
-      return true;
-    }
-    return false;
+        .equals(zeitraum.getEndUhrzeit()));
   }
 
   boolean ueberschneidenSichZeitraeume(ZeitraumDto beantragterUrlaub,

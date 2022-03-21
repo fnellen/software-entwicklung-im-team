@@ -11,10 +11,14 @@ import static org.mockito.Mockito.when;
 import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
+import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,6 +38,18 @@ public class ChickenServiceStorniereKlausurTest {
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
 
+  @Mock
+  LoggingRepository logging;
+
+  @BeforeEach
+  void setup() {
+    heutigesDatum = mock(HeutigesDatum.class);
+    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
+        LocalTime.of(10, 15)));
+    logging = mock(LoggingRepository.class);
+  }
+
   @Test
   @DisplayName("Eine Klausur kann im vorhinein bis zum Vortag storniert werden")
   void test_1() {
@@ -46,11 +62,11 @@ public class ChickenServiceStorniereKlausurTest {
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
-    ChickenService applicationService =
+    ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
-    applicationService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
     assertThat(dennis.getKlausuren()).isEmpty();
   }
@@ -67,11 +83,11 @@ public class ChickenServiceStorniereKlausurTest {
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
-    ChickenService applicationService =
+    ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
-    applicationService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
     assertThat(dennis.getKlausuren()).isEmpty();
   }
@@ -88,11 +104,11 @@ public class ChickenServiceStorniereKlausurTest {
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
-    ChickenService applicationService =
+    ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
-        applicationService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
+        appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
     ).withMessageContaining("selben");
 
     assertThat(dennis.getKlausuren()).containsExactly(
@@ -111,11 +127,11 @@ public class ChickenServiceStorniereKlausurTest {
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
-    ChickenService applicationService =
+    ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
-        applicationService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
+        appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
     ).withMessageContaining("nachhinein");
 
     assertThat(dennis.getKlausuren()).containsExactly(
@@ -137,10 +153,10 @@ public class ChickenServiceStorniereKlausurTest {
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
-    ChickenService applicationService =
+    ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
-    applicationService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+            veranstaltungsIdRepository, logging);
+    appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
     assertThat(dennis.getKlausuren()).isEmpty();
     assertThat(dennis.getUrlaube()).isEmpty();

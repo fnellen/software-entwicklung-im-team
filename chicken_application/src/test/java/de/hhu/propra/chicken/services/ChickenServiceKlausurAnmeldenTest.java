@@ -1,6 +1,5 @@
 package de.hhu.propra.chicken.services;
 
-import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_07_0930_1030;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_14_0930_1130;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_14_0930_1330;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_14_1030_1130;
@@ -15,12 +14,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
+import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.VeranstaltungsIdException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -39,7 +42,17 @@ public class ChickenServiceKlausurAnmeldenTest {
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
 
-  // Student dennis = new Student(1L, "dehus101");
+  @Mock
+  LoggingRepository logging;
+
+  @BeforeEach
+  void setup() {
+    heutigesDatum = mock(HeutigesDatum.class);
+    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
+        LocalTime.of(10, 15)));
+    logging = mock(LoggingRepository.class);
+  }
 
   @Test
   @DisplayName("Eine Klausur, die in Präsenz geschrieben wird, erhält 2 Stunden vorher und "
@@ -54,7 +67,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -78,7 +91,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -103,7 +116,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
     appService.klausurAnmelden("224568", "ProPra II",
@@ -126,7 +139,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -150,7 +163,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -171,7 +184,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(VeranstaltungsIdException.class)
         .isThrownBy(() ->

@@ -8,10 +8,14 @@ import static org.mockito.Mockito.when;
 
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
+import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,6 +35,18 @@ public class ChickeServiceStorniereUrlaubTest {
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
 
+  @Mock
+  LoggingRepository logging;
+
+  @BeforeEach
+  void setup() {
+    heutigesDatum = mock(HeutigesDatum.class);
+    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
+        LocalTime.of(10, 15)));
+    logging = mock(LoggingRepository.class);
+  }
+
   @Test
   @DisplayName("Der Urlaub kann im vorhinein bis zum Vortag storniert werden")
   void test_1() {
@@ -45,7 +61,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200);
 
@@ -66,7 +82,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200);
 
@@ -87,7 +103,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200)
     ).withMessageContaining("selben");
@@ -109,7 +125,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200)
     ).withMessageContaining("nachhinein");

@@ -31,12 +31,15 @@ import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
+import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,10 +62,16 @@ public class ChickenServiceTest {
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
 
+  @Mock
+  LoggingRepository logging;
+
   @BeforeEach
   void setup() {
     heutigesDatum = mock(HeutigesDatum.class);
     when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
+        LocalTime.of(10, 15)));
+    logging = mock(LoggingRepository.class);
   }
 
   @Test
@@ -75,7 +84,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> urlaubeAmTag = applicationService
         .getUrlaubeAmTag(ZEITRAUM_03_08_0930_1030, dennis);
@@ -92,7 +101,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> urlaubeAmTag = applicationService
         .getUrlaubeAmTag(ZEITRAUM_03_07_0930_1030, dennis);
@@ -110,7 +119,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> urlaubeAmTag = applicationService
         .getUrlaubeAmTag(ZEITRAUM_03_09_1130_1230, dennis);
@@ -139,7 +148,7 @@ public class ChickenServiceTest {
         .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<Klausur> klausurenAmTag = applicationService
         .getBelegteKlausurenAmTag(ZEITRAUM_03_08_0930_1030, dennis);
@@ -167,7 +176,7 @@ public class ChickenServiceTest {
         .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<Klausur> klausurenAmTag = applicationService
         .getBelegteKlausurenAmTag(ZEITRAUM_03_14_1130_1230, dennis);
@@ -181,7 +190,7 @@ public class ChickenServiceTest {
   void test_6() {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     boolean verteilung = applicationService.istUrlaubsverteilungKorrekt(ZEITRAUM_03_07_0930_1030,
         ZEITRAUM_03_07_1230_1330);
     assertThat(verteilung).isTrue();
@@ -193,7 +202,7 @@ public class ChickenServiceTest {
   void test_7() {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     boolean verteilung = applicationService.istUrlaubsverteilungKorrekt(ZEITRAUM_03_07_0930_1030,
         ZEITRAUM_03_07_1130_1230);
     assertThat(verteilung).isFalse();
@@ -205,7 +214,7 @@ public class ChickenServiceTest {
   void test_8() {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     boolean abstand = applicationService.istGenugZeitZwischen(ZEITRAUM_03_07_0930_1030,
         ZEITRAUM_03_07_1230_1330);
     assertThat(abstand).isTrue();
@@ -217,7 +226,7 @@ public class ChickenServiceTest {
   void test_9() {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     boolean abstand =
         applicationService.istGenugZeitZwischen(ZEITRAUM_03_07_1130_1230, ZEITRAUM_03_07_1230_1330);
     assertThat(abstand).isFalse();
@@ -231,7 +240,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Student geholt = applicationService.holeStudent("dehus101");
 
@@ -246,7 +255,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(StudentNichtGefundenException.class)
         .isThrownBy(() -> applicationService.holeStudent("dehus101"))
@@ -258,7 +267,7 @@ public class ChickenServiceTest {
   void test_12() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
         ZEITRAUM_03_15_1100_1200, ZEITRAUM_03_15_1030_1130);
@@ -272,7 +281,7 @@ public class ChickenServiceTest {
   void test_13() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
         ZEITRAUM_03_15_1145_1200, ZEITRAUM_03_15_1030_1130);
@@ -286,7 +295,7 @@ public class ChickenServiceTest {
   void test_14() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
         ZEITRAUM_03_15_1030_1130, ZEITRAUM_03_15_1145_1200);
@@ -300,7 +309,7 @@ public class ChickenServiceTest {
   void test_15() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
         ZEITRAUM_03_15_1015_1100, ZEITRAUM_03_15_1030_1130);
@@ -314,7 +323,7 @@ public class ChickenServiceTest {
   void test_16() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
         ZEITRAUM_03_15_1000_1200, ZEITRAUM_03_15_1030_1130);
@@ -328,7 +337,7 @@ public class ChickenServiceTest {
   void test_17() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
         ZEITRAUM_03_15_1000_1200, ZEITRAUM_03_15_1000_1200);
@@ -343,7 +352,7 @@ public class ChickenServiceTest {
   void test_18() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> neueZeitraeume = applicationService.berechneNichtUeberlappendeZeitraeume(
         ZEITRAUM_03_15_1000_1200, ZEITRAUM_03_15_1030_1130).collect(Collectors.toSet());
@@ -359,7 +368,7 @@ public class ChickenServiceTest {
   void test_20() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> neueZeitraeume = applicationService.berechneNichtUeberlappendeZeitraeume(
         ZEITRAUM_03_15_1045_1200, ZEITRAUM_03_15_1030_1130).collect(Collectors.toSet());
@@ -373,7 +382,7 @@ public class ChickenServiceTest {
   void test_21() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> neueZeitraeume = applicationService.berechneNichtUeberlappendeZeitraeume(
         ZEITRAUM_03_15_1000_1100, ZEITRAUM_03_15_1030_1130).collect(Collectors.toSet());
@@ -387,7 +396,7 @@ public class ChickenServiceTest {
   void test_19() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean b = applicationService.liegtUrlaubInZeitraum(
         ZEITRAUM_03_15_1030_1130, ZEITRAUM_03_15_1000_1200);
@@ -401,7 +410,7 @@ public class ChickenServiceTest {
   void test_22() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean b = applicationService.liegtUrlaubInZeitraum(
         ZEITRAUM_03_15_1030_1130, ZEITRAUM_03_15_1130_1200);
@@ -415,7 +424,7 @@ public class ChickenServiceTest {
   void test_23() throws StudentNichtGefundenException {
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     boolean b = applicationService.liegtUrlaubInZeitraum(
         ZEITRAUM_03_15_1030_1130, ZEITRAUM_03_15_1130_1200);
@@ -433,7 +442,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(
         () -> applicationService.istKlausurDatumKorrekt(KL_PROPRA_03_09_1130_1230)
@@ -450,7 +459,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(
         () -> applicationService.istKlausurDatumKorrekt(KL_PROPRA_03_09_1130_1230)
@@ -467,7 +476,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     applicationService.istKlausurDatumKorrekt(KL_PROPRA_03_09_1130_1230);
   }
@@ -482,7 +491,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
         () -> applicationService.istUrlaubsDatumKorrekt(ZEITRAUM_03_09_1130_1230)
@@ -499,7 +508,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
         () -> applicationService.istUrlaubsDatumKorrekt(ZEITRAUM_03_09_1130_1230)
@@ -516,7 +525,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
 
     applicationService.istUrlaubsDatumKorrekt(ZEITRAUM_03_09_1130_1230);
 
@@ -532,7 +541,7 @@ public class ChickenServiceTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatum,
-            veranstaltungsIdRepository);
+            veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         applicationService.passeUrlaubszeitraumeAnVorhandenenUrlaubenAn(
             Set.of(ZEITRAUM_03_09_0930_1200), Set.of(ZEITRAUM_03_09_1000_1100))
