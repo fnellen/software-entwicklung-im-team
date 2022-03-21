@@ -1,4 +1,4 @@
-package de.hhu.propra.chicken.web.controller;
+package de.hhu.propra.chicken.web.controller.student;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
@@ -6,6 +6,7 @@ import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
+import de.hhu.propra.chicken.web.annotations.StudentRoute;
 import de.hhu.propra.chicken.web.dto.KlausurDto;
 import de.hhu.propra.chicken.web.dto.UrlaubDto;
 import java.security.Principal;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@StudentRoute
 public class StudentController {
 
   private final ChickenService service;
@@ -70,11 +72,9 @@ public class StudentController {
   @PostMapping("/klausurstornieren")
   public String klausurStornieren(Model model,
                                   @ModelAttribute("handle") String handle,
-                                  @NotNull @NotBlank @NotEmpty
-                                      String veranstaltungsId) {
-    System.out.println(veranstaltungsId);
-    Klausur klausur = service.holeKlausur(veranstaltungsId);
+                                  @NotNull @NotBlank @NotEmpty String veranstaltungsId) {
     try {
+      Klausur klausur = service.holeKlausur(veranstaltungsId);
       service.storniereKlausur(handle, klausur);
     } catch (KlausurException e) {
       StudentDetails studentDetails = service.studentDetails(handle);
@@ -94,8 +94,8 @@ public class StudentController {
   }
 
   @PostMapping("/urlaubbelegen")
-  public String urlaubSpeichern(@ModelAttribute("handle") String handle,
-                                Model model, @Valid UrlaubDto urlaubDto, BindingResult result) {
+  public String urlaubSpeichern(@ModelAttribute("handle") String handle, Model model,
+                                @Valid UrlaubDto urlaubDto, BindingResult result) {
     if (result.hasErrors()) {
       model.addAttribute("fehler", "");
       return "urlaubbelegen";
