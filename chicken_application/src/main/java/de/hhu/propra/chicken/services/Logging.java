@@ -21,7 +21,7 @@ public class Logging implements LoggingRepository {
       "Aenderung von", "Aenderung zu"};
 
   @Override
-  public void logEntry(LocalDateTime dateTime, LogOperation action, String typ, String gitHubHandle,
+  public void logEntry(LocalDateTime dateTime, LogOperation action, LogTyp typ, String gitHubHandle,
                        ZeitraumDto vonZustand, ZeitraumDto nachZustand) {
     try {
       CSVPrinter printer = loadLogFile();

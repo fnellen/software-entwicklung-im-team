@@ -3,6 +3,7 @@ package de.hhu.propra.chicken.services;
 import static de.hhu.propra.chicken.services.LogOperation.DELETE;
 import static de.hhu.propra.chicken.services.LogOperation.INSERT;
 import static de.hhu.propra.chicken.services.LogOperation.UPDATE;
+import static de.hhu.propra.chicken.services.LogTyp.*;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
@@ -134,7 +135,7 @@ public class ChickenService {
     Student student = holeStudent(githubHandle);
     student.entferneUrlaub(urlaub);
     logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
-        "URLAUB", student.getGithubHandle(), urlaub, null);
+        URLAUB, student.getGithubHandle(), urlaub, null);
     studentRepository.speicherStudent(student);
   }
 
@@ -143,11 +144,11 @@ public class ChickenService {
     Student student = holeStudent(githubHandle);
     student.entferneKlausur(klausur);
     logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
-        "KLAUSUR", student.getGithubHandle(), klausur.zeitraumDto(), null);
+        KLAUSUR, student.getGithubHandle(), klausur.zeitraumDto(), null);
     Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(klausur.zeitraumDto(), student);
     urlaubeAmTag.forEach(student::entferneUrlaub);
     urlaubeAmTag.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
-        "URLAUB", student.getGithubHandle(), urlaub, null));
+        URLAUB, student.getGithubHandle(), urlaub, null));
     studentRepository.speicherStudent(student);
   }
 
@@ -176,7 +177,7 @@ public class ChickenService {
       if (ueberschneidendeKlausuren.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       } else {
         //Es wird außer Acht gelassen, dass eine Klausur zusätzlich Zeit angerechnet bekommt.
@@ -189,7 +190,7 @@ public class ChickenService {
     if (gebuchteUrlaubeAmTag.isEmpty()) {
       student.fuegeKlausurHinzu(klausur);
       logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-          "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
+          KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
       studentRepository.speicherStudent(student);
     } else {
       //**Fall 2**: Urlaub an dem Tag
@@ -201,10 +202,10 @@ public class ChickenService {
       if (!urlaubeInnerhalbKlausur.isEmpty()) {
         urlaubeInnerhalbKlausur.forEach(student::entferneUrlaub);
         urlaubeInnerhalbKlausur.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(),
-            DELETE, "URLAUB", student.getGithubHandle(), urlaub, null));
+            DELETE, URLAUB, student.getGithubHandle(), urlaub, null));
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
         return;
       }
@@ -217,7 +218,7 @@ public class ChickenService {
       if (ueberschneidendeUrlaube.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       } else {
         //Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
@@ -229,10 +230,10 @@ public class ChickenService {
         angepassteUrlaube.forEach(student::fuegeUrlaubHinzu);
         angepassteUrlaube.forEach(
             urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-                "URLAUB", student.getGithubHandle(), null, urlaub));
+                URLAUB, student.getGithubHandle(), null, urlaub));
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-            "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       }
     }
@@ -254,10 +255,10 @@ public class ChickenService {
             Collectors.toSet());
     zeitraumDtoStream.forEach(neuerUrlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(),
         UPDATE,
-        "URLAUB", student.getGithubHandle(), urlaub, neuerUrlaub));
+        URLAUB, student.getGithubHandle(), urlaub, neuerUrlaub));
     student.entferneUrlaub(urlaub);
     logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
-        "URLAUB", student.getGithubHandle(), urlaub, null);
+        URLAUB, student.getGithubHandle(), urlaub, null);
     return zeitraumDtoStream.stream();
   }
 
@@ -295,7 +296,7 @@ public class ChickenService {
 
     if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
       student.fuegeUrlaubHinzu(beantragterUrlaub);
-      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, "URLAUB",
+      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, URLAUB,
           student.getGithubHandle(), null, beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
@@ -310,7 +311,7 @@ public class ChickenService {
         || dauerDesUrlaubs == PRAKTIKUMS_TAG_DAUER) {
       student.fuegeUrlaubHinzu(beantragterUrlaub);
       logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
-          "URLAUB", student.getGithubHandle(), null, beantragterUrlaub);
+          URLAUB, student.getGithubHandle(), null, beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
       throw new UrlaubException("Urlaubszeitraum nicht korrekt");
@@ -329,7 +330,7 @@ public class ChickenService {
 
     angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(student::fuegeUrlaubHinzu);
     angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(
-        urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, "URLAUB",
+        urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, URLAUB,
             student.getGithubHandle(), null, urlaub));
     studentRepository.speicherStudent(student);
   }
@@ -501,4 +502,7 @@ public class ChickenService {
   }
 
 
+  public Set<Klausur> alleKlausuren() {
+    return klausurRepository.findAll();
+  }
 }
