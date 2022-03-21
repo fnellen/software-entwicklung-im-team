@@ -1,18 +1,21 @@
 package de.hhu.propra.chicken.web.controller;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.fehler.ZeitraumDtoException;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
-import de.hhu.propra.chicken.services.fehler.UrlaubException;
+import de.hhu.propra.chicken.web.dto.KlausurDto;
+import de.hhu.propra.chicken.web.dto.UrlaubDto;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +35,7 @@ public class StudentController {
   }
 
   @GetMapping("/")
-  public String index(Model model, @ModelAttribute("handle") String handle) {
+  public String index(Model model, @ModelAttribute("handle") String handle, UrlaubDto urlaubDto) {
     try {
       service.holeStudent(handle);
     } catch (Exception e) {
@@ -41,26 +44,23 @@ public class StudentController {
     }
     StudentDetails studentDetails = service.studentDetails(handle);
     model.addAttribute("details", studentDetails);
+    model.addAttribute("urlaubDto", urlaubDto);
     model.addAttribute("fehler", "");
     return "index";
   }
 
   @PostMapping("/urlaubstornieren")
-  public String urlaubStornieren(Model model,
-                                 @ModelAttribute("handle") String handle,
-                                 String urlaubdatum,
-                                 String urlaubstart,
-                                 String urlaubende) {
-
-    LocalDate datum = LocalDate.parse(urlaubdatum);
-    LocalTime start = LocalTime.parse(urlaubstart);
-    LocalTime ende = LocalTime.parse(urlaubende);
-    ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(datum, start, ende);
+  public String urlaubStornieren(Model model, @ModelAttribute("handle") String handle,
+                                 @Valid UrlaubDto urlaubDto) {
+    System.out.println(urlaubDto);
+    ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(urlaubDto.urlaubsDatum(),
+        urlaubDto.urlaubsStart(), urlaubDto.urlaubsEnde());
     try {
       service.storniereUrlaub(handle, urlaub);
     } catch (Exception e) {
       StudentDetails studentDetails = service.studentDetails(handle);
       model.addAttribute("details", studentDetails);
+      model.addAttribute("urlaubDto", new UrlaubDto(null, null, null));
       model.addAttribute("fehler", e.getMessage());
       return "index";
     }
@@ -70,7 +70,8 @@ public class StudentController {
   @PostMapping("/klausurstornieren")
   public String klausurStornieren(Model model,
                                   @ModelAttribute("handle") String handle,
-                                  String veranstaltungsId) {
+                                  @NotNull @NotBlank @NotEmpty
+                                      String veranstaltungsId) {
     System.out.println(veranstaltungsId);
     Klausur klausur = service.holeKlausur(veranstaltungsId);
     try {
@@ -78,6 +79,7 @@ public class StudentController {
     } catch (KlausurException e) {
       StudentDetails studentDetails = service.studentDetails(handle);
       model.addAttribute("details", studentDetails);
+      model.addAttribute("urlaubDto", new UrlaubDto(null, null, null));
       model.addAttribute("fehler", e.getMessage());
       return "index";
     }
@@ -85,33 +87,26 @@ public class StudentController {
   }
 
   @GetMapping("/urlaubbelegen")
-  public String urlaubBelegen(Model model) {
+  public String urlaubBelegen(Model model, UrlaubDto urlaubDto) {
     model.addAttribute("fehler", "");
+    model.addAttribute("urlaubDto", urlaubDto);
     return "urlaubbelegen";
   }
 
   @PostMapping("/urlaubbelegen")
   public String urlaubSpeichern(@ModelAttribute("handle") String handle,
-                                Model model,
-                                String urlaubdatum, String urlaubstart, String urlaubende) {
-    if (urlaubdatum.isEmpty() || urlaubstart.isEmpty() || urlaubende.isEmpty()) {
-      model.addAttribute("fehler", "Alle Felder müssen gesetzt sein!");
-      return "urlaubbelegen";
-    }
-    LocalDate datum = LocalDate.parse(urlaubdatum);
-    LocalTime start = LocalTime.parse(urlaubstart);
-    LocalTime ende = LocalTime.parse(urlaubende);
-    ZeitraumDto urlaub;
-    try {
-      urlaub = ZeitraumDto.erstelleZeitraum(datum, start, ende);
-    } catch (ZeitraumDtoException e) {
-      model.addAttribute("fehler", e.getMessage());
+                                Model model, @Valid UrlaubDto urlaubDto, BindingResult result) {
+    if (result.hasErrors()) {
+      model.addAttribute("fehler", "");
       return "urlaubbelegen";
     }
     try {
+      ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(urlaubDto.urlaubsDatum(),
+          urlaubDto.urlaubsStart(),
+          urlaubDto.urlaubsEnde());
       service.belegeUrlaub(handle, urlaub);
       return "redirect:/";
-    } catch (UrlaubException e) {
+    } catch (Exception e) {
       model.addAttribute("fehler", e.getMessage());
       return "urlaubbelegen";
     }
@@ -125,9 +120,13 @@ public class StudentController {
   }
 
   @PostMapping("/klausurbelegen")
-  public String klausurBelegung(@ModelAttribute("handle") String handle,
-                                Model model,
-                                String veranstaltungsId) {
+  public String klausurBelegung(@ModelAttribute("handle") String handle, Model model,
+                                @NotNull @NotEmpty @NotBlank String veranstaltungsId,
+                                BindingResult result) {
+    if (result.hasErrors()) {
+      model.addAttribute("fehler", "");
+      return "klausurbelegen";
+    }
     try {
       Klausur klausur = service.holeKlausur(veranstaltungsId);
       service.belegeKlausur(handle, klausur);
@@ -140,28 +139,26 @@ public class StudentController {
   }
 
   @GetMapping("/klausuranmelden")
-  public String klausurAnmelden(Model model) {
+  public String klausurAnmelden(Model model, KlausurDto klausurDto) {
     model.addAttribute("fehler", "");
+    model.addAttribute("klausurDto", klausurDto);
     return "klausuranmelden";
   }
 
   @PostMapping("/klausuranmelden")
-  public String klausurAnmeldenPost(Model model, String veranstaltungsId,
-                                    String veranstaltungsName,
-                                    Boolean praesenz,
-                                    String klausurdatum,
-                                    String klausurstart,
-                                    String klausurende) {
-    if (klausurdatum.isEmpty() || klausurstart.isEmpty() || klausurende.isEmpty()) {
-      model.addAttribute("fehler", "Alle Felder müssen gesetzt sein!");
-      return "urlaubbelegen";
+  public String klausurAnmeldenPost(@Valid KlausurDto klausurDto, BindingResult result, Model model
+  ) {
+    System.out.println(klausurDto);
+    if (result.hasErrors()) {
+      model.addAttribute("fehler", "");
+      return "klausuranmelden";
     }
-    LocalDate datum = LocalDate.parse(klausurdatum);
-    LocalTime start = LocalTime.parse(klausurstart);
-    LocalTime ende = LocalTime.parse(klausurende);
     try {
-      ZeitraumDto klausurZeitraum = ZeitraumDto.erstelleZeitraum(datum, start, ende);
-      service.klausurAnmelden(veranstaltungsId, veranstaltungsName, klausurZeitraum, praesenz);
+      ZeitraumDto klausurZeitraum = ZeitraumDto.erstelleZeitraum(klausurDto.klausurdatum(),
+          klausurDto.klausurstart(), klausurDto.klausurende());
+      service.klausurAnmelden(klausurDto.veranstaltungsId(), klausurDto.veranstaltungsName(),
+          klausurZeitraum,
+          klausurDto.praesenz());
     } catch (Exception e) {
       model.addAttribute("fehler", e.getMessage());
       return "klausuranmelden";

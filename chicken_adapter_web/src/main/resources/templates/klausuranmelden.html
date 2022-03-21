@@ -11,55 +11,59 @@
 
     <h1>Neue Klausur eintragen</h1>
 
-    <form method="post" name="klausurform" th:action="@{/klausuranmelden}">
+    <form method="post" name="klausurform" th:action="@{/klausuranmelden}" th:object="${klausurDto}">
 
         <div class="form-floating mb-3">
-            <input class="form-control" id="veranstaltung" name="veranstaltungsName" placeholder=" " type="text"
-                   value="">
+            <input class="form-control" id="veranstaltung" th:field="*{veranstaltungsName}" type="text">
             <label for="veranstaltung">Name der Veranstaltung</label>
-
+            <div class="alert alert-warning" th:errors="*{veranstaltungsName}"
+                 th:if="${#fields.hasErrors('veranstaltungsName')}"></div>
         </div>
 
 
         <div class="form-floating mb-3">
-            <input class="form-control" id="lsfId" name="veranstaltungsId" placeholder=" " type="text" value="">
+            <input class="form-control" id="lsfId" th:field="*{veranstaltungsId}" type="text">
             <label class="form-label" for="lsfId">ID der Veranstaltung im LSF</label>
-
-            <div class="form-text">Sie finden die LSF Veranstaltungs-ID im <a
-                    href="https://lsf.hhu.de/qisserver/rds?state=wtree&search=1&category=veranstaltung.browse&navigationPosition=lectures%2Clectureindex&breadcrumb=lectureindex&topitem=lectures&subitem=lectureindex"
-                    target="_blank">LSF</a>.
+            <div class="alert alert-warning" th:errors="*{veranstaltungsId}"
+                 th:if="${#fields.hasErrors('veranstaltungsId')}"></div>
+            <div class="form-text">Sie finden die LSF Veranstaltungs-ID im
+                <a href="https://lsf.hhu.de/qisserver/rds?state=wtree&search=1&category=veranstaltung.browse&navigationPosition=lectures%2Clectureindex&breadcrumb=lectureindex&topitem=lectures&subitem=lectureindex"
+                   target="_blank">
+                    LSF
+                </a>.
             </div>
         </div>
         <div class="form-check">
-            <input checked="checked" class="form-check-input" id="präsenz" name="praesenz" type="checkbox"
-                   value="true">
-            <input name="_vor_ort" type="hidden" value="on"/>
-            <label class="form-check-label" for="präsenz">
+            <input checked="checked" class="form-check-input" id="praesenz" th:field="*{praesenz}" type="checkbox">
+            <label class="form-check-label" for="praesenz">
                 Die Klausur findet in Präsenz statt.
             </label>
+            <div class="alert alert-warning" th:errors="*{praesenz}"
+                 th:if="${#fields.hasErrors('praesenz')}"></div>
         </div>
 
         <div class="form-floating mb-3">
-            <input class="form-control" id="tag" name="klausurdatum"
-                   placeholder=" " type="date" value="">
+            <input class="form-control" id="tag" th:field="*{klausurdatum}" type="date">
             <label class="form-label" for="tag">Datum der Klausur (dd.mm.yyyy)</label>
-
+            <div class="alert alert-warning" th:errors="*{klausurdatum}"
+                 th:if="${#fields.hasErrors('klausurdatum')}"></div>
         </div>
 
         <div class="form-floating mb-3">
-            <input class="form-control" id="von" name="klausurstart" placeholder=" " type="time"
-                   value="">
+            <input class="form-control" id="von" th:field="*{klausurstart}" type="time">
             <label for="von">Klausurbeginn (hh:mm)</label>
+            <div class="alert alert-warning" th:errors="*{klausurstart}"
+                 th:if="${#fields.hasErrors('klausurstart')}"></div>
             <div class="form-text">Runden Sie die Startzeit auf die nächste vorgegebene Zeit ab. Falls die Klausur vor
                 08:30 Uhr beginnt, tragen Sie bitte 08:30 Uhr ein.
             </div>
-
         </div>
 
         <div class="form-floating mb-3">
-            <input class="form-control" id="bis" name="klausurende" placeholder=" " type="time"
-                   value="">
+            <input class="form-control" id="bis" th:field="*{klausurende}" type="time">
             <label class="form-label" for="bis">Klausurende (hh:mm)</label>
+            <div class="alert alert-warning" th:errors="*{klausurende}"
+                 th:if="${#fields.hasErrors('klausurende')}"></div>
             <div class="form-text">Runden Sie die Zeit auf die nächste vorgegebene Zeit auf. Falls die Klausur nach
                 13:30 Uhr endet, tragen Sie bitte 13:30 Uhr ein.
             </div>
@@ -69,7 +73,7 @@
         <button class="btn btn-primary" name="submitbtn" type="submit">Eintragen</button>
     </form>
     <div th:if="${!fehler.isEmpty()}">
-        <p class="alert alert-danger" th:text="${fehler}"> Etwas ist schiefgelaufen</p>
+        <p class="alert alert-danger" th:text="${fehler}">Etwas ist schiefgelaufen</p>
     </div>
 </div>
 </body>
