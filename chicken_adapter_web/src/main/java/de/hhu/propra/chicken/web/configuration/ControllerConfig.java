@@ -5,6 +5,7 @@ import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.HeutigesDatum;
+import de.hhu.propra.chicken.services.Logging;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,10 +15,11 @@ public class ControllerConfig {
   ChickenService chickenService(StudentRepository studentRepository,
                                 KlausurRepository klausurRepository,
                                 HeutigesDatum heutigesDatum,
-                                VeranstaltungsIdRepository veranstaltungsIdRepository) {
-    
+                                VeranstaltungsIdRepository veranstaltungsIdRepository,
+                                Logging logging) {
+
     return new ChickenService(studentRepository, klausurRepository,
-        heutigesDatum, veranstaltungsIdRepository);
+        heutigesDatum, veranstaltungsIdRepository, logging);
   }
 
 }

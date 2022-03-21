@@ -11,7 +11,9 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Logging implements LoggingRepository {
 
   private final String[] headers = {"Zeitpunkt", "Aktion", "Typ", "GitHubHandle",
