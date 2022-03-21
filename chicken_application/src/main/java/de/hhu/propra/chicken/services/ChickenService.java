@@ -200,9 +200,8 @@ public class ChickenService {
 
       if (!urlaubeInnerhalbKlausur.isEmpty()) {
         urlaubeInnerhalbKlausur.forEach(student::entferneUrlaub);
-        urlaubeInnerhalbKlausur.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit()
-            , DELETE,
-            "URLAUB", student.getGithubHandle(), urlaub, null));
+        urlaubeInnerhalbKlausur.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(),
+            DELETE, "URLAUB", student.getGithubHandle(), urlaub, null));
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
             "KLAUSUR", student.getGithubHandle(), null, klausur.zeitraumDto());

@@ -16,11 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class Logging implements LoggingRepository {
 
+  private static final String logFilePath = "urlaub-logs.csv";
   private final String[] headers = {"Zeitpunkt", "Aktion", "Typ", "GitHubHandle",
       "Aenderung von", "Aenderung zu"};
-
-  private final String logFilePath = "urlaub-logs.csv";
-
 
   @Override
   public void logEntry(LocalDateTime dateTime, LogOperation action, String typ, String gitHubHandle,
