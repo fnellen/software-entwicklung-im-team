@@ -1,4 +1,4 @@
-package de.hhu.propra.chicken.services;
+package de.hhu.propra.chicken.services.logging;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
@@ -14,7 +14,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Logging implements LoggingRepository {
+public class LoggingRepositoryImpl implements LoggingRepository {
 
   private static final String logFilePath = "urlaub-logs.csv";
   private final String[] headers = {"Zeitpunkt", "Aktion", "Typ", "GitHubHandle",

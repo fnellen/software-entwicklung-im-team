@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
@@ -37,7 +38,7 @@ public class ChickenServiceKlausurAnmeldenTest {
   KlausurRepository klausurRepository;
 
   @Mock
-  HeutigesDatum heutigesDatum;
+  HeutigesDatumRepository heutigesDatumRepository;
 
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
@@ -47,10 +48,11 @@ public class ChickenServiceKlausurAnmeldenTest {
 
   @BeforeEach
   void setup() {
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
-    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
-        LocalTime.of(10, 15)));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatumRepository.getDatumUndZeit()).thenReturn(
+        LocalDateTime.of(LocalDate.of(2022, 3, 15),
+            LocalTime.of(10, 15)));
     logging = mock(LoggingRepository.class);
   }
 
@@ -66,7 +68,7 @@ public class ChickenServiceKlausurAnmeldenTest {
     when(veranstaltungsIdRepository.webCheck("224568")).thenReturn(true);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
@@ -90,7 +92,7 @@ public class ChickenServiceKlausurAnmeldenTest {
     when(veranstaltungsIdRepository.webCheck("224568")).thenReturn(true);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
@@ -115,7 +117,7 @@ public class ChickenServiceKlausurAnmeldenTest {
     when(veranstaltungsIdRepository.webCheck("224568")).thenReturn(true);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
@@ -138,7 +140,7 @@ public class ChickenServiceKlausurAnmeldenTest {
     when(veranstaltungsIdRepository.webCheck("224568")).thenReturn(true);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
@@ -162,7 +164,7 @@ public class ChickenServiceKlausurAnmeldenTest {
     when(veranstaltungsIdRepository.webCheck("224568")).thenReturn(true);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
@@ -183,7 +185,7 @@ public class ChickenServiceKlausurAnmeldenTest {
     when(veranstaltungsIdRepository.webCheck("224568")).thenReturn(false);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(VeranstaltungsIdException.class)

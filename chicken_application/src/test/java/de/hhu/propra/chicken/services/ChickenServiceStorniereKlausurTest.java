@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
@@ -33,7 +34,7 @@ public class ChickenServiceStorniereKlausurTest {
   Student dennis = new Student(1L, "dehus101");
 
   @Mock
-  HeutigesDatum heutigesDatum;
+  HeutigesDatumRepository heutigesDatumRepository;
 
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
@@ -43,10 +44,11 @@ public class ChickenServiceStorniereKlausurTest {
 
   @BeforeEach
   void setup() {
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
-    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
-        LocalTime.of(10, 15)));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatumRepository.getDatumUndZeit()).thenReturn(
+        LocalDateTime.of(LocalDate.of(2022, 3, 15),
+            LocalTime.of(10, 15)));
     logging = mock(LoggingRepository.class);
   }
 
@@ -56,14 +58,14 @@ public class ChickenServiceStorniereKlausurTest {
 
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
     klausurRepository = mock(KlausurRepository.class);
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
@@ -77,14 +79,14 @@ public class ChickenServiceStorniereKlausurTest {
 
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 8));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 8));
     klausurRepository = mock(KlausurRepository.class);
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
@@ -98,14 +100,14 @@ public class ChickenServiceStorniereKlausurTest {
 
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
     klausurRepository = mock(KlausurRepository.class);
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
@@ -121,14 +123,14 @@ public class ChickenServiceStorniereKlausurTest {
 
     dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 17));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 17));
     klausurRepository = mock(KlausurRepository.class);
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
@@ -147,14 +149,14 @@ public class ChickenServiceStorniereKlausurTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_0945);
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1300_1330);
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
     klausurRepository = mock(KlausurRepository.class);
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
     ChickenService appService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 

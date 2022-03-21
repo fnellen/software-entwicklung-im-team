@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
@@ -57,7 +58,7 @@ public class ChickenServiceTest {
   Student dennis = new Student(1L, "dehus101");
 
   @Mock
-  HeutigesDatum heutigesDatum;
+  HeutigesDatumRepository heutigesDatumRepository;
 
   @Mock
   VeranstaltungsIdRepository veranstaltungsIdRepository;
@@ -67,10 +68,11 @@ public class ChickenServiceTest {
 
   @BeforeEach
   void setup() {
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
-    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
-        LocalTime.of(10, 15)));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    when(heutigesDatumRepository.getDatumUndZeit()).thenReturn(
+        LocalDateTime.of(LocalDate.of(2022, 3, 15),
+            LocalTime.of(10, 15)));
     logging = mock(LoggingRepository.class);
   }
 
@@ -83,7 +85,7 @@ public class ChickenServiceTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1130_1230);
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> urlaubeAmTag = applicationService
@@ -100,7 +102,7 @@ public class ChickenServiceTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1130_1230);
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> urlaubeAmTag = applicationService
@@ -118,7 +120,7 @@ public class ChickenServiceTest {
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1130_1230);
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> urlaubeAmTag = applicationService
@@ -147,7 +149,7 @@ public class ChickenServiceTest {
         KL_RECHNERNETZTE_03_07_0930_1030.getVeranstaltungsId()))
         .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<Klausur> klausurenAmTag = applicationService
@@ -175,7 +177,7 @@ public class ChickenServiceTest {
         KL_RECHNERNETZTE_03_07_0930_1030.getVeranstaltungsId()))
         .thenReturn(KL_RECHNERNETZTE_03_07_0930_1030);
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<Klausur> klausurenAmTag = applicationService
@@ -189,7 +191,7 @@ public class ChickenServiceTest {
       + "Urlaubszeiten")
   void test_6() {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     boolean verteilung = applicationService.istUrlaubsverteilungKorrekt(ZEITRAUM_03_07_0930_1030,
         ZEITRAUM_03_07_1230_1330);
@@ -201,7 +203,7 @@ public class ChickenServiceTest {
       + "Urlaubszeiten")
   void test_7() {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     boolean verteilung = applicationService.istUrlaubsverteilungKorrekt(ZEITRAUM_03_07_0930_1030,
         ZEITRAUM_03_07_1130_1230);
@@ -213,7 +215,7 @@ public class ChickenServiceTest {
       + "Urlaubszeiten")
   void test_8() {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     boolean abstand = applicationService.istGenugZeitZwischen(ZEITRAUM_03_07_0930_1030,
         ZEITRAUM_03_07_1230_1330);
@@ -225,7 +227,7 @@ public class ChickenServiceTest {
       + "Urlaubszeiten")
   void test_9() {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     boolean abstand =
         applicationService.istGenugZeitZwischen(ZEITRAUM_03_07_1130_1230, ZEITRAUM_03_07_1230_1330);
@@ -239,7 +241,7 @@ public class ChickenServiceTest {
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Student geholt = applicationService.holeStudent("dehus101");
@@ -254,7 +256,7 @@ public class ChickenServiceTest {
     when(studentRepository.findeStudentMitHandle(anyString())).thenReturn(null);
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(StudentNichtGefundenException.class)
@@ -266,7 +268,7 @@ public class ChickenServiceTest {
   @DisplayName("ueberschneidenSichZeitraeume gibt true bei rechter Überschneidung zurück")
   void test_12() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
@@ -280,7 +282,7 @@ public class ChickenServiceTest {
   @DisplayName("ueberschneidenSichZeitraeume gibt bei keiner Überschneidung false zurück")
   void test_13() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
@@ -294,7 +296,7 @@ public class ChickenServiceTest {
   @DisplayName("Reihenfolge ist nicht entscheidend über das Ergebnis")
   void test_14() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
@@ -308,7 +310,7 @@ public class ChickenServiceTest {
   @DisplayName("ueberschneidenSichZeitraeume gibt true bei linker Überschneidung zurück")
   void test_15() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
@@ -322,7 +324,7 @@ public class ChickenServiceTest {
   @DisplayName("ueberschneidenSichZeitraeume gibt true bei kompletter Überlappung")
   void test_16() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
@@ -336,7 +338,7 @@ public class ChickenServiceTest {
   @DisplayName("ueberschneidenSichZeitraeume gibt false bei identischen Zeiträumen")
   void test_17() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean ueberschneidung = applicationService.ueberschneidenSichZeitraeume(
@@ -351,7 +353,7 @@ public class ChickenServiceTest {
       + "Zeitraum1 beinhaltet Zeitraum2")
   void test_18() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> neueZeitraeume = applicationService.berechneNichtUeberlappendeZeitraeume(
@@ -367,7 +369,7 @@ public class ChickenServiceTest {
   @DisplayName("berechneZeitraeume gibt ueberlappenden Zeitraum rechts zurück.")
   void test_20() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> neueZeitraeume = applicationService.berechneNichtUeberlappendeZeitraeume(
@@ -381,7 +383,7 @@ public class ChickenServiceTest {
   @DisplayName("berechneZeitraeume gibt ueberlappenden Zeitraum links zurück.")
   void test_21() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     Set<ZeitraumDto> neueZeitraeume = applicationService.berechneNichtUeberlappendeZeitraeume(
@@ -395,7 +397,7 @@ public class ChickenServiceTest {
   @DisplayName("liegtUrlaubInZeitraum gibt true bei Zeitraum2 beinhaltet Zeitraum1 zurück")
   void test_19() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean b = applicationService.liegtUrlaubInZeitraum(
@@ -409,7 +411,7 @@ public class ChickenServiceTest {
   @DisplayName("liegtUrlaubInZeitraum gibt false bei Zeitraum2 beinhaltet nicht Zeitraum1 zurück")
   void test_22() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean b = applicationService.liegtUrlaubInZeitraum(
@@ -423,7 +425,7 @@ public class ChickenServiceTest {
   @DisplayName("berechneRestUrlaub gibt true ")
   void test_23() throws StudentNichtGefundenException {
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     boolean b = applicationService.liegtUrlaubInZeitraum(
@@ -437,11 +439,11 @@ public class ChickenServiceTest {
       + "Tag liegt.")
   void test_24() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(
@@ -454,11 +456,11 @@ public class ChickenServiceTest {
       + "der heutige Tag ist")
   void test_25() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 15));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 15));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(
@@ -471,11 +473,11 @@ public class ChickenServiceTest {
       + "der heutige Tag ist")
   void test_26() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     applicationService.istKlausurDatumKorrekt(KL_PROPRA_03_09_1130_1230);
@@ -486,11 +488,11 @@ public class ChickenServiceTest {
       + "Tag ist")
   void test_27() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
@@ -503,11 +505,11 @@ public class ChickenServiceTest {
       + "Tag ist")
   void test_28() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 9));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(
@@ -520,11 +522,11 @@ public class ChickenServiceTest {
       + "Tag ist")
   void test_29() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
     applicationService.istUrlaubsDatumKorrekt(ZEITRAUM_03_09_1130_1230);
@@ -536,11 +538,11 @@ public class ChickenServiceTest {
       + "Tag ist")
   void test_30() throws StudentNichtGefundenException {
 
-    heutigesDatum = mock(HeutigesDatum.class);
-    when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
+    heutigesDatumRepository = mock(HeutigesDatumRepository.class);
+    when(heutigesDatumRepository.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
 
     ChickenService applicationService =
-        new ChickenService(studentRepository, klausurRepository, heutigesDatum,
+        new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         applicationService.passeUrlaubszeitraumeAnVorhandenenUrlaubenAn(

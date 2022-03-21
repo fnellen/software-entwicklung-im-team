@@ -1,15 +1,16 @@
 package de.hhu.propra.chicken.services;
 
-import static de.hhu.propra.chicken.services.LogOperation.DELETE;
-import static de.hhu.propra.chicken.services.LogOperation.INSERT;
-import static de.hhu.propra.chicken.services.LogOperation.UPDATE;
-import static de.hhu.propra.chicken.services.LogTyp.KLAUSUR;
-import static de.hhu.propra.chicken.services.LogTyp.URLAUB;
+import static de.hhu.propra.chicken.services.logging.LogOperation.DELETE;
+import static de.hhu.propra.chicken.services.logging.LogOperation.INSERT;
+import static de.hhu.propra.chicken.services.logging.LogOperation.UPDATE;
+import static de.hhu.propra.chicken.services.logging.LogTyp.KLAUSUR;
+import static de.hhu.propra.chicken.services.logging.LogTyp.URLAUB;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
 import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
@@ -35,18 +36,18 @@ public class ChickenService {
 
   private final StudentRepository studentRepository;
   private final KlausurRepository klausurRepository;
-  private final HeutigesDatum heutigesDatum;
+  private final HeutigesDatumRepository heutigesDatumRepository;
   private final VeranstaltungsIdRepository veranstaltungsIdRepository;
   private final LoggingRepository logging;
 
   public ChickenService(StudentRepository studentRepository,
                         KlausurRepository klausurRepository,
-                        HeutigesDatum heutigesDatum,
+                        HeutigesDatumRepository heutigesDatumRepository,
                         VeranstaltungsIdRepository veranstaltungsIdRepository,
                         LoggingRepository logging) {
     this.studentRepository = studentRepository;
     this.klausurRepository = klausurRepository;
-    this.heutigesDatum = heutigesDatum;
+    this.heutigesDatumRepository = heutigesDatumRepository;
     this.veranstaltungsIdRepository = veranstaltungsIdRepository;
     this.logging = logging;
   }
@@ -135,7 +136,7 @@ public class ChickenService {
     istUrlaubsDatumKorrekt(urlaub);
     Student student = holeStudent(githubHandle);
     student.entferneUrlaub(urlaub);
-    logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+    logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), DELETE,
         URLAUB, student.getGithubHandle(), urlaub, null);
     studentRepository.speicherStudent(student);
   }
@@ -144,20 +145,21 @@ public class ChickenService {
     istKlausurDatumKorrekt(klausur);
     Student student = holeStudent(githubHandle);
     student.entferneKlausur(klausur);
-    logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+    logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), DELETE,
         KLAUSUR, student.getGithubHandle(), klausur.zeitraumDto(), null);
     Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(klausur.zeitraumDto(), student);
     urlaubeAmTag.forEach(student::entferneUrlaub);
-    urlaubeAmTag.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
-        URLAUB, student.getGithubHandle(), urlaub, null));
+    urlaubeAmTag.forEach(
+        urlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), DELETE,
+            URLAUB, student.getGithubHandle(), urlaub, null));
     studentRepository.speicherStudent(student);
   }
 
   void istUrlaubsDatumKorrekt(ZeitraumDto beantragterUrlaub) {
-    if (beantragterUrlaub.getDatum().equals(heutigesDatum.getDatum())) {
+    if (beantragterUrlaub.getDatum().equals(heutigesDatumRepository.getDatum())) {
       throw new UrlaubException("Urlaub kann nicht am selben Tag geaendert werden.");
     }
-    if (beantragterUrlaub.getDatum().isBefore(heutigesDatum.getDatum())) {
+    if (beantragterUrlaub.getDatum().isBefore(heutigesDatumRepository.getDatum())) {
       throw new UrlaubException("Urlaub kann nicht im nachhinein geaendert werden");
     }
   }
@@ -177,7 +179,7 @@ public class ChickenService {
               beantragteKlausur)).collect(Collectors.toSet());
       if (ueberschneidendeKlausuren.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
-        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+        logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
             KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       } else {
@@ -190,7 +192,7 @@ public class ChickenService {
     //**Fall 1**: Kein Urlaub an dem Tag
     if (gebuchteUrlaubeAmTag.isEmpty()) {
       student.fuegeKlausurHinzu(klausur);
-      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+      logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
           KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
       studentRepository.speicherStudent(student);
     } else {
@@ -202,10 +204,11 @@ public class ChickenService {
 
       if (!urlaubeInnerhalbKlausur.isEmpty()) {
         urlaubeInnerhalbKlausur.forEach(student::entferneUrlaub);
-        urlaubeInnerhalbKlausur.forEach(urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(),
-            DELETE, URLAUB, student.getGithubHandle(), urlaub, null));
+        urlaubeInnerhalbKlausur.forEach(
+            urlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(),
+                DELETE, URLAUB, student.getGithubHandle(), urlaub, null));
         student.fuegeKlausurHinzu(klausur);
-        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+        logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
             KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
         return;
@@ -218,7 +221,7 @@ public class ChickenService {
       //Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
       if (ueberschneidendeUrlaube.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
-        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+        logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
             KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       } else {
@@ -230,10 +233,10 @@ public class ChickenService {
                 beantragteKlausur, student)).collect(Collectors.toSet());
         angepassteUrlaube.forEach(student::fuegeUrlaubHinzu);
         angepassteUrlaube.forEach(
-            urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+            urlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
                 URLAUB, student.getGithubHandle(), null, urlaub));
         student.fuegeKlausurHinzu(klausur);
-        logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+        logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
             KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
         studentRepository.speicherStudent(student);
       }
@@ -241,10 +244,10 @@ public class ChickenService {
   }
 
   void istKlausurDatumKorrekt(Klausur klausur) {
-    if (klausur.zeitraumDto().getDatum().equals(heutigesDatum.getDatum())) {
+    if (klausur.zeitraumDto().getDatum().equals(heutigesDatumRepository.getDatum())) {
       throw new KlausurException("Klausur kann nicht am selben Tag geaendert werden.");
     }
-    if (klausur.zeitraumDto().getDatum().isBefore(heutigesDatum.getDatum())) {
+    if (klausur.zeitraumDto().getDatum().isBefore(heutigesDatumRepository.getDatum())) {
       throw new KlausurException("Klausur kann nicht im nachhinein geaendert werden.");
     }
   }
@@ -254,11 +257,12 @@ public class ChickenService {
     Set<ZeitraumDto> zeitraumDtoStream =
         berechneNichtUeberlappendeZeitraeume(urlaub, klausur).collect(
             Collectors.toSet());
-    zeitraumDtoStream.forEach(neuerUrlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(),
-        UPDATE,
-        URLAUB, student.getGithubHandle(), urlaub, neuerUrlaub));
+    zeitraumDtoStream.forEach(
+        neuerUrlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(),
+            UPDATE,
+            URLAUB, student.getGithubHandle(), urlaub, neuerUrlaub));
     student.entferneUrlaub(urlaub);
-    logging.logEntry(heutigesDatum.getDatumUndZeit(), DELETE,
+    logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), DELETE,
         URLAUB, student.getGithubHandle(), urlaub, null);
     return zeitraumDtoStream.stream();
   }
@@ -297,7 +301,7 @@ public class ChickenService {
 
     if (urlaubsRegelnUeberpruefen(urlaub1, urlaub2)) {
       student.fuegeUrlaubHinzu(beantragterUrlaub);
-      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, URLAUB,
+      logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT, URLAUB,
           student.getGithubHandle(), null, beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
@@ -311,7 +315,7 @@ public class ChickenService {
     if (dauerDesUrlaubs <= MAXIMALER_URLAUB_AN_EINEM_TAG
         || dauerDesUrlaubs == PRAKTIKUMS_TAG_DAUER) {
       student.fuegeUrlaubHinzu(beantragterUrlaub);
-      logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT,
+      logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
           URLAUB, student.getGithubHandle(), null, beantragterUrlaub);
       studentRepository.speicherStudent(student);
     } else {
@@ -331,7 +335,7 @@ public class ChickenService {
 
     angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(student::fuegeUrlaubHinzu);
     angepassteUrlaubszeitraumeAnVorhandenenUrlauben.forEach(
-        urlaub -> logging.logEntry(heutigesDatum.getDatumUndZeit(), INSERT, URLAUB,
+        urlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT, URLAUB,
             student.getGithubHandle(), null, urlaub));
     studentRepository.speicherStudent(student);
   }

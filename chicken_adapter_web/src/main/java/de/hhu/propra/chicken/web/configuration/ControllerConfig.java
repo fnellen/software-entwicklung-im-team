@@ -1,11 +1,11 @@
 package de.hhu.propra.chicken.web.configuration;
 
+import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.ChickenService;
-import de.hhu.propra.chicken.services.HeutigesDatum;
-import de.hhu.propra.chicken.services.Logging;
+import de.hhu.propra.chicken.services.logging.LoggingRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,12 +14,12 @@ public class ControllerConfig {
   @Bean
   ChickenService chickenService(StudentRepository studentRepository,
                                 KlausurRepository klausurRepository,
-                                HeutigesDatum heutigesDatum,
+                                HeutigesDatumRepository heutigesDatumRepository,
                                 VeranstaltungsIdRepository veranstaltungsIdRepository,
-                                Logging logging) {
+                                LoggingRepositoryImpl loggingRepositoryImpl) {
 
     return new ChickenService(studentRepository, klausurRepository,
-        heutigesDatum, veranstaltungsIdRepository, logging);
+        heutigesDatumRepository, veranstaltungsIdRepository, loggingRepositoryImpl);
   }
 
 }

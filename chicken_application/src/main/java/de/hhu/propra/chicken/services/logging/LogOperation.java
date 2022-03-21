@@ -1,4 +1,4 @@
-package de.hhu.propra.chicken.services;
+package de.hhu.propra.chicken.services.logging;
 
 public enum LogOperation {
 
