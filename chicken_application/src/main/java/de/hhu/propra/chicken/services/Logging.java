@@ -25,7 +25,7 @@ public class Logging implements LoggingRepository {
                        ZeitraumDto vonZustand, ZeitraumDto nachZustand) {
     try {
       CSVPrinter printer = loadLogFile();
-      printer.printRecord(dateTime, action, gitHubHandle, vonZustand, nachZustand);
+      printer.printRecord(dateTime, action, typ, gitHubHandle, vonZustand, nachZustand);
       printer.flush();
     } catch (IOException e) {
       e.printStackTrace();
