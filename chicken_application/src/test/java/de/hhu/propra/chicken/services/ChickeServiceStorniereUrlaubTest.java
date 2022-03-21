@@ -42,8 +42,10 @@ public class ChickeServiceStorniereUrlaubTest {
   void setup() {
     heutigesDatum = mock(HeutigesDatum.class);
     when(heutigesDatum.getDatum()).thenReturn(LocalDate.of(2022, 3, 7));
-    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(LocalDate.of(2022, 3, 15),
-        LocalTime.of(10, 15)));
+    when(heutigesDatum.getDatumUndZeit()).thenReturn(LocalDateTime.of(
+        LocalDate.of(2022, 3, 15),
+        LocalTime.of(10, 15))
+    );
     logging = mock(LoggingRepository.class);
   }
 

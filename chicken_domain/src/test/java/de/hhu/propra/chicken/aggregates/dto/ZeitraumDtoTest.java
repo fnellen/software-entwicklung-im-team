@@ -1,7 +1,9 @@
 package de.hhu.propra.chicken.aggregates.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import de.hhu.propra.chicken.aggregates.fehler.ZeitraumDtoException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
@@ -46,65 +48,70 @@ public class ZeitraumDtoTest {
   @DisplayName("Ein Zeitraum soll nicht valide sein, wenn das angegeben Datum vor dem "
       + "Praktikumszeitraum liegt.")
   void test_2a() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 1),
-        LocalTime.of(9, 30),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() ->
+            ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 1),
+                LocalTime.of(9, 30),
+                LocalTime.of(10, 30)))
+        .withMessageContaining("Praktikumszeitraum");
   }
 
   @Test
   @DisplayName("Ein Zeitraum soll nicht valide sein, wenn das angegeben Datum nach dem "
       + "Praktikumszeitraum liegt.")
   void test_2b() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 30),
-        LocalTime.of(9, 30),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() ->
+            ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 30),
+                LocalTime.of(9, 30),
+                LocalTime.of(10, 30)))
+        .withMessageContaining("Praktikumszeitraum");
   }
 
   @Test
   @DisplayName("Ein Zeitraum soll nicht valide sein, wenn die angegebenen Zeiten nicht in 15er "
       + "Blöcken angegeben sind.")
   void test_3() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 9),
-        LocalTime.of(9, 32),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() ->
+            ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 9),
+                LocalTime.of(9, 32),
+                LocalTime.of(10, 30)))
+        .withMessageContaining("15-Minuten Blockform");
   }
 
   @Test
   @DisplayName("Ein Zeitraum soll nicht valide sein, wenn die Startzeit nach der Endzeit liegt.")
   void test_4() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 9),
-        LocalTime.of(14, 30),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() -> ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 9),
+            LocalTime.of(14, 30),
+            LocalTime.of(10, 30)))
+        .withMessageContaining("Startuhrzeit liegt nicht vor der Enduhrzeit");
   }
 
   @Test
   @DisplayName("Ein Zeitraum soll nicht valide sein, wenn das angegebene Datum am Wochenende "
       + "liegt.")
   void test_5() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 12),
-        LocalTime.of(9, 30),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() ->
+            ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 12),
+                LocalTime.of(9, 30),
+                LocalTime.of(10, 30)))
+        .withMessageContaining("Wochenende");
   }
 
   @Test
   @DisplayName("Ein Zeitraum soll nicht valide sein, wenn das angegebene Datum am Wochenende "
       + "liegt.")
   void test_6() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 13),
-        LocalTime.of(9, 30),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() ->
+            ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 13),
+                LocalTime.of(9, 30),
+                LocalTime.of(10, 30)))
+        .withMessageContaining("Wochenende");
   }
 
   @Test
@@ -121,21 +128,21 @@ public class ZeitraumDtoTest {
   @Test
   @DisplayName("Wenn die Uhrzeit vor Praktikumsbeginn liegt, erstelle kein Zeitraum.")
   void test_8() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
-        LocalTime.of(9, 15),
-        LocalTime.of(10, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() -> ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
+            LocalTime.of(9, 15),
+            LocalTime.of(10, 30)))
+        .withMessageContaining("Arbeitszeitraum");
   }
 
   @Test
   @DisplayName("Wenn die Uhrzeit nach Praktikumsende liegt, erstelle kein Zeitraum.")
   void test_9() {
-    ZeitraumDto
-        zeitraumDto = ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
-        LocalTime.of(9, 30),
-        LocalTime.of(14, 30));
-    assertThat(zeitraumDto).isNull();
+    assertThatExceptionOfType(ZeitraumDtoException.class)
+        .isThrownBy(() -> ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7),
+            LocalTime.of(9, 30),
+            LocalTime.of(14, 30)))
+        .withMessageContaining("Arbeitszeitraum");
   }
 
 }

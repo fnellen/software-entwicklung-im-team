@@ -135,60 +135,67 @@ public class ZeitraumDtoTemplate {
 
   static final ZeitraumDto ZEITRAUM_03_14_1100_1230 = ZeitraumDto.erstelleZeitraum(
       LocalDate.of(2022, 3, 14),
-      LocalTime.of(11, 00),
+      LocalTime.of(11, 0),
       LocalTime.of(12, 30));
 
-  static final ZeitraumDto ZEITRAUM_03_14_0930_1430 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 3, 14),
-      LocalTime.of(9, 30),
-      LocalTime.of(14, 30));
-
   static final ZeitraumDto ZEITRAUM_03_15_1030_1130 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(10, 30),
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(10, 30),
       LocalTime.of(11, 30));
 
   static final ZeitraumDto ZEITRAUM_03_15_1100_1200 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(11, 00),
-      LocalTime.of(12, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(11, 0),
+      LocalTime.of(12, 0));
 
   static final ZeitraumDto ZEITRAUM_03_15_1145_1200 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(11, 45),
-      LocalTime.of(12, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(11, 45),
+      LocalTime.of(12, 0));
 
   static final ZeitraumDto ZEITRAUM_03_15_1015_1100 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(10, 15),
-      LocalTime.of(11, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(10, 15),
+      LocalTime.of(11, 0));
 
   static final ZeitraumDto ZEITRAUM_03_15_1000_1200 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(10, 00),
-      LocalTime.of(12, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(10, 0),
+      LocalTime.of(12, 0));
 
   static final ZeitraumDto ZEITRAUM_03_15_1000_1030 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(10, 00),
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(10, 0),
       LocalTime.of(10, 30));
 
   static final ZeitraumDto ZEITRAUM_03_15_1130_1200 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(11, 30),
-      LocalTime.of(12, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(11, 30),
+      LocalTime.of(12, 0));
 
   static final ZeitraumDto ZEITRAUM_03_15_1045_1200 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(10, 45),
-      LocalTime.of(12, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(10, 45),
+      LocalTime.of(12, 0));
 
   static final ZeitraumDto ZEITRAUM_03_15_1000_1100 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 03, 15), LocalTime.of(10, 00),
-      LocalTime.of(11, 00));
+      LocalDate.of(2022, 3, 15),
+      LocalTime.of(10, 0),
+      LocalTime.of(11, 0));
 
   static final ZeitraumDto ZEITRAUM_03_09_1100_1200 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 3, 9), LocalTime.of(11, 0),
+      LocalDate.of(2022, 3, 9),
+      LocalTime.of(11, 0),
       LocalTime.of(12, 0));
 
   static final ZeitraumDto ZEITRAUM_03_09_1200_1330 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 3, 9), LocalTime.of(12, 0),
+      LocalDate.of(2022, 3, 9),
+      LocalTime.of(12, 0),
       LocalTime.of(13, 30));
 
   static final ZeitraumDto ZEITRAUM_03_09_1000_1145 = ZeitraumDto.erstelleZeitraum(
-      LocalDate.of(2022, 3, 9), LocalTime.of(10, 0),
+      LocalDate.of(2022, 3, 9),
+      LocalTime.of(10, 0),
       LocalTime.of(11, 45));
 
 

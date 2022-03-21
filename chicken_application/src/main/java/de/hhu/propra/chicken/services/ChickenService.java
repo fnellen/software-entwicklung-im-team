@@ -3,7 +3,8 @@ package de.hhu.propra.chicken.services;
 import static de.hhu.propra.chicken.services.LogOperation.DELETE;
 import static de.hhu.propra.chicken.services.LogOperation.INSERT;
 import static de.hhu.propra.chicken.services.LogOperation.UPDATE;
-import static de.hhu.propra.chicken.services.LogTyp.*;
+import static de.hhu.propra.chicken.services.LogTyp.KLAUSUR;
+import static de.hhu.propra.chicken.services.LogTyp.URLAUB;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;

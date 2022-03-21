@@ -7,7 +7,6 @@ import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
-import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -90,7 +89,7 @@ public class StudentController {
   public String urlaubSpeichern(@ModelAttribute("handle") String handle,
                                 Model model,
                                 String urlaubdatum, String urlaubstart, String urlaubende) {
-    if(urlaubdatum.isEmpty() || urlaubstart.isEmpty() || urlaubende.isEmpty()){
+    if (urlaubdatum.isEmpty() || urlaubstart.isEmpty() || urlaubende.isEmpty()) {
       model.addAttribute("fehler", "Alle Felder müssen gesetzt sein!");
       return "urlaubbelegen";
     }
@@ -124,12 +123,11 @@ public class StudentController {
 
   public String klausurBelegung(@ModelAttribute("handle") String handle,
                                 Model model,
-                                String veranstaltungsId){
-    try{
+                                String veranstaltungsId) {
+    try {
       Klausur klausur = service.holeKlausur(veranstaltungsId);
       service.belegeKlausur(handle, klausur);
-    }
-    catch(Exception e){
+    } catch (Exception e) {
       model.addAttribute("fehler", e.getMessage());
       model.addAttribute("klausuren", service.alleKlausuren());
       return "klausurbelegen";
