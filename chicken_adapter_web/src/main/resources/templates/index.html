@@ -100,5 +100,9 @@
         </a>
     </div>
 
+    <div th:if="${!fehler.isEmpty()}">
+        <p class="alert alert-danger" th:text="${fehler}"> Etwas ist schiefgelaufen</p>
+    </div>
+
 </body>
 </html>

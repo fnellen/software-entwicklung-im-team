@@ -41,8 +41,7 @@ public class StudentController {
     }
     StudentDetails studentDetails = service.studentDetails(handle);
     model.addAttribute("details", studentDetails);
-
-
+    model.addAttribute("fehler", "");
     return "index";
   }
 
@@ -60,7 +59,10 @@ public class StudentController {
     try {
       service.storniereUrlaub(handle, urlaub);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      StudentDetails studentDetails = service.studentDetails(handle);
+      model.addAttribute("details", studentDetails);
+      model.addAttribute("fehler", e.getMessage());
+      return "index";
     }
     return "redirect:/";
   }
@@ -74,7 +76,10 @@ public class StudentController {
     try {
       service.storniereKlausur(handle, klausur);
     } catch (KlausurException e) {
-      System.out.println(e.getMessage());
+      StudentDetails studentDetails = service.studentDetails(handle);
+      model.addAttribute("details", studentDetails);
+      model.addAttribute("fehler", e.getMessage());
+      return "index";
     }
     return "redirect:/";
   }
@@ -120,7 +125,6 @@ public class StudentController {
   }
 
   @PostMapping("/klausurbelegen")
-
   public String klausurBelegung(@ModelAttribute("handle") String handle,
                                 Model model,
                                 String veranstaltungsId) {
@@ -137,8 +141,32 @@ public class StudentController {
 
   @GetMapping("/klausuranmelden")
   public String klausurAnmelden(Model model) {
+    model.addAttribute("fehler", "");
     return "klausuranmelden";
   }
 
+  @PostMapping("/klausuranmelden")
+  public String klausurAnmeldenPost(Model model, String veranstaltungsId,
+                                    String veranstaltungsName,
+                                    Boolean praesenz,
+                                    String klausurdatum,
+                                    String klausurstart,
+                                    String klausurende) {
+    if (klausurdatum.isEmpty() || klausurstart.isEmpty() || klausurende.isEmpty()) {
+      model.addAttribute("fehler", "Alle Felder müssen gesetzt sein!");
+      return "urlaubbelegen";
+    }
+    LocalDate datum = LocalDate.parse(klausurdatum);
+    LocalTime start = LocalTime.parse(klausurstart);
+    LocalTime ende = LocalTime.parse(klausurende);
+    try {
+      ZeitraumDto klausurZeitraum = ZeitraumDto.erstelleZeitraum(datum, start, ende);
+      service.klausurAnmelden(veranstaltungsId, veranstaltungsName, klausurZeitraum, praesenz);
+    } catch (Exception e) {
+      model.addAttribute("fehler", e.getMessage());
+      return "klausuranmelden";
+    }
+    return "redirect:/";
+  }
 
 }
