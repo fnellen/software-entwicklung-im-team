@@ -1,12 +1,14 @@
 package de.hhu.propra.chicken.web.controller;
 
 import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.aggregates.fehler.ZeitraumDtoException;
 import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.dto.StudentDetails;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
+import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -56,7 +58,6 @@ public class StudentController {
     LocalTime start = LocalTime.parse(urlaubstart);
     LocalTime ende = LocalTime.parse(urlaubende);
     ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(datum, start, ende);
-    System.out.println(urlaub);
     try {
       service.storniereUrlaub(handle, urlaub);
     } catch (Exception e) {
@@ -81,12 +82,65 @@ public class StudentController {
 
   @GetMapping("/urlaubbelegen")
   public String urlaubBelegen(Model model) {
+    model.addAttribute("fehler", "");
     return "urlaubbelegen";
+  }
+
+  @PostMapping("/urlaubbelegen")
+  public String urlaubSpeichern(@ModelAttribute("handle") String handle,
+                                Model model,
+                                String urlaubdatum, String urlaubstart, String urlaubende) {
+    if(urlaubdatum.isEmpty() || urlaubstart.isEmpty() || urlaubende.isEmpty()){
+      model.addAttribute("fehler", "Alle Felder müssen gesetzt sein!");
+      return "urlaubbelegen";
+    }
+    LocalDate datum = LocalDate.parse(urlaubdatum);
+    LocalTime start = LocalTime.parse(urlaubstart);
+    LocalTime ende = LocalTime.parse(urlaubende);
+    ZeitraumDto urlaub;
+    try {
+      urlaub = ZeitraumDto.erstelleZeitraum(datum, start, ende);
+    } catch (ZeitraumDtoException e) {
+      model.addAttribute("fehler", e.getMessage());
+      return "urlaubbelegen";
+    }
+    try {
+      service.belegeUrlaub(handle, urlaub);
+      return "redirect:/";
+    } catch (UrlaubException e) {
+      model.addAttribute("fehler", e.getMessage());
+      return "urlaubbelegen";
+    }
   }
 
   @GetMapping("/klausurbelegen")
   public String klausurBelegen(Model model) {
+    model.addAttribute("fehler", "");
+    model.addAttribute("klausuren", service.alleKlausuren());
     return "klausurbelegen";
   }
+
+  @PostMapping("/klausurbelegen")
+
+  public String klausurBelegung(@ModelAttribute("handle") String handle,
+                                Model model,
+                                String veranstaltungsId){
+    try{
+      Klausur klausur = service.holeKlausur(veranstaltungsId);
+      service.belegeKlausur(handle, klausur);
+    }
+    catch(Exception e){
+      model.addAttribute("fehler", e.getMessage());
+      model.addAttribute("klausuren", service.alleKlausuren());
+      return "klausurbelegen";
+    }
+    return "redirect:/";
+  }
+
+  @GetMapping("/klausuranmelden")
+  public String klausurAnmelden(Model model) {
+    return "klausuranmelden";
+  }
+
 
 }

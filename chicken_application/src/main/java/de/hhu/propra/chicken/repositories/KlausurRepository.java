@@ -11,4 +11,6 @@ public interface KlausurRepository {
 
   void speicherKlausur(Klausur klausur);
 
+  Set<Klausur> findAll();
+
 }

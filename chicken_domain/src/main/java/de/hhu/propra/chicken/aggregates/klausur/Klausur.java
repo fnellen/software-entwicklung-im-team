@@ -43,4 +43,9 @@ public record Klausur(Long id, VeranstaltungsId veranstaltungsId,
   public int hashCode() {
     return veranstaltungsId.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return veranstaltungsName + " " + zeitraumDto;
+  }
 }

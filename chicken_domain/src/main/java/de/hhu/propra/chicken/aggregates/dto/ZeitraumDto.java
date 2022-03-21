@@ -1,5 +1,6 @@
 package de.hhu.propra.chicken.aggregates.dto;
 
+import de.hhu.propra.chicken.aggregates.fehler.ZeitraumDtoException;
 import de.hhu.propra.chicken.stereotypes.ValueObject;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -33,19 +34,19 @@ public class ZeitraumDto {
   public static ZeitraumDto erstelleZeitraum(LocalDate datum, LocalTime startUhrzeit,
                                              LocalTime endUhrzeit) {
     if (!validierePraktikumszeitraum(datum)) {
-      return null;
+      throw new ZeitraumDtoException("Der Zeitraum liegt nicht im Praktikumszeitraum");
     }
     if (validiereObAnWochenende(datum)) {
-      return null;
+      throw new ZeitraumDtoException("Der Zeitraum liegt am Wochenende");
     }
     if (!validiereUhrzeiten(startUhrzeit, endUhrzeit)) {
-      return null;
+      throw new ZeitraumDtoException("Die Startuhrzeit liegt nicht vor der Enduhrzeit");
     }
     if (!validiereUhrzeitBlock(startUhrzeit, endUhrzeit)) {
-      return null;
+      throw new ZeitraumDtoException("Die Uhrzeiten sind nicht in 15-Minuten Blockform");
     }
     if (!inPraktikumsZeit(startUhrzeit, endUhrzeit)) {
-      return null;
+      throw new ZeitraumDtoException("Die Uhrzeiten liegen nicht innerhalb des Arbeitszeitraums");
     }
     return new ZeitraumDto(datum, startUhrzeit, endUhrzeit);
   }

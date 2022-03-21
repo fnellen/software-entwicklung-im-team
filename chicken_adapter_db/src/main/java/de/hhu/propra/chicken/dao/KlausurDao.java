@@ -29,5 +29,6 @@ public interface KlausurDao extends CrudRepository<KlausurDto, String> {
   Optional<KlausurDto> findeKlausurMitVeranstaltungsId(
       @Param("veranstaltungsId") String veranstaltungsId);
 
+  Set<KlausurDto> findAll();
 
 }

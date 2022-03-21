@@ -21,6 +21,7 @@ public class KlausurRepositoryImpl implements KlausurRepository {
   }
 
 
+
   @Override
   public Klausur findeKlausurMitVeranstaltungsId(String id) {
     KlausurDto klausurDto = klausurDao.findeKlausurMitVeranstaltungsId(id)
@@ -38,6 +39,14 @@ public class KlausurRepositoryImpl implements KlausurRepository {
       KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
       klausurDao.save(klausurDto);
     }
+  }
+
+  @Override
+  public Set<Klausur> findAll() {
+    return klausurDao.findAll()
+        .stream()
+        .map(KlausurDto::konvertiereZuKlausur)
+        .collect(Collectors.toSet());
   }
 
 
