@@ -20,6 +20,10 @@ public class AuthenticationTemplates {
     return createSession("dehus101", "ROLE_TUTOR");
   }
 
+  public static MockHttpSession studentSession() {
+    return createSession("dehus101", "ROLE_STUDENT");
+  }
+
   public static MockHttpSession organisatorSession() {
     return createSession("dehus101", "ROLE_ORGANISATOR");
   }

@@ -1,4 +1,4 @@
-package de.hhu.propra.chicken.web;
+package de.hhu.propra.chicken;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
