@@ -1,6 +1,8 @@
 package de.hhu.propra.chicken.web.controller;
 
-import static de.hhu.propra.chicken.web.StudentTemplate.*;
+import static de.hhu.propra.chicken.web.StudentTemplate.DENNIS;
+import static de.hhu.propra.chicken.web.StudentTemplate.DENNIS_DETAILS;
+import static de.hhu.propra.chicken.web.StudentTemplate.ZEITRAUM_03_10_1030_1300;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,15 +36,13 @@ public class StudentControllerTest {
   void test_01() throws Exception {
     when(chickenService.holeStudent(DENNIS.getGithubHandle())).thenReturn(DENNIS);
     when(chickenService.studentDetails(DENNIS.getGithubHandle())).thenReturn(DENNIS_DETAILS);
-    MockHttpServletRequestBuilder getRequest = get("/")
-        .flashAttr("handle", DENNIS.getGithubHandle());
+    MockHttpServletRequestBuilder getRequest =
+        get("/").flashAttr("handle", DENNIS.getGithubHandle());
 
-    MvcResult mvcResult = mockMvc.perform(getRequest)
-        .andExpect(status().isOk())
+    MvcResult mvcResult = mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(model().attribute("details", DENNIS_DETAILS))
         .andExpect(model().attribute("urlaubDto", new UrlaubDto(null, null, null)))
-        .andExpect(model().attribute("fehler", ""))
-        .andReturn();
+        .andExpect(model().attribute("fehler", "")).andReturn();
 
     assertThat(mvcResult.getResponse().getContentAsString().contains("Propra2"));
   }
@@ -53,15 +53,13 @@ public class StudentControllerTest {
     when(chickenService.holeStudent(DENNIS.getGithubHandle())).thenReturn(DENNIS);
     DENNIS.fuegeUrlaubHinzu(ZEITRAUM_03_10_1030_1300);
     when(chickenService.studentDetails(DENNIS.getGithubHandle())).thenReturn(DENNIS_DETAILS);
-    MockHttpServletRequestBuilder getRequest = get("/")
-        .flashAttr("handle", DENNIS.getGithubHandle());
+    MockHttpServletRequestBuilder getRequest =
+        get("/").flashAttr("handle", DENNIS.getGithubHandle());
 
-    MvcResult mvcResult = mockMvc.perform(getRequest)
-        .andExpect(status().isOk())
+    MvcResult mvcResult = mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(model().attribute("details", DENNIS_DETAILS))
         .andExpect(model().attribute("urlaubDto", new UrlaubDto(null, null, null)))
-        .andExpect(model().attribute("fehler", ""))
-        .andReturn();
+        .andExpect(model().attribute("fehler", "")).andReturn();
 
     assertThat(mvcResult.getResponse().getContentAsString().contains("10.03.2022"));
     assertThat(mvcResult.getResponse().getContentAsString().contains("10:30"));
