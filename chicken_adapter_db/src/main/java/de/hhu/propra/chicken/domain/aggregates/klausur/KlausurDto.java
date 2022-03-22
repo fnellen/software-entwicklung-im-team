@@ -1,6 +1,6 @@
-package de.hhu.propra.chicken.aggregates.klausur;
+package de.hhu.propra.chicken.domain.aggregates.klausur;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Embedded;
 

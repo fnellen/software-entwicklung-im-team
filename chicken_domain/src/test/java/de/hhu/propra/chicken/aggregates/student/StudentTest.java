@@ -2,7 +2,8 @@ package de.hhu.propra.chicken.aggregates.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;

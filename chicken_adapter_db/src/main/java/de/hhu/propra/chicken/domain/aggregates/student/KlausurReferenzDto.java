@@ -1,8 +1,7 @@
-package de.hhu.propra.chicken.aggregates.student;
+package de.hhu.propra.chicken.domain.aggregates.student;
 
-import de.hhu.propra.chicken.aggregates.klausur.VeranstaltungsIdDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.VeranstaltungsIdDto;
 import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.data.relational.core.mapping.Table;
 
 //@Table("klausur_referenz")
 public record KlausurReferenzDto(

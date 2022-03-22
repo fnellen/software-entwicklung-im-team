@@ -27,9 +27,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;

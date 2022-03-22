@@ -1,7 +1,6 @@
 package de.hhu.propra.chicken.dao;
 
-import de.hhu.propra.chicken.aggregates.klausur.KlausurDto;
-import de.hhu.propra.chicken.aggregates.klausur.VeranstaltungsIdDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.KlausurDto;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;

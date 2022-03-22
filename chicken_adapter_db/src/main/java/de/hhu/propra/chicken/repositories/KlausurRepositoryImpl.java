@@ -1,25 +1,21 @@
 package de.hhu.propra.chicken.repositories;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.klausur.KlausurDto;
-import de.hhu.propra.chicken.aggregates.student.StudentDto;
 import de.hhu.propra.chicken.dao.KlausurDao;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.aggregates.klausur.KlausurDto;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class KlausurRepositoryImpl implements KlausurRepository {
 
-  final KlausurDao klausurDao;
+  private final KlausurDao klausurDao;
 
   public KlausurRepositoryImpl(KlausurDao klausurDao) {
     this.klausurDao = klausurDao;
   }
-
 
 
   @Override

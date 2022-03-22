@@ -1,10 +1,10 @@
 package de.hhu.propra.chicken.web.controller.student;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import de.hhu.propra.chicken.services.ChickenService;
-import de.hhu.propra.chicken.services.dto.StudentDetails;
+import de.hhu.propra.chicken.services.dto.StudentDetailsDto;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.web.annotations.StudentRoute;
 import de.hhu.propra.chicken.web.dto.KlausurDto;
@@ -44,8 +44,8 @@ public class StudentController {
       Student student = new Student(null, handle);
       service.studentSpeichern(student);
     }
-    StudentDetails studentDetails = service.studentDetails(handle);
-    model.addAttribute("details", studentDetails);
+    StudentDetailsDto studentDetailsDto = service.studentDetails(handle);
+    model.addAttribute("details", studentDetailsDto);
     model.addAttribute("urlaubDto", urlaubDto);
     model.addAttribute("fehler", "");
     return "index";
@@ -60,8 +60,8 @@ public class StudentController {
     try {
       service.storniereUrlaub(handle, urlaub);
     } catch (Exception e) {
-      StudentDetails studentDetails = service.studentDetails(handle);
-      model.addAttribute("details", studentDetails);
+      StudentDetailsDto studentDetailsDto = service.studentDetails(handle);
+      model.addAttribute("details", studentDetailsDto);
       model.addAttribute("urlaubDto", new UrlaubDto(null, null, null));
       model.addAttribute("fehler", e.getMessage());
       return "index";
@@ -77,8 +77,8 @@ public class StudentController {
       Klausur klausur = service.holeKlausur(veranstaltungsId);
       service.storniereKlausur(handle, klausur);
     } catch (KlausurException e) {
-      StudentDetails studentDetails = service.studentDetails(handle);
-      model.addAttribute("details", studentDetails);
+      StudentDetailsDto studentDetailsDto = service.studentDetails(handle);
+      model.addAttribute("details", studentDetailsDto);
       model.addAttribute("urlaubDto", new UrlaubDto(null, null, null));
       model.addAttribute("fehler", e.getMessage());
       return "index";

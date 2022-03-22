@@ -1,8 +1,8 @@
 package de.hhu.propra.chicken.repositories;
 
-import de.hhu.propra.chicken.aggregates.student.Student;
-import de.hhu.propra.chicken.aggregates.student.StudentDto;
 import de.hhu.propra.chicken.dao.StudentDao;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
+import de.hhu.propra.chicken.domain.aggregates.student.StudentDto;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,4 @@
-package de.hhu.propra.chicken.aggregates.klausur;
-
-import de.hhu.propra.chicken.aggregates.klausur.VeranstaltungsId;
-import org.springframework.data.relational.core.mapping.Table;
+package de.hhu.propra.chicken.domain.aggregates.klausur;
 
 public record VeranstaltungsIdDto(String veranstaltungsId) {
 

@@ -3,27 +3,19 @@ package de.hhu.propra.chicken.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
-import de.hhu.propra.chicken.aggregates.student.Student;
 import de.hhu.propra.chicken.dao.StudentDao;
-import de.hhu.propra.chicken.repositories.StudentRepositoryImpl;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.aggregates.student.KlausurReferenz;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"classpath:db/migration/V1__tabelle_erstellen.sql",

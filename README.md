@@ -74,7 +74,9 @@ und Klausuren sollen nachträglich nicht storniert werden können.
 Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des heutigen Tag zurück gibt.
 
 ## ToDo:
+
 #### Allgemein:
+
 - [ ] Konfiguration docker-compose für DB und Anwendung
 - [ ] Dokumentation
 
@@ -86,7 +88,7 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 - [x] Testing
 - [x] Logging
     - [ ] Testing
-- [ ] opt. Refactoring    
+- [ ] opt. Refactoring
 
 #### Domain:
 
@@ -99,17 +101,18 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 
 #### Web:
 
-- [ ] Controller mit Html
-- [ ] Authentifizierung mit Annotationen (ArchTest Überprüfung)
-- [ ] Security
-- [ ] Klausur hinzufügen
+- [x] Controller mit Html
+- [x] Authentifizierung mit Annotationen (ArchTest Überprüfung)
+- [x] Security
+- [x] Klausur hinzufügen
 - [x] Urlaub belegen
 - [x] Klausur belegen
 - [x] Urlaub stornieren
 - [x] Klausur stornieren
 - [x] Resturlaub Übersicht
-- [ ] Organisator und Tutor Übersicht
+- [x] Organisator und Tutor Übersicht
 - [ ] Accessibility
+
 #### Spring:
 
 - [ ] Auth

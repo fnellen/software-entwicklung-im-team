@@ -1,7 +1,7 @@
-package de.hhu.propra.chicken.aggregates.dto;
+package de.hhu.propra.chicken.domain.aggregates.dto;
 
-import de.hhu.propra.chicken.aggregates.fehler.ZeitraumDtoException;
-import de.hhu.propra.chicken.stereotypes.ValueObject;
+import de.hhu.propra.chicken.domain.fehler.ZeitraumDtoException;
+import de.hhu.propra.chicken.domain.stereotypes.ValueObject;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -55,18 +55,11 @@ public class ZeitraumDto {
   private static boolean validierePraktikumszeitraum(LocalDate datum) {
     LocalDate startDatum = LocalDate.of(2022, 03, 07);
     LocalDate endDatum = LocalDate.of(2022, 03, 25);
-    if (datum.isBefore(startDatum) || datum.isAfter(endDatum)) {
-      return false;
-    }
-    return true;
+    return !datum.isBefore(startDatum) && !datum.isAfter(endDatum);
   }
 
   private static boolean inPraktikumsZeit(LocalTime startUhrzeit, LocalTime endUhrzeit) {
-    if (startUhrzeit.isBefore(LocalTime.of(9, 30)) || endUhrzeit.isAfter(LocalTime.of(13, 30))) {
-      return false;
-    } else {
-      return true;
-    }
+    return !startUhrzeit.isBefore(LocalTime.of(9, 30)) && !endUhrzeit.isAfter(LocalTime.of(13, 30));
   }
 
   private static boolean validiereObAnWochenende(LocalDate datum) {
@@ -81,10 +74,7 @@ public class ZeitraumDto {
     if (startUhrzeit.getMinute() % 15 != 0) {
       return false;
     }
-    if (endUhrzeit.getMinute() % 15 != 0) {
-      return false;
-    }
-    return true;
+    return endUhrzeit.getMinute() % 15 == 0;
   }
 
   public LocalDate getDatum() {

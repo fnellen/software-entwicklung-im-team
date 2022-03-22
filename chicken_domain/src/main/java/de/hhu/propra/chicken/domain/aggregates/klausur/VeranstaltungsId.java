@@ -1,6 +1,6 @@
-package de.hhu.propra.chicken.aggregates.klausur;
+package de.hhu.propra.chicken.domain.aggregates.klausur;
 
-import de.hhu.propra.chicken.stereotypes.ValueObject;
+import de.hhu.propra.chicken.domain.stereotypes.ValueObject;
 
 
 /**

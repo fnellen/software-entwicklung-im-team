@@ -3,9 +3,9 @@ package de.hhu.propra.chicken.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
 import de.hhu.propra.chicken.dao.KlausurDao;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 

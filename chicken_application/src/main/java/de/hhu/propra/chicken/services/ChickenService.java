@@ -6,16 +6,16 @@ import static de.hhu.propra.chicken.services.logging.LogOperation.UPDATE;
 import static de.hhu.propra.chicken.services.logging.LogTyp.KLAUSUR;
 import static de.hhu.propra.chicken.services.logging.LogTyp.URLAUB;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.aggregates.student.KlausurReferenz;
-import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.aggregates.student.KlausurReferenz;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
-import de.hhu.propra.chicken.services.dto.StudentDetails;
+import de.hhu.propra.chicken.services.dto.StudentDetailsDto;
 import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ChickenService {
-  public static final LocalTime PRAKTIKUMS_START_UHRZEIT = LocalTime.of(9, 30);
-  public static final LocalTime PRAKTIKUMS_END_UHRZEIT = LocalTime.of(13, 30);
-  public static final long PRAKTIKUMS_TAG_DAUER = 240L;
-  public static final long MAXIMALER_URLAUB_AN_EINEM_TAG = 150L;
-  public static final int MINDESTARBEITSAUFWAND = 90;
+  private static final LocalTime PRAKTIKUMS_START_UHRZEIT = LocalTime.of(9, 30);
+  private static final LocalTime PRAKTIKUMS_END_UHRZEIT = LocalTime.of(13, 30);
+  private static final long PRAKTIKUMS_TAG_DAUER = 240L;
+  private static final long MAXIMALER_URLAUB_AN_EINEM_TAG = 150L;
+  private static final int MINDESTARBEITSAUFWAND = 90;
 
   private final StudentRepository studentRepository;
   private final KlausurRepository klausurRepository;
@@ -52,7 +52,7 @@ public class ChickenService {
     this.logging = logging;
   }
 
-  public StudentDetails studentDetails(String handle) {
+  public StudentDetailsDto studentDetails(String handle) {
     Student student = studentRepository.findeStudentMitHandle(handle);
     if (student == null) {
       throw new StudentNichtGefundenException(handle);
@@ -61,7 +61,7 @@ public class ChickenService {
     Set<Klausur> klausuren1 = klausuren.stream()
         .map(KlausurReferenz::id)
         .map(klausurRepository::findeKlausurMitVeranstaltungsId).collect(Collectors.toSet());
-    return StudentDetails.von(student, klausuren1);
+    return StudentDetailsDto.von(student, klausuren1);
   }
 
   public void studentSpeichern(Student student) {
@@ -177,12 +177,7 @@ public class ChickenService {
       Set<Klausur> ueberschneidendeKlausuren = belegteKlausurenAmTag.stream().filter(
           belegteKlausurAmTag -> ueberschneidenSichZeitraeume(belegteKlausurAmTag.zeitraumDto(),
               beantragteKlausur)).collect(Collectors.toSet());
-      if (ueberschneidendeKlausuren.isEmpty()) {
-        student.fuegeKlausurHinzu(klausur);
-        logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
-            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
-        studentRepository.speicherStudent(student);
-      } else {
+      if (!ueberschneidendeKlausuren.isEmpty()) {
         //Es wird außer Acht gelassen, dass eine Klausur zusätzlich Zeit angerechnet bekommt.
         throw new KlausurException("Es können keine zwei Klausuren am selben Zeitraum geschrieben"
             + " werden.");

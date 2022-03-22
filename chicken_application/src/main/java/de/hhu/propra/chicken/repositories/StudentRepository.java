@@ -1,6 +1,6 @@
 package de.hhu.propra.chicken.repositories;
 
-import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 
 public interface StudentRepository {
 

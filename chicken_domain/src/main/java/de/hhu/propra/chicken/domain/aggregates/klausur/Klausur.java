@@ -1,8 +1,8 @@
-package de.hhu.propra.chicken.aggregates.klausur;
+package de.hhu.propra.chicken.domain.aggregates.klausur;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.stereotypes.AggregateRoot;
-import de.hhu.propra.chicken.stereotypes.EntityObject;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.stereotypes.AggregateRoot;
+import de.hhu.propra.chicken.domain.stereotypes.EntityObject;
 
 /**
  * Darstellung einer Klausur.

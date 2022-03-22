@@ -7,13 +7,13 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import de.hhu.propra.chicken.aggregates.student.Student;
+import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import de.hhu.propra.chicken.repositories.HeutigesDatumRepository;
 import de.hhu.propra.chicken.repositories.KlausurRepository;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
-import de.hhu.propra.chicken.services.dto.StudentDetails;
+import de.hhu.propra.chicken.services.dto.StudentDetailsDto;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-public class ChickenServiceStudentDetailsTest {
+public class ChickenServiceStudentDetailsTestDto {
 
   @Mock
   StudentRepository studentRepository;
@@ -67,9 +67,9 @@ public class ChickenServiceStudentDetailsTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
-    StudentDetails studentDetails = appService.studentDetails("dehus101");
+    StudentDetailsDto studentDetailsDto = appService.studentDetails("dehus101");
 
-    assertThat(studentDetails.klausuren()).containsExactlyInAnyOrder(KL_PROPRA_03_09_1130_1230);
+    assertThat(studentDetailsDto.klausuren()).containsExactlyInAnyOrder(KL_PROPRA_03_09_1130_1230);
   }
 
   @Test
@@ -92,9 +92,9 @@ public class ChickenServiceStudentDetailsTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
-    StudentDetails studentDetails = appService.studentDetails("dehus101");
+    StudentDetailsDto studentDetailsDto = appService.studentDetails("dehus101");
 
-    assertThat(studentDetails.klausuren()).containsExactlyInAnyOrder(KL_PROPRA_03_09_1130_1230,
+    assertThat(studentDetailsDto.klausuren()).containsExactlyInAnyOrder(KL_PROPRA_03_09_1130_1230,
         KL_03_09_1000_1145);
   }
 
@@ -110,9 +110,9 @@ public class ChickenServiceStudentDetailsTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging);
 
-    StudentDetails studentDetails = appService.studentDetails("dehus101");
+    StudentDetailsDto studentDetailsDto = appService.studentDetails("dehus101");
 
-    assertThat(studentDetails.klausuren()).isEmpty();
+    assertThat(studentDetailsDto.klausuren()).isEmpty();
   }
 
   @Test

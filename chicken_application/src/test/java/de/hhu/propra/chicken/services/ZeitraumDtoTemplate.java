@@ -1,6 +1,6 @@
 package de.hhu.propra.chicken.services;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -198,5 +198,29 @@ public class ZeitraumDtoTemplate {
       LocalTime.of(10, 0),
       LocalTime.of(11, 45));
 
+  static final ZeitraumDto ZEITRAUM_03_24_0930_1000 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(9, 30),
+      LocalTime.of(10, 00));
+
+  static final ZeitraumDto ZEITRAUM_03_24_1000_1100 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(10, 0),
+      LocalTime.of(11, 00));
+
+  static final ZeitraumDto ZEITRAUM_03_24_1000_1300 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(10, 0),
+      LocalTime.of(13, 00));
+
+  static final ZeitraumDto ZEITRAUM_03_24_1200_1330 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(12, 0),
+      LocalTime.of(13, 30));
+
+  static final ZeitraumDto ZEITRAUM_03_24_1300_1330 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(13, 0),
+      LocalTime.of(13, 30));
 
 }

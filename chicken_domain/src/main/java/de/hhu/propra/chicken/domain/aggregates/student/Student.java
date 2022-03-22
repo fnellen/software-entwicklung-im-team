@@ -1,8 +1,9 @@
-package de.hhu.propra.chicken.aggregates.student;
+package de.hhu.propra.chicken.domain.aggregates.student;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.stereotypes.AggregateRoot;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.stereotypes.AggregateRoot;
+import de.hhu.propra.chicken.domain.stereotypes.EntityObject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,14 +12,14 @@ import java.util.Set;
  * Bildet den Stakeholder Student ab.
  */
 @AggregateRoot
+@EntityObject
 public class Student {
 
-  private Long id;
+  private static final long GESAMT_URLAUBSZEIT_IN_MINUTEN = 240L;
   private final String githubHandle;
+  private Long id;
   private Set<ZeitraumDto> urlaube = new HashSet<>();
   private Set<KlausurReferenz> klausuren = new HashSet<>();
-
-  private static final long GESAMT_URLAUBSZEIT_IN_MINUTEN = 240L;
 
   /**
    * Konstruktor zur Erstellung eines Studenten.
@@ -35,16 +36,16 @@ public class Student {
     return id;
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
   public String getGithubHandle() {
     return githubHandle;
   }
 
   public Set<ZeitraumDto> getUrlaube() {
     return urlaube;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   /**

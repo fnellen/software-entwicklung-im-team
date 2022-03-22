@@ -1,6 +1,6 @@
 package de.hhu.propra.chicken.services.logging;
 
-import de.hhu.propra.chicken.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.repositories.LoggingRepository;
 import java.io.BufferedWriter;
 import java.io.File;
