@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HeutigesDatumRepositoryRepositoryImpl implements HeutigesDatumRepository {
+public class HeutigesDatumRepositoryImpl implements HeutigesDatumRepository {
   @Override
   public LocalDate getDatum() {
     return LocalDate.now();
