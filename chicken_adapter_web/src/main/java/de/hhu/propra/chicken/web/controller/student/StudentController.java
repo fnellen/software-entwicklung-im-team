@@ -54,7 +54,7 @@ public class StudentController {
   @PostMapping("/urlaubstornieren")
   public String urlaubStornieren(Model model, @ModelAttribute("handle") String handle,
                                  @Valid UrlaubDto urlaubDto) {
-    System.out.println(urlaubDto);
+    
     ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(urlaubDto.urlaubsDatum(),
         urlaubDto.urlaubsStart(), urlaubDto.urlaubsEnde());
     try {
