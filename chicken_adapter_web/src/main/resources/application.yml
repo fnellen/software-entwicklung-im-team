@@ -1,6 +1,6 @@
 rollen:
-  tutoren: dehus101
-  organisatoren: dehus101, daisy, minnie, mickey, gundel, dagobert, bendisposto
+  tutoren: ${TUTOREN}
+  organisatoren: ${ORGANISATOREN}
 
 spring:
   flyway:
