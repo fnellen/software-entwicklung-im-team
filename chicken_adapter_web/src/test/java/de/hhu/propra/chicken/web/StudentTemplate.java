@@ -6,6 +6,7 @@ import de.hhu.propra.chicken.domain.aggregates.student.Student;
 import de.hhu.propra.chicken.services.dto.StudentDetailsDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.Set;
 
 public class StudentTemplate {
@@ -22,10 +23,16 @@ public class StudentTemplate {
 
   public static final Klausur KL_PROPRA_03_09_1130_1230 =
       new Klausur(null, "215783", "Propra2", ZEITRAUM_03_09_1130_1230, true);
+
   public static final Student DENNIS = new Student(1L, "dehus101");
-  public static final StudentDetailsDto DENNIS_DETAILS =
-      new StudentDetailsDto(DENNIS, Set.of(KL_PROPRA_03_09_1130_1230));
   public static final Student FEDERICO = new Student(2L, "fnellen");
 
+  public StudentDetailsDto getDennisDetails() {
+    return new StudentDetailsDto(DENNIS, Set.of(KL_PROPRA_03_09_1130_1230));
+  }
+
+  public StudentDetailsDto getFedericoDetails() {
+    return new StudentDetailsDto(FEDERICO, Collections.emptySet());
+  }
 
 }
