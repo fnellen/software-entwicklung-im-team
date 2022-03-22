@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class KlausurRepositoryImpl implements KlausurRepository {
@@ -27,6 +28,7 @@ public class KlausurRepositoryImpl implements KlausurRepository {
 
 
   @Override
+  @Transactional
   public void speicherKlausur(Klausur klausur) {
     try {
       findeKlausurMitVeranstaltungsId(klausur.getVeranstaltungsId());
