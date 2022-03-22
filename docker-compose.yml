@@ -3,7 +3,7 @@ services:
   database:
     image: mariadb:10.7
     ports:
-      - "3332:3306" # port binding only for external access via IntelliJ
+      - "3306:3306" # port binding only for external access via IntelliJ
     env_file: .env
     healthcheck:
       test: [ 'CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u$DB_USER', '-p$MARIADB_ROOT_PASSWORD' ]
