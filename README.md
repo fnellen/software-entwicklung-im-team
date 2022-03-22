@@ -77,7 +77,7 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 
 #### Allgemein:
 
-- [ ] Konfiguration docker-compose für DB und Anwendung
+- [x] Konfiguration docker-compose für DB und Anwendung
 - [ ] Dokumentation
 
 #### Service:
@@ -87,12 +87,13 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 - [x] Klausur Stornieren
 - [x] Testing
 - [x] Logging
-    - [ ] Testing
+    - [x] Testing
 - [ ] opt. Refactoring
 
 #### Domain:
 
-- [ ] ArchTest
+- [x] ArchTest
+- [ ] Klausur Trennung von Klausurzeitraum und Freistellung vom Praktikum
 - [ ] ZeitraumDto Konfiguration (Praktikumsstart / Ende)
 
 #### Datenbank:
@@ -115,8 +116,9 @@ Interface in die Service KLasse Injizieren lassen, das das aktuelle Datum des he
 
 #### Spring:
 
-- [ ] Auth
-- [ ] Integration Tests Ende-zu-Ende
+- [x] Auth
+- [ ] Integration Tests
+- [ ] SystemTests
 
 #### LSF-ID:
 
