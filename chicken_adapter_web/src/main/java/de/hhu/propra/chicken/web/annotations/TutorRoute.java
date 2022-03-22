@@ -10,6 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Secured("ROLE_LEADER")
+@Secured("ROLE_TUTOR")
 public @interface TutorRoute {
 }

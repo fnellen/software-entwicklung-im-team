@@ -26,7 +26,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private final List<String> organisatoren;
 
   public WebSecurityConfiguration(
-      @Value("${rollen.tutoren") List<String> tutoren,
+      @Value("${rollen.tutoren}") List<String> tutoren,
       @Value("${rollen.organisatoren}") List<String> organisatoren) {
     this.tutoren = tutoren;
     this.organisatoren = organisatoren;
@@ -62,15 +62,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         Map<String, Object> attributes = oauth2User.getAttributes();
 
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
         String login = attributes.get("login").toString();
 
         if (tutoren.contains(login)) {
-          authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+          authorities.add(new SimpleGrantedAuthority("ROLE_TUTOR"));
         }
         if (organisatoren.contains(login)) {
-          authorities.add(new SimpleGrantedAuthority("ROLE_LEADER"));
+          authorities.add(new SimpleGrantedAuthority("ROLE_ORGANISATOR"));
         }
 
         return new DefaultOAuth2User(authorities, attributes, "login");

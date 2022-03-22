@@ -14,7 +14,7 @@ public class TutorController {
 
   @GetMapping("logs")
   public String logs(@ModelAttribute("handle") String tutorHandle) {
-    return "index";
+    return "logs";
   }
 
   @ModelAttribute("handle")

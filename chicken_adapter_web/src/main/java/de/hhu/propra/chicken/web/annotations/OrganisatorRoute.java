@@ -10,6 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Secured("ROLE_ADMIN")
+@Secured("ROLE_ORGANISATOR")
 public @interface OrganisatorRoute {
 }

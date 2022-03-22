@@ -8,6 +8,6 @@ import org.springframework.security.access.annotation.Secured;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Secured("ROLE_USER")
+@Secured("ROLE_STUDENT")
 public @interface StudentRoute {
 }
