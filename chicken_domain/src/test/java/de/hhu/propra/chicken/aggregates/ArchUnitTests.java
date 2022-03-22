@@ -59,6 +59,8 @@ public class ArchUnitTests {
   @ArchTest
   ArchRule valueObjekteSindNichtPublic = ArchRuleDefinition.noClasses()
       .that()
+      .resideOutsideOfPackage("..dto..")
+      .and()
       .arePublic()
       .should()
       .beAnnotatedWith(ValueObject.class);
