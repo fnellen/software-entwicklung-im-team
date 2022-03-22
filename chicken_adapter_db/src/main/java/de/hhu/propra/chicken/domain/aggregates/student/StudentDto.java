@@ -6,11 +6,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.annotation.Id;
 
-//@Table("student")
 public record StudentDto(@Id Long id,
                          String githubhandle,
                          Set<ZeitraumDto> urlaube,
                          Set<KlausurReferenzDto> klausuren) {
+
+  public StudentDto(Long id, String githubhandle, Set<ZeitraumDto> urlaube,
+                    Set<KlausurReferenzDto> klausuren) {
+    this.id = id;
+    this.githubhandle = githubhandle;
+    this.urlaube = Set.copyOf(urlaube);
+    this.klausuren = Set.copyOf(klausuren);
+  }
 
   public static StudentDto konvertiereZuStudentDto(Student student) {
     Set<KlausurReferenzDto> klausurReferenzDtos = student.getKlausuren().stream()
@@ -18,6 +25,16 @@ public record StudentDto(@Id Long id,
         .collect(Collectors.toSet());
     return new StudentDto(student.getId(), student.getGithubHandle(), student.getUrlaube(),
         klausurReferenzDtos);
+  }
+
+  @Override
+  public Set<ZeitraumDto> urlaube() {
+    return Set.copyOf(urlaube);
+  }
+
+  @Override
+  public Set<KlausurReferenzDto> klausuren() {
+    return Set.copyOf(klausuren);
   }
 
   public Student konvertiereZuStudent() {

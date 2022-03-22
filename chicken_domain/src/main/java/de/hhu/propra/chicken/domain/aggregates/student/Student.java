@@ -56,7 +56,9 @@ public class Student {
   public void fuegeUrlaubHinzu(ZeitraumDto urlaubsZeitraum) {
     long minuten = urlaubsZeitraum.dauerInMinuten() + this.berechneBeantragtenUrlaub();
     if (minuten <= GESAMT_URLAUBSZEIT_IN_MINUTEN) {
-      urlaube.add(urlaubsZeitraum);
+      Set<ZeitraumDto> newUrlaube = new HashSet<>(urlaube);
+      newUrlaube.add(urlaubsZeitraum);
+      urlaube = Set.copyOf(newUrlaube);
     }
   }
 
@@ -86,7 +88,9 @@ public class Student {
   }
 
   public void entferneUrlaub(ZeitraumDto zeitraumDto) {
-    urlaube.remove(zeitraumDto);
+    Set<ZeitraumDto> neueUrlaube = new HashSet<>(urlaube);
+    neueUrlaube.remove(zeitraumDto);
+    urlaube = Set.copyOf(neueUrlaube);
   }
 
   @Override

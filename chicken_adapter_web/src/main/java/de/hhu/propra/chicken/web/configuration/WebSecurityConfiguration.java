@@ -28,8 +28,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   public WebSecurityConfiguration(
       @Value("${rollen.tutoren}") List<String> tutoren,
       @Value("${rollen.organisatoren}") List<String> organisatoren) {
-    this.tutoren = tutoren;
-    this.organisatoren = organisatoren;
+    this.tutoren = List.copyOf(tutoren);
+    this.organisatoren = List.copyOf(organisatoren);
   }
 
   @Override
