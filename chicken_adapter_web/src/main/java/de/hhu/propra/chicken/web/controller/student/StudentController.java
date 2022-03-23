@@ -121,9 +121,9 @@ public class StudentController {
 
   @PostMapping("/klausurbelegen")
   public String klausurBelegung(@ModelAttribute("handle") String handle, Model model,
-                                @NotNull @NotEmpty @NotBlank String veranstaltungsId,
+                                String veranstaltungsId,
                                 BindingResult result) {
-    if (result.hasErrors()) {
+    if (veranstaltungsId == null) {
       model.addAttribute("fehler", "");
       return "klausurbelegen";
     }
@@ -148,7 +148,6 @@ public class StudentController {
   @PostMapping("/klausuranmelden")
   public String klausurAnmeldenPost(@Valid KlausurDto klausurDto, BindingResult result, Model model
   ) {
-    System.out.println(klausurDto);
     if (result.hasErrors()) {
       model.addAttribute("fehler", "");
       return "klausuranmelden";
