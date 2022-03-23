@@ -21,11 +21,13 @@ import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import de.hhu.propra.chicken.services.fehler.VeranstaltungsIdException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ChickenService {
   private static final LocalTime PRAKTIKUMS_START_UHRZEIT = LocalTime.of(9, 30);
@@ -40,16 +42,23 @@ public class ChickenService {
   private final VeranstaltungsIdRepository veranstaltungsIdRepository;
   private final LoggingRepository logging;
 
+  private final LocalDate praktikumsstart;
+  private final LocalDate praktikumsende;
+
   public ChickenService(StudentRepository studentRepository,
                         KlausurRepository klausurRepository,
                         HeutigesDatumRepository heutigesDatumRepository,
                         VeranstaltungsIdRepository veranstaltungsIdRepository,
-                        LoggingRepository logging) {
+                        LoggingRepository logging,
+                        @Value("${praktikumszeitraum.praktikumsstart}") String praktikumsstart,
+                        @Value("${praktikumszeitraum.praktikumsende}") String praktikumsende) {
     this.studentRepository = studentRepository;
     this.klausurRepository = klausurRepository;
     this.heutigesDatumRepository = heutigesDatumRepository;
     this.veranstaltungsIdRepository = veranstaltungsIdRepository;
     this.logging = logging;
+    this.praktikumsstart = LocalDate.parse(praktikumsstart);
+    this.praktikumsende = LocalDate.parse(praktikumsende);
   }
 
   public StudentDetailsDto studentDetails(String handle) {
@@ -88,7 +97,8 @@ public class ChickenService {
           neueEndUhrzeit = LocalTime.of(13, 30);
         }
         neuerZeitraum =
-            ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit, neueEndUhrzeit);
+            ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit, neueEndUhrzeit,
+                praktikumsstart, praktikumsende);
       } else {
         LocalTime neueStartuhrzeit = zeitraumDto.getStartUhrzeit().minus(Duration.of(30,
             ChronoUnit.MINUTES));
@@ -96,7 +106,7 @@ public class ChickenService {
           neueStartuhrzeit = LocalTime.of(9, 30);
         }
         neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit,
-            zeitraumDto.getEndUhrzeit());
+            zeitraumDto.getEndUhrzeit(), praktikumsstart, praktikumsende);
       }
       Klausur klausur =
           new Klausur(null, veranstaltungsId, veranstaltungsName, neuerZeitraum, praesenz);
@@ -405,7 +415,7 @@ public class ChickenService {
       ZeitraumDto neuerUrlaub = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
           urlaub.getStartUhrzeit(),
-          zeitraum.getStartUhrzeit());
+          zeitraum.getStartUhrzeit(), praktikumsstart, praktikumsende);
       return Stream.of(neuerUrlaub);
     }
     // Fall 3: Urlaub Start in Klausur, Urlaub Ende nach Klausur
@@ -414,7 +424,7 @@ public class ChickenService {
       ZeitraumDto neuerUrlaub = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
           zeitraum.getEndUhrzeit(),
-          urlaub.getEndUhrzeit());
+          urlaub.getEndUhrzeit(), praktikumsstart, praktikumsende);
       return Stream.of(neuerUrlaub);
     }
     // Fall 4: Urlaub liegt komplett in Klausur
@@ -425,11 +435,11 @@ public class ChickenService {
       ZeitraumDto neuerUrlaubVorKlausur = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
           urlaub.getStartUhrzeit(),
-          zeitraum.getStartUhrzeit());
+          zeitraum.getStartUhrzeit(), praktikumsstart, praktikumsende);
       ZeitraumDto neuerUrlaubNachKlausur = ZeitraumDto.erstelleZeitraum(
           urlaub.getDatum(),
           zeitraum.getEndUhrzeit(),
-          urlaub.getEndUhrzeit());
+          urlaub.getEndUhrzeit(), praktikumsstart, praktikumsende);
       return Stream.of(neuerUrlaubVorKlausur, neuerUrlaubNachKlausur);
     }
     return Stream.empty();

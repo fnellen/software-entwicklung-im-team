@@ -14,12 +14,16 @@ public class StudentTemplate {
   public static final ZeitraumDto ZEITRAUM_03_09_1130_1230 = ZeitraumDto.erstelleZeitraum(
       LocalDate.of(2022, 3, 9),
       LocalTime.of(11, 30),
-      LocalTime.of(12, 30));
+      LocalTime.of(12, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
 
   public static final ZeitraumDto ZEITRAUM_03_10_1030_1300 = ZeitraumDto.erstelleZeitraum(
       LocalDate.of(2022, 3, 10),
       LocalTime.of(10, 30),
-      LocalTime.of(13, 00));
+      LocalTime.of(13, 00),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
 
   public static final Klausur KL_PROPRA_03_09_1130_1230 =
       new Klausur(null, "215783", "Propra2", ZEITRAUM_03_09_1130_1230, true);

@@ -57,7 +57,7 @@ public class ChickenServiceHoleKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     Klausur geholteKlausur
         = appService.holeKlausur(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
@@ -73,7 +73,7 @@ public class ChickenServiceHoleKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.holeKlausur("20012154")

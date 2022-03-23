@@ -65,7 +65,7 @@ public class ChickenServiceStudentDetailsTestDto {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     StudentDetailsDto studentDetailsDto = appService.studentDetails("dehus101");
 
@@ -90,7 +90,7 @@ public class ChickenServiceStudentDetailsTestDto {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     StudentDetailsDto studentDetailsDto = appService.studentDetails("dehus101");
 
@@ -108,7 +108,7 @@ public class ChickenServiceStudentDetailsTestDto {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     StudentDetailsDto studentDetailsDto = appService.studentDetails("dehus101");
 
@@ -126,7 +126,7 @@ public class ChickenServiceStudentDetailsTestDto {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     assertThatExceptionOfType(StudentNichtGefundenException.class).isThrownBy(() ->
         appService.studentDetails("fnellen")).withMessageContaining("fnellen");

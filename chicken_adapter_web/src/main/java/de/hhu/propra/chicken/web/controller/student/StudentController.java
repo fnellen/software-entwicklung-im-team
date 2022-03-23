@@ -10,10 +10,12 @@ import de.hhu.propra.chicken.web.annotations.StudentRoute;
 import de.hhu.propra.chicken.web.dto.KlausurDto;
 import de.hhu.propra.chicken.web.dto.UrlaubDto;
 import java.security.Principal;
+import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,8 +29,15 @@ public class StudentController {
 
   private final ChickenService service;
 
-  public StudentController(ChickenService service) {
+  private final LocalDate praktikumsstart;
+  private final LocalDate praktikumsende;
+
+  public StudentController(ChickenService service,
+                           @Value("${praktikumszeitraum.praktikumsstart}") String praktikumsstart,
+                           @Value("${praktikumszeitraum.praktikumsende}") String praktikumsende) {
     this.service = service;
+    this.praktikumsstart = LocalDate.parse(praktikumsstart);
+    this.praktikumsende = LocalDate.parse(praktikumsende);
   }
 
   @ModelAttribute("handle")
@@ -54,9 +63,9 @@ public class StudentController {
   @PostMapping("/urlaubstornieren")
   public String urlaubStornieren(Model model, @ModelAttribute("handle") String handle,
                                  @Valid UrlaubDto urlaubDto) {
-    
+
     ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(urlaubDto.urlaubsDatum(),
-        urlaubDto.urlaubsStart(), urlaubDto.urlaubsEnde());
+        urlaubDto.urlaubsStart(), urlaubDto.urlaubsEnde(), praktikumsstart, praktikumsende);
     try {
       service.storniereUrlaub(handle, urlaub);
     } catch (Exception e) {
@@ -103,7 +112,7 @@ public class StudentController {
     try {
       ZeitraumDto urlaub = ZeitraumDto.erstelleZeitraum(urlaubDto.urlaubsDatum(),
           urlaubDto.urlaubsStart(),
-          urlaubDto.urlaubsEnde());
+          urlaubDto.urlaubsEnde(), praktikumsstart, praktikumsende);
       service.belegeUrlaub(handle, urlaub);
       return "redirect:/";
     } catch (Exception e) {
@@ -154,7 +163,7 @@ public class StudentController {
     }
     try {
       ZeitraumDto klausurZeitraum = ZeitraumDto.erstelleZeitraum(klausurDto.klausurdatum(),
-          klausurDto.klausurstart(), klausurDto.klausurende());
+          klausurDto.klausurstart(), klausurDto.klausurende(), praktikumsstart, praktikumsende);
       service.klausurAnmelden(klausurDto.veranstaltungsId(), klausurDto.veranstaltungsName(),
           klausurZeitraum,
           klausurDto.praesenz());

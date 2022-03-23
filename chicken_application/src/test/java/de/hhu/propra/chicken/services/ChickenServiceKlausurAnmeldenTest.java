@@ -69,7 +69,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -93,7 +93,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -118,7 +118,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
     appService.klausurAnmelden("224568", "ProPra II",
@@ -141,7 +141,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -165,7 +165,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     ArgumentCaptor<Klausur> klausurArgumentCaptor = ArgumentCaptor.forClass(Klausur.class);
 
@@ -186,7 +186,7 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     assertThatExceptionOfType(VeranstaltungsIdException.class)
         .isThrownBy(() ->

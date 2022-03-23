@@ -75,7 +75,8 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07",
+            "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -108,7 +109,8 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07",
+            "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -142,7 +144,8 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07",
+            "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -176,7 +179,8 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07",
+            "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -210,7 +214,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -245,7 +249,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -280,7 +284,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -315,7 +319,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -351,7 +355,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -386,7 +390,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -423,7 +427,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -460,7 +464,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
@@ -491,7 +495,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
@@ -518,7 +522,7 @@ public class ChickenServiceBelegeKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230)

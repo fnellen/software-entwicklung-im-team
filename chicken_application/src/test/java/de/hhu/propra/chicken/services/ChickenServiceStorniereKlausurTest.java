@@ -66,7 +66,7 @@ public class ChickenServiceStorniereKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -87,7 +87,7 @@ public class ChickenServiceStorniereKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
@@ -108,7 +108,7 @@ public class ChickenServiceStorniereKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
     ).withMessageContaining("selben");
@@ -131,7 +131,7 @@ public class ChickenServiceStorniereKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     assertThatExceptionOfType(KlausurException.class).isThrownBy(() ->
         appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230)
     ).withMessageContaining("nachhinein");
@@ -157,7 +157,7 @@ public class ChickenServiceStorniereKlausurTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     appService.storniereKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
 
     assertThat(dennis.getKlausuren()).isEmpty();

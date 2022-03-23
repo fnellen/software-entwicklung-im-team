@@ -1,6 +1,6 @@
+DROP TABLE IF EXISTS urlaub_zeitraum_dto;
 DROP TABLE IF EXISTS klausur_referenz_dto;
 DROP TABLE IF EXISTS klausur_dto;
-DROP TABLE IF EXISTS zeitraum_dto;
 DROP TABLE IF EXISTS student_dto;
 
 
@@ -28,7 +28,7 @@ create table klausur_dto
     praesenz            bool
 );
 
-create table zeitraum_dto
+create table urlaub_zeitraum_dto
 (
     student_dto   int references student_dto (id),
     datum         date not null,

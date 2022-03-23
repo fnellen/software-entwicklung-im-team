@@ -17,10 +17,14 @@ public class StudentTest {
     Student student = new Student(1L, "");
     ZeitraumDto zeitraum1 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7), LocalTime.of(9, 30),
-            LocalTime.of(10, 30));
+            LocalTime.of(10, 30),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25));
     ZeitraumDto zeitraum2 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 10), LocalTime.of(10, 30),
-            LocalTime.of(11, 0));
+            LocalTime.of(11, 0),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25));
     student.fuegeUrlaubHinzu(zeitraum1);
     student.fuegeUrlaubHinzu(zeitraum2);
     long restUrlaub = student.berechneBeantragtenUrlaub();
@@ -34,10 +38,14 @@ public class StudentTest {
     Student student = new Student(1L, "");
     ZeitraumDto zeitraum1 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 7), LocalTime.of(9, 30),
-            LocalTime.of(10, 30));
+            LocalTime.of(10, 30),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25));
     ZeitraumDto zeitraum2 =
         ZeitraumDto.erstelleZeitraum(LocalDate.of(2022, 3, 10), LocalTime.of(10, 30),
-            LocalTime.of(11, 00));
+            LocalTime.of(11, 0),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25));
     student.fuegeUrlaubHinzu(zeitraum1);
     student.fuegeUrlaubHinzu(zeitraum2);
     long restUrlaub = student.berechneRestUrlaub();

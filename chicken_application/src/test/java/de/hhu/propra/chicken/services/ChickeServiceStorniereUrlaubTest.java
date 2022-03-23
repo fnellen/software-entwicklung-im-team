@@ -64,7 +64,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200);
 
@@ -85,7 +85,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200);
 
@@ -106,7 +106,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200)
     ).withMessageContaining("selben");
@@ -128,7 +128,7 @@ public class ChickeServiceStorniereUrlaubTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     assertThatExceptionOfType(UrlaubException.class).isThrownBy(() ->
         applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_15_1045_1200)
     ).withMessageContaining("nachhinein");

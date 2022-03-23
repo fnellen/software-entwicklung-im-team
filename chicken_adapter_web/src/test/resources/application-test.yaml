@@ -2,6 +2,10 @@ rollen:
   tutoren: xyz
   organisatoren: xyz, abc
 
+praktikumszeitraum:
+  praktikumsstart: 2022-03-07
+  praktikumsende: 2022-03-25
+
 spring:
   flyway:
     schemas: chicken

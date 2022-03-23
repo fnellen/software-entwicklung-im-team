@@ -1,6 +1,5 @@
 package de.hhu.propra.chicken.domain.aggregates.klausur;
 
-import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Embedded;
 
@@ -10,17 +9,13 @@ public record KlausurDto(@Id Long id,
                          VeranstaltungsId veranstaltungsId,
                          String veranstaltungsName,
                          @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
-                         ZeitraumDto klausurZeitraum,
+                         KlausurZeitraumDto klausurZeitraum,
                          boolean praesenz) {
 
   public static KlausurDto konvertiereZuKlausurDto(Klausur klausur) {
     return new KlausurDto(klausur.id(), klausur.veranstaltungsId(), klausur.veranstaltungsName(),
-        klausur.zeitraumDto(), klausur.praesenz());
-  }
-
-  public Klausur konvertiereZuKlausur() {
-    return new Klausur(this.id, this.veranstaltungsId, this.veranstaltungsName,
-        this.klausurZeitraum(),
-        this.praesenz);
+        new KlausurZeitraumDto(klausur.zeitraumDto().getDatum(),
+            klausur.zeitraumDto().getStartUhrzeit(), klausur.zeitraumDto().getEndUhrzeit()),
+        klausur.praesenz());
   }
 }

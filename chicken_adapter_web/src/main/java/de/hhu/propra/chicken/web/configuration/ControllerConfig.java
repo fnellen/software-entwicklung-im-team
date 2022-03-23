@@ -6,6 +6,7 @@ import de.hhu.propra.chicken.repositories.StudentRepository;
 import de.hhu.propra.chicken.repositories.VeranstaltungsIdRepository;
 import de.hhu.propra.chicken.services.ChickenService;
 import de.hhu.propra.chicken.services.logging.LoggingRepositoryImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,10 +17,15 @@ public class ControllerConfig {
                                 KlausurRepository klausurRepository,
                                 HeutigesDatumRepository heutigesDatumRepository,
                                 VeranstaltungsIdRepository veranstaltungsIdRepository,
-                                LoggingRepositoryImpl loggingRepositoryImpl) {
+                                LoggingRepositoryImpl loggingRepositoryImpl,
+                                @Value("${praktikumszeitraum.praktikumsstart}")
+                                    String praktikumsstart,
+                                @Value("${praktikumszeitraum.praktikumsende}")
+                                    String praktikumsende) {
 
     return new ChickenService(studentRepository, klausurRepository,
-        heutigesDatumRepository, veranstaltungsIdRepository, loggingRepositoryImpl);
+        heutigesDatumRepository, veranstaltungsIdRepository, loggingRepositoryImpl,
+        praktikumsstart, praktikumsende);
   }
 
 }

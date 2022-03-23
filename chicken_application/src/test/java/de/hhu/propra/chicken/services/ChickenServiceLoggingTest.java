@@ -73,7 +73,7 @@ public class ChickenServiceLoggingTest {
     klausurRepository = mock(KlausurRepository.class);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeUrlaub("dehus101", ZEITRAUM_03_24_1300_1330);
     verify(logging).logEntry(heutigesDatum, LogOperation.INSERT, LogTyp.URLAUB, "dehus101",
@@ -97,7 +97,7 @@ public class ChickenServiceLoggingTest {
         .thenReturn(KL_RANDOM10_03_24_1000_1300);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeUrlaub("dehus101", ZEITRAUM_03_24_1300_1330);
     verify(logging).logEntry(heutigesDatum, LogOperation.INSERT, LogTyp.URLAUB, "dehus101",
@@ -117,7 +117,7 @@ public class ChickenServiceLoggingTest {
     klausurRepository = mock(KlausurRepository.class);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeUrlaub("dehus101", ZEITRAUM_03_24_1300_1330);
     verify(logging).logEntry(heutigesDatum, LogOperation.INSERT, LogTyp.URLAUB, "dehus101",
@@ -135,7 +135,7 @@ public class ChickenServiceLoggingTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     applicationService.storniereUrlaub("dehus101", ZEITRAUM_03_08_0930_1030);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.DELETE, LogTyp.URLAUB, "dehus101",
@@ -155,7 +155,7 @@ public class ChickenServiceLoggingTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     applicationService.storniereKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.DELETE, LogTyp.KLAUSUR, "dehus101",
@@ -177,7 +177,7 @@ public class ChickenServiceLoggingTest {
 
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
     applicationService.storniereKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.DELETE, LogTyp.URLAUB, "dehus101",
@@ -199,7 +199,7 @@ public class ChickenServiceLoggingTest {
     klausurRepository = mock(KlausurRepository.class);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
 
@@ -223,7 +223,7 @@ public class ChickenServiceLoggingTest {
     klausurRepository = mock(KlausurRepository.class);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
 
@@ -249,7 +249,7 @@ public class ChickenServiceLoggingTest {
     klausurRepository = mock(KlausurRepository.class);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
 
@@ -274,7 +274,7 @@ public class ChickenServiceLoggingTest {
     klausurRepository = mock(KlausurRepository.class);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
     verify(logging).logEntry(heutigesDatum, LogOperation.UPDATE, LogTyp.URLAUB, "dehus101",
@@ -304,7 +304,7 @@ public class ChickenServiceLoggingTest {
         .thenReturn(KL_RANDOM11_03_24_1300_1330);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
 

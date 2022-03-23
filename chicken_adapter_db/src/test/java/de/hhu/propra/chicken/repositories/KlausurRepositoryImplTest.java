@@ -29,7 +29,8 @@ public class KlausurRepositoryImplTest {
   @Test
   @DisplayName("Klausur wird mit richtiger VeranstaltungsId aus der Datenbank geladen")
   void test_1() {
-    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao);
+    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao, "2022-03-07",
+        "2022-03-25");
     Klausur klausur = klausurRepository.findeKlausurMitVeranstaltungsId("215783");
     assertThat(klausur).isNotNull();
     assertThat(klausur.getVeranstaltungsId()).isEqualTo("215783");
@@ -38,7 +39,8 @@ public class KlausurRepositoryImplTest {
   @Test
   @DisplayName("Eine nicht vorhandene Klausur wird nicht aus der Datenbank geladen.")
   void test_2() {
-    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao);
+    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao, "2022-03-07",
+        "2022-03-25");
     assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(() ->
         klausurRepository.findeKlausurMitVeranstaltungsId("456654")
     );
@@ -47,11 +49,15 @@ public class KlausurRepositoryImplTest {
   @Test
   @DisplayName("Eine Klausur wird richtig in der Datenbank gespeichert.")
   void test_3() {
-    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao);
-    Klausur klausur = new Klausur(null, "224568", "RDB", ZeitraumDto.erstelleZeitraum(
-        LocalDate.of(2022, 3, 9),
-        LocalTime.of(10, 30),
-        LocalTime.of(11, 30)), true);
+    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao, "2022-03-07",
+        "2022-03-25");
+    Klausur klausur = new Klausur(null, "224568", "RDB",
+        ZeitraumDto.erstelleZeitraum(
+            LocalDate.of(2022, 3, 9),
+            LocalTime.of(10, 30),
+            LocalTime.of(11, 30),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25)), true);
     klausurRepository.speicherKlausur(klausur);
     Klausur geladeneKlausur = klausurRepository.findeKlausurMitVeranstaltungsId("224568");
     assertThat(geladeneKlausur).isNotNull();
@@ -61,12 +67,15 @@ public class KlausurRepositoryImplTest {
   @Test
   @DisplayName("Es kann nicht 2 mal die gleiche Klausur hinzugefügt werden")
   void test_4() {
-    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao);
+    KlausurRepositoryImpl klausurRepository = new KlausurRepositoryImpl(klausurDao, "2022-03-07",
+        "2022-03-25");
     Klausur klausur = new Klausur(null, "215783", "RDB",
         ZeitraumDto.erstelleZeitraum(
             LocalDate.of(2022, 3, 9),
             LocalTime.of(10, 30),
-            LocalTime.of(11, 30)), true);
+            LocalTime.of(11, 30),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25)), true);
     assertThatExceptionOfType(RuntimeException.class)
         .isThrownBy(() -> klausurRepository.speicherKlausur(klausur));
   }

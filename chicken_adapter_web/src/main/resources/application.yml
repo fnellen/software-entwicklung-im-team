@@ -2,17 +2,21 @@ rollen:
   tutoren: ${TUTOREN}
   organisatoren: ${ORGANISATOREN}
 
+praktikumszeitraum:
+  praktikumsstart: ${PRAKTIKUMS_START}
+  praktikumsende: ${PRAKTIKUMS_ENDE}
+
 spring:
   flyway:
     schemas: chicken
     create-schemas: true
     url: jdbc:mariadb://${DB_HOST:localhost}:3306
-    user: ${DB_USER}
-    password: ${MARIADB_ROOT_PASSWORD}
+    user: ${DB_USER:root}
+    password: ${MARIADB_ROOT_PASSWORD:iamgroot}
   datasource:
     url: jdbc:mariadb://${DB_HOST:localhost}:3306/chicken
-    username: ${DB_USER}
-    password: ${MARIADB_ROOT_PASSWORD}
+    username: ${DB_USER:root}
+    password: ${MARIADB_ROOT_PASSWORD:iamgroot}
   security:
     oauth2:
       client:

@@ -6,6 +6,6 @@
 
     <!-- Match all XYZ violations. -->
     <Match>
-        <Bug code="EI, UrF"/>
+        <Bug code="EI,EI2, UrF"/>
     </Match>
 </FindBugsFilter>

@@ -24,7 +24,6 @@ import de.hhu.propra.chicken.services.fehler.KlausurException;
 import de.hhu.propra.chicken.services.fehler.StudentNichtGefundenException;
 import de.hhu.propra.chicken.services.fehler.UrlaubException;
 import de.hhu.propra.chicken.web.StudentTemplate;
-import de.hhu.propra.chicken.web.dto.UrlaubDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
@@ -34,12 +33,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @WebMvcTest
 @AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 public class StudentControllerTest {
 
   @Autowired
@@ -103,28 +104,18 @@ public class StudentControllerTest {
     verify(chickenService).holeStudent(FEDERICO.getGithubHandle());
     verify(chickenService).studentSpeichern(FEDERICO);
     verify(chickenService).studentDetails(FEDERICO.getGithubHandle());
-  }
-
-  @Test
-  @DisplayName("Urlaub wird storniert")
-  void test_04() throws Exception {
-    FEDERICO.fuegeUrlaubHinzu(ZEITRAUM_03_10_1030_1300);
-    when(chickenService.holeStudent(FEDERICO.getGithubHandle()))
-        .thenThrow(StudentNichtGefundenException.class)
-        .thenReturn(FEDERICO);
-    when(chickenService.studentDetails(FEDERICO.getGithubHandle())).thenReturn(
-        template.getFedericoDetails());
 
     MockHttpServletRequestBuilder postRequest =
         post("/urlaubstornieren").flashAttr("handle", FEDERICO.getGithubHandle())
-            .param("urlaubsDatum",LocalDate.of(2022,03,10).toString())
-            .param("urlaubsStart",LocalTime.of(10,30).toString())
-            .param("urlaubsEnde",LocalTime.of(13,00).toString());
+            .param("urlaubsDatum", LocalDate.of(2022, 03, 10).toString())
+            .param("urlaubsStart", LocalTime.of(10, 30).toString())
+            .param("urlaubsEnde", LocalTime.of(13, 00).toString());
 
-    mockMvc.perform(postRequest).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/"))
+    mockMvc.perform(postRequest).andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/"))
         .andReturn();
 
-    verify(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+    verify(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(), ZEITRAUM_03_10_1030_1300);
 
   }
 
@@ -137,20 +128,20 @@ public class StudentControllerTest {
     when(chickenService.studentDetails(FEDERICO.getGithubHandle())).thenReturn(
         template.getFedericoDetails());
     doThrow(new UrlaubException("Urlaub konnte nicht storniert werden"))
-        .when(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+        .when(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(), ZEITRAUM_03_10_1030_1300);
 
     MockHttpServletRequestBuilder postRequest =
         post("/urlaubstornieren").flashAttr("handle", FEDERICO.getGithubHandle())
-            .param("urlaubsDatum",LocalDate.of(2022,03,10).toString())
-            .param("urlaubsStart",LocalTime.of(10,30).toString())
-            .param("urlaubsEnde",LocalTime.of(13,00).toString());
+            .param("urlaubsDatum", LocalDate.of(2022, 03, 10).toString())
+            .param("urlaubsStart", LocalTime.of(10, 30).toString())
+            .param("urlaubsEnde", LocalTime.of(13, 00).toString());
 
     mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler","Urlaub konnte nicht storniert werden"))
+        .andExpect(model().attribute("fehler", "Urlaub konnte nicht storniert werden"))
         .andReturn();
 
-    verify(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+    verify(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(), ZEITRAUM_03_10_1030_1300);
 
   }
 
@@ -167,12 +158,13 @@ public class StudentControllerTest {
 
     MockHttpServletRequestBuilder postRequest =
         post("/klausurstornieren").flashAttr("handle", FEDERICO.getGithubHandle())
-            .param("veranstaltungsId",KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
+            .param("veranstaltungsId", KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
 
-    mockMvc.perform(postRequest).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/"))
+    mockMvc.perform(postRequest).andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/"))
         .andReturn();
 
-    verify(chickenService).storniereKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+    verify(chickenService).storniereKlausur(FEDERICO.getGithubHandle(), KL_PROPRA_03_09_1130_1230);
 
   }
 
@@ -186,18 +178,19 @@ public class StudentControllerTest {
     when(chickenService.studentDetails(FEDERICO.getGithubHandle())).thenReturn(
         template.getFedericoDetails());
     doThrow(new KlausurException("Klausur konnte nicht sotrniert werden"))
-        .when(chickenService).storniereKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+        .when(chickenService)
+        .storniereKlausur(FEDERICO.getGithubHandle(), KL_PROPRA_03_09_1130_1230);
 
     MockHttpServletRequestBuilder postRequest =
         post("/klausurstornieren").flashAttr("handle", FEDERICO.getGithubHandle())
-            .param("veranstaltungsId",KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
+            .param("veranstaltungsId", KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
 
     mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler","Klausur konnte nicht sotrniert werden"))
+        .andExpect(model().attribute("fehler", "Klausur konnte nicht sotrniert werden"))
         .andReturn();
 
-    verify(chickenService).storniereKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+    verify(chickenService).storniereKlausur(FEDERICO.getGithubHandle(), KL_PROPRA_03_09_1130_1230);
 
   }
 
@@ -205,7 +198,7 @@ public class StudentControllerTest {
   @DisplayName("Urlaubelegung ist erreichbar")
   void test_06() throws Exception {
     MockHttpServletRequestBuilder getRequest =
-        get("/urlaubbelegen").flashAttr("handle",FEDERICO.getGithubHandle());
+        get("/urlaubbelegen").flashAttr("handle", FEDERICO.getGithubHandle());
 
     MvcResult result = mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(model().attribute("fehler", "")).andReturn();
@@ -217,17 +210,17 @@ public class StudentControllerTest {
   @DisplayName("Urlaub wird belegt")
   void test_07() throws Exception {
     MockHttpServletRequestBuilder postRequest =
-        post("/urlaubbelegen").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("urlaubsDatum",LocalDate.of(2022,03,10).toString())
-        .param("urlaubsStart",LocalTime.of(10,30).toString())
-        .param("urlaubsEnde",LocalTime.of(13,00).toString());;
+        post("/urlaubbelegen").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("urlaubsDatum", LocalDate.of(2022, 03, 10).toString())
+            .param("urlaubsStart", LocalTime.of(10, 30).toString())
+            .param("urlaubsEnde", LocalTime.of(13, 00).toString());
 
     mockMvc.perform(postRequest)
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/"))
         .andReturn();
 
-    verify(chickenService).belegeUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+    verify(chickenService).belegeUrlaub(FEDERICO.getGithubHandle(), ZEITRAUM_03_10_1030_1300);
   }
 
   @Test
@@ -235,10 +228,10 @@ public class StudentControllerTest {
   void test_08() throws Exception {
 
     MockHttpServletRequestBuilder postRequest =
-        post("/urlaubbelegen").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("urlaubsDatum","")
-            .param("urlaubsStart",LocalTime.of(10,30).toString())
-            .param("urlaubsEnde",LocalTime.of(13,00).toString());
+        post("/urlaubbelegen").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("urlaubsDatum", "")
+            .param("urlaubsStart", LocalTime.of(10, 30).toString())
+            .param("urlaubsEnde", LocalTime.of(13, 00).toString());
 
     MvcResult result = mockMvc.perform(postRequest)
         .andExpect(status().isOk())
@@ -256,17 +249,17 @@ public class StudentControllerTest {
         .belegeUrlaub(FEDERICO.getGithubHandle(), ZEITRAUM_03_10_1030_1300);
 
     MockHttpServletRequestBuilder postRequest =
-        post("/urlaubbelegen").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("urlaubsDatum",LocalDate.of(2022,03,10).toString())
-            .param("urlaubsStart",LocalTime.of(10,30).toString())
-            .param("urlaubsEnde",LocalTime.of(13,00).toString());
+        post("/urlaubbelegen").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("urlaubsDatum", LocalDate.of(2022, 03, 10).toString())
+            .param("urlaubsStart", LocalTime.of(10, 30).toString())
+            .param("urlaubsEnde", LocalTime.of(13, 00).toString());
 
-    MvcResult result = mockMvc.perform(postRequest)
+    mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler","Urlaub schon gebucht"))
+        .andExpect(model().attribute("fehler", "Urlaub schon gebucht"))
         .andReturn();
 
-    verify(chickenService).belegeUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+    verify(chickenService).belegeUrlaub(FEDERICO.getGithubHandle(), ZEITRAUM_03_10_1030_1300);
 
   }
 
@@ -274,7 +267,7 @@ public class StudentControllerTest {
   @DisplayName("Klausurbelegung ist erreichbar")
   void test_10() throws Exception {
     MockHttpServletRequestBuilder getRequest =
-        get("/klausurbelegen").flashAttr("handle",FEDERICO.getGithubHandle());
+        get("/klausurbelegen").flashAttr("handle", FEDERICO.getGithubHandle());
 
     MvcResult result = mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(model().attribute("fehler", "")).andReturn();
@@ -288,26 +281,26 @@ public class StudentControllerTest {
   void test_11() throws Exception {
     when(chickenService.holeKlausur("215783")).thenReturn(KL_PROPRA_03_09_1130_1230);
     MockHttpServletRequestBuilder postRequest =
-        post("/klausurbelegen").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("veranstaltungsId","215783");
+        post("/klausurbelegen").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsId", "215783");
 
     mockMvc.perform(postRequest)
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/"))
         .andReturn();
 
-    verify(chickenService).belegeKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+    verify(chickenService).belegeKlausur(FEDERICO.getGithubHandle(), KL_PROPRA_03_09_1130_1230);
   }
 
   @Test
   @DisplayName("Klausur wird nicht belegt wenn die Veranstaltungsid null ist")
   void test_12() throws Exception {
     MockHttpServletRequestBuilder postRequest =
-        post("/klausurbelegen").flashAttr("handle",FEDERICO.getGithubHandle());
+        post("/klausurbelegen").flashAttr("handle", FEDERICO.getGithubHandle());
 
-    MvcResult result = mockMvc.perform(postRequest)
+    mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler",""))
+        .andExpect(model().attribute("fehler", ""))
         .andReturn();
   }
 
@@ -315,38 +308,39 @@ public class StudentControllerTest {
   @DisplayName("Klausur wird nicht belegt wenn belegeKlausur fehlschlägt")
   void test_13() throws Exception {
     doThrow(new KlausurException("Klausur gibt es nicht"))
-        .when(chickenService).belegeKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+        .when(chickenService).belegeKlausur(FEDERICO.getGithubHandle(), KL_PROPRA_03_09_1130_1230);
     when(chickenService.holeKlausur("215783")).thenReturn(KL_PROPRA_03_09_1130_1230);
     when(chickenService.alleKlausuren()).thenReturn(Set.of(KL_PROPRA_03_09_1130_1230));
 
     MockHttpServletRequestBuilder postRequest =
-        post("/klausurbelegen").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("veranstaltungsId","215783");
+        post("/klausurbelegen").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsId", "215783");
 
     mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler","Klausur gibt es nicht"))
-        .andExpect(model().attribute("klausuren",Set.of(KL_PROPRA_03_09_1130_1230)))
+        .andExpect(model().attribute("fehler", "Klausur gibt es nicht"))
+        .andExpect(model().attribute("klausuren", Set.of(KL_PROPRA_03_09_1130_1230)))
         .andReturn();
 
-    verify(chickenService).belegeKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+    verify(chickenService).belegeKlausur(FEDERICO.getGithubHandle(), KL_PROPRA_03_09_1130_1230);
     verify(chickenService).holeKlausur("215783");
   }
 
   @Test
   @DisplayName("Klausur wird nicht belegt wenn holeKlausur fehlschlägt")
   void test_14() throws Exception {
-    when(chickenService.holeKlausur("Käse")).thenThrow(new KlausurException("Klausur gibt es nicht"));
+    when(chickenService.holeKlausur("Käse")).thenThrow(
+        new KlausurException("Klausur gibt es nicht"));
     when(chickenService.alleKlausuren()).thenReturn(Set.of(KL_PROPRA_03_09_1130_1230));
 
     MockHttpServletRequestBuilder postRequest =
-        post("/klausurbelegen").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("veranstaltungsId","Käse");
+        post("/klausurbelegen").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsId", "Käse");
 
     mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler","Klausur gibt es nicht"))
-        .andExpect(model().attribute("klausuren",Set.of(KL_PROPRA_03_09_1130_1230)))
+        .andExpect(model().attribute("fehler", "Klausur gibt es nicht"))
+        .andExpect(model().attribute("klausuren", Set.of(KL_PROPRA_03_09_1130_1230)))
         .andReturn();
 
     verify(chickenService).holeKlausur("Käse");
@@ -356,7 +350,7 @@ public class StudentControllerTest {
   @DisplayName("Klausuranmeldung ist erreichbar")
   void test_15() throws Exception {
     MockHttpServletRequestBuilder getRequest =
-        get("/klausuranmelden").flashAttr("handle",FEDERICO.getGithubHandle());
+        get("/klausuranmelden").flashAttr("handle", FEDERICO.getGithubHandle());
 
     MvcResult result = mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(model().attribute("fehler", "")).andReturn();
@@ -368,13 +362,13 @@ public class StudentControllerTest {
   @DisplayName("Klausur wird angemeldet")
   void test_16() throws Exception {
     MockHttpServletRequestBuilder postRequest =
-        post("/klausuranmelden").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("veranstaltungsId","215783")
-            .param("veranstaltungsName","Propra2")
-            .param("praesenz","true")
-            .param("klausurdatum",LocalDate.of(2022,03,23).toString())
-            .param("klausurstart",LocalTime.of(11,30).toString())
-            .param("klausurende",LocalTime.of(13,00).toString());
+        post("/klausuranmelden").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsId", "215783")
+            .param("veranstaltungsName", "Propra2")
+            .param("praesenz", "true")
+            .param("klausurdatum", LocalDate.of(2022, 3, 23).toString())
+            .param("klausurstart", LocalTime.of(11, 30).toString())
+            .param("klausurende", LocalTime.of(13, 0).toString());
 
     mockMvc.perform(postRequest)
         .andExpect(status().is3xxRedirection())
@@ -382,26 +376,28 @@ public class StudentControllerTest {
         .andReturn();
 
     ZeitraumDto zeitraum = ZeitraumDto
-        .erstelleZeitraum(LocalDate.of(2022,03,23)
-            ,LocalTime.of(11,30),LocalTime.of(13,00));
+        .erstelleZeitraum(LocalDate.of(2022, 3, 23),
+            LocalTime.of(11, 30), LocalTime.of(13, 0),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25));
 
-    verify(chickenService).klausurAnmelden("215783","Propra2",zeitraum,true);
+    verify(chickenService).klausurAnmelden("215783", "Propra2", zeitraum, true);
   }
 
   @Test
   @DisplayName("Klausur wird nicht angemeldet wenn ein Feld null ist")
   void test_17() throws Exception {
     MockHttpServletRequestBuilder postRequest =
-        post("/klausuranmelden").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("veranstaltungsName","Propra2")
-            .param("praesenz","true")
-            .param("klausurdatum",LocalDate.of(2022,03,23).toString())
-            .param("klausurstart",LocalTime.of(11,30).toString())
-            .param("klausurende",LocalTime.of(13,00).toString());
+        post("/klausuranmelden").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsName", "Propra2")
+            .param("praesenz", "true")
+            .param("klausurdatum", LocalDate.of(2022, 03, 23).toString())
+            .param("klausurstart", LocalTime.of(11, 30).toString())
+            .param("klausurende", LocalTime.of(13, 00).toString());
 
     MvcResult result = mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler",""))
+        .andExpect(model().attribute("fehler", ""))
         .andReturn();
     String html = result.getResponse().getContentAsString();
 
@@ -412,20 +408,20 @@ public class StudentControllerTest {
   @DisplayName("Klausur wird nicht angemeldet wenn ")
   void test_18() throws Exception {
     doThrow(new KlausurException("VeranstaltungsId ist falsch")).when(chickenService)
-        .klausurAnmelden(anyString(),anyString(),any(ZeitraumDto.class),anyBoolean());
+        .klausurAnmelden(anyString(), anyString(), any(ZeitraumDto.class), anyBoolean());
 
     MockHttpServletRequestBuilder postRequest =
-        post("/klausuranmelden").flashAttr("handle",FEDERICO.getGithubHandle())
-            .param("veranstaltungsId","Käse")
-            .param("veranstaltungsName","Propra2")
-            .param("praesenz","true")
-            .param("klausurdatum",LocalDate.of(2022,03,23).toString())
-            .param("klausurstart",LocalTime.of(11,30).toString())
-            .param("klausurende",LocalTime.of(13,00).toString());
+        post("/klausuranmelden").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsId", "Käse")
+            .param("veranstaltungsName", "Propra2")
+            .param("praesenz", "true")
+            .param("klausurdatum", LocalDate.of(2022, 03, 23).toString())
+            .param("klausurstart", LocalTime.of(11, 30).toString())
+            .param("klausurende", LocalTime.of(13, 00).toString());
 
     mockMvc.perform(postRequest)
         .andExpect(status().isOk())
-        .andExpect(model().attribute("fehler","VeranstaltungsId ist falsch"))
+        .andExpect(model().attribute("fehler", "VeranstaltungsId ist falsch"))
         .andReturn();
   }
 }

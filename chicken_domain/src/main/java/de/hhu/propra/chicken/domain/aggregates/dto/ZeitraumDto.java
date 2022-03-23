@@ -16,11 +16,17 @@ public class ZeitraumDto {
   private final LocalDate datum;
   private final LocalTime startUhrzeit;
   private final LocalTime endUhrzeit;
+  private final LocalDate praktikumsStart;
+  private final LocalDate praktikumsEnde;
 
-  private ZeitraumDto(LocalDate datum, LocalTime startUhrzeit, LocalTime endUhrzeit) {
+
+  public ZeitraumDto(LocalDate datum, LocalTime startUhrzeit, LocalTime endUhrzeit,
+                     LocalDate praktikumsStart, LocalDate praktikumsEnde) {
     this.datum = datum;
     this.startUhrzeit = startUhrzeit;
     this.endUhrzeit = endUhrzeit;
+    this.praktikumsStart = praktikumsStart;
+    this.praktikumsEnde = praktikumsEnde;
   }
 
   /**
@@ -32,8 +38,9 @@ public class ZeitraumDto {
    * @return gibt ein Zeitraums Objekt zurück, wenn die Validierung erfolgreich war. Ansonsten null.
    */
   public static ZeitraumDto erstelleZeitraum(LocalDate datum, LocalTime startUhrzeit,
-                                             LocalTime endUhrzeit) {
-    if (!validierePraktikumszeitraum(datum)) {
+                                             LocalTime endUhrzeit, LocalDate praktikumsStart,
+                                             LocalDate praktikumsEnde) {
+    if (!validierePraktikumszeitraum(datum, praktikumsStart, praktikumsEnde)) {
       throw new ZeitraumDtoException("Der Zeitraum liegt nicht im Praktikumszeitraum");
     }
     if (validiereObAnWochenende(datum)) {
@@ -48,22 +55,33 @@ public class ZeitraumDto {
     if (!inPraktikumsZeit(startUhrzeit, endUhrzeit)) {
       throw new ZeitraumDtoException("Die Uhrzeiten liegen nicht innerhalb des Arbeitszeitraums");
     }
-    return new ZeitraumDto(datum, startUhrzeit, endUhrzeit);
+    return new ZeitraumDto(datum, startUhrzeit, endUhrzeit, praktikumsStart, praktikumsEnde);
   }
 
-  @Deprecated
+  /*@Deprecated
   private static boolean validierePraktikumszeitraum(LocalDate datum) {
     LocalDate startDatum = LocalDate.of(2022, 03, 07);
     LocalDate endDatum = LocalDate.of(2022, 03, 25);
     return !datum.isBefore(startDatum) && !datum.isAfter(endDatum);
+  }*/
+
+  private static boolean validierePraktikumszeitraum(LocalDate datum, LocalDate praktikumsStart,
+                                                     LocalDate praktikumsEnde) {
+    if (praktikumsEnde.isBefore(praktikumsStart)) {
+      throw new ZeitraumDtoException("Praktikumsstart ist nach Praktikumsende");
+    } else {
+      return !datum.isBefore(praktikumsStart) && !datum.isAfter(praktikumsEnde);
+    }
   }
 
   private static boolean inPraktikumsZeit(LocalTime startUhrzeit, LocalTime endUhrzeit) {
-    return !startUhrzeit.isBefore(LocalTime.of(9, 30)) && !endUhrzeit.isAfter(LocalTime.of(13, 30));
+    return !startUhrzeit.isBefore(LocalTime.of(9, 30)) && !endUhrzeit.isAfter(
+        LocalTime.of(13, 30));
   }
 
   private static boolean validiereObAnWochenende(LocalDate datum) {
-    return datum.getDayOfWeek() == DayOfWeek.SATURDAY || datum.getDayOfWeek() == DayOfWeek.SUNDAY;
+    return datum.getDayOfWeek() == DayOfWeek.SATURDAY
+        || datum.getDayOfWeek() == DayOfWeek.SUNDAY;
   }
 
   private static boolean validiereUhrzeiten(LocalTime startUhrzeit, LocalTime endUhrzeit) {

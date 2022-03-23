@@ -57,7 +57,7 @@ public class ChickenServiceStudentSpeichernTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     appService.studentSpeichern(dennis);
 
@@ -74,7 +74,7 @@ public class ChickenServiceStudentSpeichernTest {
 
     ChickenService appService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
-            veranstaltungsIdRepository, logging);
+            veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
     Student student = new Student(3L, "test");
 
