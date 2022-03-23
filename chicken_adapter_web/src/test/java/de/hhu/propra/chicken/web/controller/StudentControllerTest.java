@@ -129,6 +129,32 @@ public class StudentControllerTest {
   }
 
   @Test
+  @DisplayName("Urlaub wird nicht storniert wenn ein Fehler bei stornieUrlaub auftritt")
+  void test_04a() throws Exception {
+    FEDERICO.fuegeUrlaubHinzu(ZEITRAUM_03_10_1030_1300);
+    when(chickenService.holeStudent(FEDERICO.getGithubHandle()))
+        .thenReturn(FEDERICO);
+    when(chickenService.studentDetails(FEDERICO.getGithubHandle())).thenReturn(
+        template.getFedericoDetails());
+    doThrow(new UrlaubException("Urlaub konnte nicht storniert werden"))
+        .when(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+
+    MockHttpServletRequestBuilder postRequest =
+        post("/urlaubstornieren").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("urlaubsDatum",LocalDate.of(2022,03,10).toString())
+            .param("urlaubsStart",LocalTime.of(10,30).toString())
+            .param("urlaubsEnde",LocalTime.of(13,00).toString());
+
+    mockMvc.perform(postRequest)
+        .andExpect(status().isOk())
+        .andExpect(model().attribute("fehler","Urlaub konnte nicht storniert werden"))
+        .andReturn();
+
+    verify(chickenService).storniereUrlaub(FEDERICO.getGithubHandle(),ZEITRAUM_03_10_1030_1300);
+
+  }
+
+  @Test
   @DisplayName("Klausur wird storniert")
   void test_05() throws Exception {
     FEDERICO.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
@@ -144,6 +170,31 @@ public class StudentControllerTest {
             .param("veranstaltungsId",KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
 
     mockMvc.perform(postRequest).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/"))
+        .andReturn();
+
+    verify(chickenService).storniereKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+
+  }
+
+  @Test
+  @DisplayName("Klausur wird nicht storniert wenn ein Fehler bei storniereKlausur auftritt")
+  void test_05a() throws Exception {
+    FEDERICO.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    when(chickenService.holeStudent(FEDERICO.getGithubHandle()))
+        .thenReturn(FEDERICO);
+    when(chickenService.holeKlausur(anyString())).thenReturn(KL_PROPRA_03_09_1130_1230);
+    when(chickenService.studentDetails(FEDERICO.getGithubHandle())).thenReturn(
+        template.getFedericoDetails());
+    doThrow(new KlausurException("Klausur konnte nicht sotrniert werden"))
+        .when(chickenService).storniereKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
+
+    MockHttpServletRequestBuilder postRequest =
+        post("/klausurstornieren").flashAttr("handle", FEDERICO.getGithubHandle())
+            .param("veranstaltungsId",KL_PROPRA_03_09_1130_1230.getVeranstaltungsId());
+
+    mockMvc.perform(postRequest)
+        .andExpect(status().isOk())
+        .andExpect(model().attribute("fehler","Klausur konnte nicht sotrniert werden"))
         .andReturn();
 
     verify(chickenService).storniereKlausur(FEDERICO.getGithubHandle(),KL_PROPRA_03_09_1130_1230);
