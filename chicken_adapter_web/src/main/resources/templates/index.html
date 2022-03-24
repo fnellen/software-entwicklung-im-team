@@ -78,15 +78,15 @@
             <thead>
             <tr>
                 <th>Veranstaltungsname</th>
-                <th>Datum</th>
+                <th>Klausurzeitraum</th>
                 <th>Freistellung vom Praktikum</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="klausur: ${details.klausuren()}">
                 <td th:text="${klausur.veranstaltungsName()}"> Propra</td>
-                <td th:text="${klausur.zeitraumDto().getDatum()}">21.03.2022</td>
-                <td th:text="${klausur.zeitraumDto().toString()}"> 09:30 - 11:00 Uhr</td>
+                <td th:text="${klausur.klausurZeitraum().toString()}">21.03.2022</td>
+                <td th:text="${klausur.freistellungsZeitraum().toString()}"> 09:30 - 11:00 Uhr</td>
                 <td>
                     <form method="post" th:action="@{/klausurstornieren}">
                         <input name="veranstaltungsId" th:value="${klausur.getVeranstaltungsId()}" type="hidden">

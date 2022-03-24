@@ -11,12 +11,15 @@ import de.hhu.propra.chicken.domain.stereotypes.EntityObject;
 @EntityObject
 public record Klausur(Long id, VeranstaltungsId veranstaltungsId,
                       String veranstaltungsName,
-                      ZeitraumDto zeitraumDto, Boolean praesenz) {
+                      ZeitraumDto klausurZeitraum,
+                      ZeitraumDto freistellungsZeitraum,
+                      Boolean praesenz) {
 
 
   public Klausur(Long id, String veranstaltungsId, String veranstaltungsName,
-                 ZeitraumDto zeitraum, Boolean praesenz) {
-    this(id, VeranstaltungsId.erstelle(veranstaltungsId), veranstaltungsName, zeitraum, praesenz);
+                 ZeitraumDto klausurZeitraum, ZeitraumDto freistellungsZeitraum, Boolean praesenz) {
+    this(id, VeranstaltungsId.erstelle(veranstaltungsId), veranstaltungsName, klausurZeitraum,
+        freistellungsZeitraum, praesenz);
 
   }
 
@@ -46,6 +49,6 @@ public record Klausur(Long id, VeranstaltungsId veranstaltungsId,
 
   @Override
   public String toString() {
-    return veranstaltungsName + " " + zeitraumDto;
+    return veranstaltungsName + " " + klausurZeitraum + " " + (praesenz ? "in Präsenz" : "Online");
   }
 }

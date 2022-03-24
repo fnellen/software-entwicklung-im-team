@@ -1,6 +1,7 @@
 package de.hhu.propra.chicken.services;
 
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_RANDOM10_03_24_1000_1300;
+import static de.hhu.propra.chicken.services.KlausurTemplate.KL_RANDOM10_03_24_1000_1300_O;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_RANDOM11_03_24_1300_1330;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_08_0930_1030;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_24_0930_1000;
@@ -90,11 +91,11 @@ public class ChickenServiceLoggingTest {
      *       Klausur von 10_00 - 13_00 schon gebucht
      *       Soll: Urlaub von 13:00 -> 13:30 buchen
      */
-    dennis.fuegeKlausurHinzu(KL_RANDOM10_03_24_1000_1300);
+    dennis.fuegeKlausurHinzu(KL_RANDOM10_03_24_1000_1300_O);
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_RANDOM10_03_24_1000_1300.getVeranstaltungsId()))
-        .thenReturn(KL_RANDOM10_03_24_1000_1300);
+        KL_RANDOM10_03_24_1000_1300_O.getVeranstaltungsId()))
+        .thenReturn(KL_RANDOM10_03_24_1000_1300_O);
     ChickenService applicationService =
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
@@ -201,7 +202,7 @@ public class ChickenServiceLoggingTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
+    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300_O);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.INSERT, LogTyp.KLAUSUR, "dehus101",
         null, ZEITRAUM_03_24_1000_1300);
@@ -225,7 +226,7 @@ public class ChickenServiceLoggingTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
+    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300_O);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.DELETE, LogTyp.URLAUB, "dehus101",
         ZEITRAUM_03_24_1000_1100, null);
@@ -251,7 +252,7 @@ public class ChickenServiceLoggingTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
+    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300_O);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.INSERT, LogTyp.KLAUSUR, "dehus101",
         null, ZEITRAUM_03_24_1000_1300);
@@ -276,7 +277,7 @@ public class ChickenServiceLoggingTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
+    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300_O);
     verify(logging).logEntry(heutigesDatum, LogOperation.UPDATE, LogTyp.URLAUB, "dehus101",
         ZEITRAUM_03_24_1200_1330, ZEITRAUM_03_24_1300_1330);
     verify(logging).logEntry(heutigesDatum, LogOperation.DELETE, LogTyp.URLAUB, "dehus101",
@@ -306,7 +307,7 @@ public class ChickenServiceLoggingTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300);
+    applicationService.belegeKlausur("dehus101", KL_RANDOM10_03_24_1000_1300_O);
 
     verify(logging).logEntry(heutigesDatum, LogOperation.INSERT, LogTyp.KLAUSUR, "dehus101",
         null, ZEITRAUM_03_24_1000_1300);

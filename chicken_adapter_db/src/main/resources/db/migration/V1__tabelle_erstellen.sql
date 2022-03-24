@@ -19,13 +19,16 @@ create table klausur_referenz_dto
 
 create table klausur_dto
 (
-    id                  int auto_increment not null primary key,
-    veranstaltungs_id   varchar(260),
-    veranstaltungs_name varchar(260),
-    datum               date               not null,
-    start_uhrzeit       time               not null,
-    end_uhrzeit         time               not null,
-    praesenz            bool
+    id                        int auto_increment not null primary key,
+    veranstaltungs_id         varchar(260),
+    veranstaltungs_name       varchar(260),
+    klausurdatum              date               not null,
+    klausurstart_uhrzeit      time               not null,
+    klausurend_uhrzeit        time               not null,
+    freistellungdatum         date               not null,
+    freistellungstart_uhrzeit time               not null,
+    freistellungend_uhrzeit   time               not null,
+    praesenz                  bool
 );
 
 create table urlaub_zeitraum_dto

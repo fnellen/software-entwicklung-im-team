@@ -57,6 +57,12 @@ public class KlausurRepositoryImplTest {
             LocalTime.of(10, 30),
             LocalTime.of(11, 30),
             LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25)),
+        ZeitraumDto.erstelleZeitraum(
+            LocalDate.of(2022, 3, 9),
+            LocalTime.of(9, 30),
+            LocalTime.of(13, 30),
+            LocalDate.of(2022, 3, 7),
             LocalDate.of(2022, 3, 25)), true);
     klausurRepository.speicherKlausur(klausur);
     Klausur geladeneKlausur = klausurRepository.findeKlausurMitVeranstaltungsId("224568");
@@ -74,6 +80,12 @@ public class KlausurRepositoryImplTest {
             LocalDate.of(2022, 3, 9),
             LocalTime.of(10, 30),
             LocalTime.of(11, 30),
+            LocalDate.of(2022, 3, 7),
+            LocalDate.of(2022, 3, 25)),
+        ZeitraumDto.erstelleZeitraum(
+            LocalDate.of(2022, 3, 9),
+            LocalTime.of(9, 30),
+            LocalTime.of(13, 30),
             LocalDate.of(2022, 3, 7),
             LocalDate.of(2022, 3, 25)), true);
     assertThatExceptionOfType(RuntimeException.class)

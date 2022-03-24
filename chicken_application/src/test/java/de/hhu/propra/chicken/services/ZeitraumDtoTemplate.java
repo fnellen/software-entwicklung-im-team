@@ -309,4 +309,52 @@ public class ZeitraumDtoTemplate {
       LocalDate.of(2022, 3, 7),
       LocalDate.of(2022, 3, 25));
 
+  static final ZeitraumDto ZEITRAUM_03_09_0930_1300 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 9),
+      LocalTime.of(9, 30),
+      LocalTime.of(13, 0),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
+
+  static final ZeitraumDto ZEITRAUM_03_08_0930_1230 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 8),
+      LocalTime.of(9, 30),
+      LocalTime.of(12, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
+
+  static final ZeitraumDto ZEITRAUM_03_07_0930_1230 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 7),
+      LocalTime.of(9, 30),
+      LocalTime.of(12, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
+
+  static final ZeitraumDto ZEITRAUM_03_24_0930_1330 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(9, 30),
+      LocalTime.of(13, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
+
+  static final ZeitraumDto ZEITRAUM_03_24_1100_1330 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(11, 30),
+      LocalTime.of(13, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
+
+  static final ZeitraumDto ZEITRAUM_03_24_1130_1330 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 24),
+      LocalTime.of(11, 30),
+      LocalTime.of(13, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
+
+  static final ZeitraumDto ZEITRAUM_03_09_1000_1230 = ZeitraumDto.erstelleZeitraum(
+      LocalDate.of(2022, 3, 9),
+      LocalTime.of(10, 0),
+      LocalTime.of(12, 30),
+      LocalDate.of(2022, 3, 7),
+      LocalDate.of(2022, 3, 25));
 }

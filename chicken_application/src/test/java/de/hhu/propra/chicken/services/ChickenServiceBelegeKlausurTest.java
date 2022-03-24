@@ -3,6 +3,7 @@ package de.hhu.propra.chicken.services;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_03_09_1000_1100;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_03_09_1000_1145;
 import static de.hhu.propra.chicken.services.KlausurTemplate.KL_PROPRA_03_09_1130_1230;
+import static de.hhu.propra.chicken.services.KlausurTemplate.KL_PROPRA_03_09_1130_1230_O2;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_0930_0945;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_0930_1130;
 import static de.hhu.propra.chicken.services.ZeitraumDtoTemplate.ZEITRAUM_03_09_0930_1330;
@@ -98,12 +99,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_0945);
 
@@ -112,10 +113,10 @@ public class ChickenServiceBelegeKlausurTest {
             veranstaltungsIdRepository, logging, "2022-03-07",
             "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_0930_0945);
   }
 
@@ -133,12 +134,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_1130);
 
@@ -147,10 +148,10 @@ public class ChickenServiceBelegeKlausurTest {
             veranstaltungsIdRepository, logging, "2022-03-07",
             "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_0930_1130);
   }
 
@@ -168,12 +169,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1230_1330);
 
@@ -182,10 +183,10 @@ public class ChickenServiceBelegeKlausurTest {
             veranstaltungsIdRepository, logging, "2022-03-07",
             "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1230_1330);
   }
 
@@ -203,12 +204,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1300_1330);
 
@@ -216,10 +217,10 @@ public class ChickenServiceBelegeKlausurTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1300_1330);
   }
 
@@ -238,12 +239,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1100_1200);
 
@@ -251,10 +252,10 @@ public class ChickenServiceBelegeKlausurTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1100_1130);
   }
 
@@ -273,12 +274,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1200_1330);
 
@@ -286,10 +287,10 @@ public class ChickenServiceBelegeKlausurTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1230_1330);
   }
 
@@ -343,12 +344,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1145_1215);
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_1230_1330);
@@ -357,10 +358,10 @@ public class ChickenServiceBelegeKlausurTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
-        new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));
+        new KlausurReferenz(KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()));
     assertThat(dennis.getUrlaube()).containsExactly(ZEITRAUM_03_09_1230_1330);
   }
 
@@ -379,12 +380,12 @@ public class ChickenServiceBelegeKlausurTest {
      */
     studentRepository = mock(StudentRepository.class);
     when(studentRepository.findeStudentMitHandle("dehus101")).thenReturn(dennis);
-    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230);
+    dennis.fuegeKlausurHinzu(KL_PROPRA_03_09_1130_1230_O2);
 
     klausurRepository = mock(KlausurRepository.class);
     when(klausurRepository.findeKlausurMitVeranstaltungsId(
-        KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()))
-        .thenReturn(KL_PROPRA_03_09_1130_1230);
+        KL_PROPRA_03_09_1130_1230_O2.getVeranstaltungsId()))
+        .thenReturn(KL_PROPRA_03_09_1130_1230_O2);
 
     dennis.fuegeUrlaubHinzu(ZEITRAUM_03_09_0930_1330);
 
@@ -392,7 +393,7 @@ public class ChickenServiceBelegeKlausurTest {
         new ChickenService(studentRepository, klausurRepository, heutigesDatumRepository,
             veranstaltungsIdRepository, logging, "2022-03-07", "2022-03-25");
 
-    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230);
+    appService.belegeKlausur("dehus101", KL_PROPRA_03_09_1130_1230_O2);
 
     assertThat(dennis.getKlausuren()).contains(
         new KlausurReferenz(KL_PROPRA_03_09_1130_1230.getVeranstaltungsId()));

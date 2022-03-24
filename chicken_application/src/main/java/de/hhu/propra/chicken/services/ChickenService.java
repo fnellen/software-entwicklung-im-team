@@ -78,38 +78,42 @@ public class ChickenService {
   }
 
   public void klausurAnmelden(String veranstaltungsId, String veranstaltungsName,
-                              ZeitraumDto zeitraumDto, Boolean praesenz)
+                              ZeitraumDto klausurZeitraum, Boolean praesenz)
       throws VeranstaltungsIdException {
     boolean valideId = veranstaltungsIdRepository.webCheck(veranstaltungsId);
     if (!valideId) {
       throw new VeranstaltungsIdException("Veranstaltungs ID nicht gültig");
     } else {
-      ZeitraumDto neuerZeitraum;
+      ZeitraumDto freistellungsZeitraum;
       if (praesenz) {
         LocalTime neueStartuhrzeit =
-            zeitraumDto.getStartUhrzeit().minus(Duration.of(120, ChronoUnit.MINUTES));
+            klausurZeitraum.getStartUhrzeit().minus(Duration.of(120, ChronoUnit.MINUTES));
         LocalTime neueEndUhrzeit =
-            zeitraumDto.getEndUhrzeit().plus(Duration.of(120, ChronoUnit.MINUTES));
+            klausurZeitraum.getEndUhrzeit().plus(Duration.of(120, ChronoUnit.MINUTES));
         if (neueStartuhrzeit.isBefore(LocalTime.of(9, 30))) {
           neueStartuhrzeit = LocalTime.of(9, 30);
         }
         if (neueEndUhrzeit.isAfter(LocalTime.of(13, 30))) {
           neueEndUhrzeit = LocalTime.of(13, 30);
         }
-        neuerZeitraum =
-            ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit, neueEndUhrzeit,
+        freistellungsZeitraum =
+            ZeitraumDto.erstelleZeitraum(klausurZeitraum.getDatum(), neueStartuhrzeit,
+                neueEndUhrzeit,
                 praktikumsstart, praktikumsende);
       } else {
-        LocalTime neueStartuhrzeit = zeitraumDto.getStartUhrzeit().minus(Duration.of(30,
+        LocalTime neueStartuhrzeit = klausurZeitraum.getStartUhrzeit().minus(Duration.of(30,
             ChronoUnit.MINUTES));
         if (neueStartuhrzeit.isBefore(LocalTime.of(9, 30))) {
           neueStartuhrzeit = LocalTime.of(9, 30);
         }
-        neuerZeitraum = ZeitraumDto.erstelleZeitraum(zeitraumDto.getDatum(), neueStartuhrzeit,
-            zeitraumDto.getEndUhrzeit(), praktikumsstart, praktikumsende);
+        freistellungsZeitraum =
+            ZeitraumDto.erstelleZeitraum(klausurZeitraum.getDatum(), neueStartuhrzeit,
+                klausurZeitraum.getEndUhrzeit(), praktikumsstart, praktikumsende);
       }
       Klausur klausur =
-          new Klausur(null, veranstaltungsId, veranstaltungsName, neuerZeitraum, praesenz);
+          new Klausur(null, veranstaltungsId, veranstaltungsName, klausurZeitraum,
+              freistellungsZeitraum,
+              praesenz);
       klausurRepository.speicherKlausur(klausur);
     }
   }
@@ -156,8 +160,8 @@ public class ChickenService {
     Student student = holeStudent(githubHandle);
     student.entferneKlausur(klausur);
     logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), DELETE,
-        KLAUSUR, student.getGithubHandle(), klausur.zeitraumDto(), null);
-    Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(klausur.zeitraumDto(), student);
+        KLAUSUR, student.getGithubHandle(), klausur.klausurZeitraum(), null);
+    Set<ZeitraumDto> urlaubeAmTag = getUrlaubeAmTag(klausur.klausurZeitraum(), student);
     urlaubeAmTag.forEach(student::entferneUrlaub);
     urlaubeAmTag.forEach(
         urlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), DELETE,
@@ -179,32 +183,32 @@ public class ChickenService {
     istKlausurDatumKorrekt(klausur);
 
     Student student = holeStudent(githubHandle);
-    ZeitraumDto beantragteKlausur = klausur.zeitraumDto();
+    ZeitraumDto beantragteKlausur = klausur.klausurZeitraum();
     Set<Klausur> belegteKlausurenAmTag = getBelegteKlausurenAmTag(beantragteKlausur, student);
     Set<ZeitraumDto> gebuchteUrlaubeAmTag = getUrlaubeAmTag(beantragteKlausur, student);
 
     if (!belegteKlausurenAmTag.isEmpty()) {
       Set<Klausur> ueberschneidendeKlausuren = belegteKlausurenAmTag.stream().filter(
-          belegteKlausurAmTag -> ueberschneidenSichZeitraeume(belegteKlausurAmTag.zeitraumDto(),
-              beantragteKlausur)).collect(Collectors.toSet());
+          belegteKlausurAmTag -> ueberschneidenSichZeitraeume(belegteKlausurAmTag.klausurZeitraum(),
+              klausur.klausurZeitraum())).collect(Collectors.toSet());
       if (!ueberschneidendeKlausuren.isEmpty()) {
         //Es wird außer Acht gelassen, dass eine Klausur zusätzlich Zeit angerechnet bekommt.
         throw new KlausurException("Es können keine zwei Klausuren am selben Zeitraum geschrieben"
             + " werden.");
       }
     }
-
+    beantragteKlausur = klausur.freistellungsZeitraum();
     //**Fall 1**: Kein Urlaub an dem Tag
     if (gebuchteUrlaubeAmTag.isEmpty()) {
       student.fuegeKlausurHinzu(klausur);
       logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
-          KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
+          KLAUSUR, student.getGithubHandle(), null, beantragteKlausur);
       studentRepository.speicherStudent(student);
     } else {
       //**Fall 2**: Urlaub an dem Tag
       //Fall 5: Urlaub fängt innerhalb der Klausur an und hört innerhalb der Klausur auf
       Set<ZeitraumDto> urlaubeInnerhalbKlausur = gebuchteUrlaubeAmTag.stream()
-          .filter(urlaub -> liegtUrlaubInZeitraum(urlaub, beantragteKlausur))
+          .filter(urlaub -> liegtUrlaubInZeitraum(urlaub, klausur.freistellungsZeitraum()))
           .collect(Collectors.toSet());
 
       if (!urlaubeInnerhalbKlausur.isEmpty()) {
@@ -214,20 +218,21 @@ public class ChickenService {
                 DELETE, URLAUB, student.getGithubHandle(), urlaub, null));
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
-            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.freistellungsZeitraum());
         studentRepository.speicherStudent(student);
         return;
       }
 
       Set<ZeitraumDto> ueberschneidendeUrlaube = gebuchteUrlaubeAmTag.stream().filter(urlaub ->
-          ueberschneidenSichZeitraeume(urlaub, beantragteKlausur)).collect(Collectors.toSet());
+              ueberschneidenSichZeitraeume(urlaub, klausur.freistellungsZeitraum()))
+          .collect(Collectors.toSet());
 
       //Fall 2: Urlaub fängt vor der Klausur an und hört vor der Klausur auf
       //Fall 6: Urlaub fängt nach der Klausur an und hört nach der Klausur auf
       if (ueberschneidendeUrlaube.isEmpty()) {
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
-            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.freistellungsZeitraum());
         studentRepository.speicherStudent(student);
       } else {
         //Fall 1: Urlaub fängt vor der Klausur an und hört innerhalb des Klausurzeitraums auf
@@ -235,24 +240,24 @@ public class ChickenService {
         //Fall 4: Urlaub fängt innerhalb der Klausur an und hört nach der Klausur auf
         Set<ZeitraumDto> angepassteUrlaube =
             ueberschneidendeUrlaube.stream().flatMap(urlaub -> passeUrlaubAnKlausurAn(urlaub,
-                beantragteKlausur, student)).collect(Collectors.toSet());
+                klausur.freistellungsZeitraum(), student)).collect(Collectors.toSet());
         angepassteUrlaube.forEach(student::fuegeUrlaubHinzu);
         angepassteUrlaube.forEach(
             urlaub -> logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
                 URLAUB, student.getGithubHandle(), null, urlaub));
         student.fuegeKlausurHinzu(klausur);
         logging.logEntry(heutigesDatumRepository.getDatumUndZeit(), INSERT,
-            KLAUSUR, student.getGithubHandle(), null, klausur.zeitraumDto());
+            KLAUSUR, student.getGithubHandle(), null, klausur.freistellungsZeitraum());
         studentRepository.speicherStudent(student);
       }
     }
   }
 
   void istKlausurDatumKorrekt(Klausur klausur) {
-    if (klausur.zeitraumDto().getDatum().equals(heutigesDatumRepository.getDatum())) {
+    if (klausur.klausurZeitraum().getDatum().equals(heutigesDatumRepository.getDatum())) {
       throw new KlausurException("Klausur kann nicht am selben Tag geaendert werden.");
     }
-    if (klausur.zeitraumDto().getDatum().isBefore(heutigesDatumRepository.getDatum())) {
+    if (klausur.klausurZeitraum().getDatum().isBefore(heutigesDatumRepository.getDatum())) {
       throw new KlausurException("Klausur kann nicht im nachhinein geaendert werden.");
     }
   }
@@ -385,7 +390,8 @@ public class ChickenService {
     // zu buchender Urlaub liegt in gebuchtem Klausurzeitraum -> lösche Urlaubantrag
     Set<Klausur> klausurenDieBeantragtenUrlaubUeberdecken = belegteKlausurenAmTag
         .stream()
-        .filter(klausur -> liegtUrlaubInZeitraum(beantragterUrlaub, klausur.zeitraumDto()))
+        .filter(
+            klausur -> liegtUrlaubInZeitraum(beantragterUrlaub, klausur.freistellungsZeitraum()))
         .collect(Collectors.toSet());
     if (!klausurenDieBeantragtenUrlaubUeberdecken.isEmpty()) {
       throw new UrlaubException("Urlaubzeitraum wird komplett von Klausur ueberdeckt");
@@ -393,9 +399,10 @@ public class ChickenService {
 
     // Berechne neue Urlaubszeiträume außerhalb des vorher gebuchten Klausurzeitraums
     Set<ZeitraumDto> neuBerechneteZeitraeume = belegteKlausurenAmTag.stream()
-        .filter(klausur -> ueberschneidenSichZeitraeume(beantragterUrlaub, klausur.zeitraumDto()))
+        .filter(klausur -> ueberschneidenSichZeitraeume(beantragterUrlaub,
+            klausur.freistellungsZeitraum()))
         .flatMap(klausur -> berechneNichtUeberlappendeZeitraeume(beantragterUrlaub,
-            klausur.zeitraumDto()))
+            klausur.freistellungsZeitraum()))
         .collect(Collectors.toSet());
 
     // falls sich der zu beantragende Urlaub nicht mit der Klausur überschneidet, soll
@@ -491,7 +498,7 @@ public class ChickenService {
         student.getKlausuren().stream().map(KlausurReferenz::id).map(
             klausurRepository::findeKlausurMitVeranstaltungsId).collect(Collectors.toSet());
     return belegteKlausurenVomStudenten.stream()
-        .filter(e -> e.zeitraumDto().getDatum().equals(zeitraumDto.getDatum())).collect(
+        .filter(e -> e.freistellungsZeitraum().getDatum().equals(zeitraumDto.getDatum())).collect(
             Collectors.toSet());
   }
 

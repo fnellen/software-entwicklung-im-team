@@ -47,6 +47,12 @@ public class KlausurRepositoryImpl implements KlausurRepository {
             klausurDto.klausurZeitraum().endUhrzeit(),
             praktikumsstart,
             praktikumsende),
+        ZeitraumDto.erstelleZeitraum(
+            klausurDto.freistellungsZeitraum().datum(),
+            klausurDto.freistellungsZeitraum().startUhrzeit(),
+            klausurDto.freistellungsZeitraum().endUhrzeit(),
+            praktikumsstart,
+            praktikumsende),
         klausurDto.praesenz());
   }
 

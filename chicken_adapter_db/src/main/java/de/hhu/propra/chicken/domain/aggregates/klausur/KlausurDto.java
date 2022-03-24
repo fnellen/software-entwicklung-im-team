@@ -8,14 +8,19 @@ public record KlausurDto(@Id Long id,
                          @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
                          VeranstaltungsId veranstaltungsId,
                          String veranstaltungsName,
-                         @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+                         @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL, prefix = "klausur")
                          KlausurZeitraumDto klausurZeitraum,
+                         @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL, prefix = "freistellung")
+                         KlausurZeitraumDto freistellungsZeitraum,
                          boolean praesenz) {
 
   public static KlausurDto konvertiereZuKlausurDto(Klausur klausur) {
     return new KlausurDto(klausur.id(), klausur.veranstaltungsId(), klausur.veranstaltungsName(),
-        new KlausurZeitraumDto(klausur.zeitraumDto().getDatum(),
-            klausur.zeitraumDto().getStartUhrzeit(), klausur.zeitraumDto().getEndUhrzeit()),
+        new KlausurZeitraumDto(klausur.klausurZeitraum().getDatum(),
+            klausur.klausurZeitraum().getStartUhrzeit(), klausur.klausurZeitraum().getEndUhrzeit()),
+        new KlausurZeitraumDto(klausur.freistellungsZeitraum().getDatum(),
+            klausur.freistellungsZeitraum().getStartUhrzeit(),
+            klausur.freistellungsZeitraum().getEndUhrzeit()),
         klausur.praesenz());
   }
 }

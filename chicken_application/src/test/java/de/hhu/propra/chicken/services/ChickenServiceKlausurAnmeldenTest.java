@@ -77,7 +77,10 @@ public class ChickenServiceKlausurAnmeldenTest {
         ZEITRAUM_03_14_1130_1230, true);
 
     verify(klausurRepository).speicherKlausur(klausurArgumentCaptor.capture());
-    assertThat(klausurArgumentCaptor.getValue().zeitraumDto()).isEqualTo(ZEITRAUM_03_14_0930_1330);
+    assertThat(klausurArgumentCaptor.getValue().klausurZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_1130_1230);
+    assertThat(klausurArgumentCaptor.getValue().freistellungsZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_0930_1330);
   }
 
   @Test
@@ -101,8 +104,10 @@ public class ChickenServiceKlausurAnmeldenTest {
         ZEITRAUM_03_14_1030_1130, true);
 
     verify(klausurRepository).speicherKlausur(klausurArgumentCaptor.capture());
-    assertThat(klausurArgumentCaptor.getValue().zeitraumDto()).isEqualTo(ZEITRAUM_03_14_0930_1330);
-
+    assertThat(klausurArgumentCaptor.getValue().klausurZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_1030_1130);
+    assertThat(klausurArgumentCaptor.getValue().freistellungsZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_0930_1330);
   }
 
   @Test
@@ -126,7 +131,10 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     verify(klausurRepository).speicherKlausur(klausurArgumentCaptor.capture());
 
-    assertThat(klausurArgumentCaptor.getValue().zeitraumDto()).isEqualTo(ZEITRAUM_03_14_1030_1330);
+    assertThat(klausurArgumentCaptor.getValue().klausurZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_1230_1330);
+    assertThat(klausurArgumentCaptor.getValue().freistellungsZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_1030_1330);
   }
 
   @Test
@@ -150,7 +158,10 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     verify(klausurRepository).speicherKlausur(klausurArgumentCaptor.capture());
 
-    assertThat(klausurArgumentCaptor.getValue().zeitraumDto()).isEqualTo(ZEITRAUM_03_14_1100_1230);
+    assertThat(klausurArgumentCaptor.getValue().klausurZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_1130_1230);
+    assertThat(klausurArgumentCaptor.getValue().freistellungsZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_1100_1230);
   }
 
   @Test
@@ -174,7 +185,10 @@ public class ChickenServiceKlausurAnmeldenTest {
 
     verify(klausurRepository).speicherKlausur(klausurArgumentCaptor.capture());
 
-    assertThat(klausurArgumentCaptor.getValue().zeitraumDto()).isEqualTo(ZEITRAUM_03_14_0930_1130);
+    assertThat(klausurArgumentCaptor.getValue().klausurZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_0930_1130);
+    assertThat(klausurArgumentCaptor.getValue().freistellungsZeitraum()).isEqualTo(
+        ZEITRAUM_03_14_0930_1130);
   }
 
   @Test
