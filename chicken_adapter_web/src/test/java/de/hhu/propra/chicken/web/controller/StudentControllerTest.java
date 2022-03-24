@@ -203,7 +203,7 @@ public class StudentControllerTest {
     MvcResult result = mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(model().attribute("fehler", "")).andReturn();
 
-    assertThat(result.getResponse().getContentAsString()).contains("Urlaub anmelden");
+    assertThat(result.getResponse().getContentAsString()).contains("Urlaub belegen");
   }
 
   @Test
@@ -238,7 +238,7 @@ public class StudentControllerTest {
         .andReturn();
     String html = result.getResponse().getContentAsString();
 
-    assertThat(html).contains("must not be null");
+    assertThat(html).contains("Darf nicht leer sein");
 
   }
 
@@ -401,7 +401,7 @@ public class StudentControllerTest {
         .andReturn();
     String html = result.getResponse().getContentAsString();
 
-    assertThat(html).contains("must not be null");
+    assertThat(html).contains("Darf nicht leer sein");
   }
 
   @Test

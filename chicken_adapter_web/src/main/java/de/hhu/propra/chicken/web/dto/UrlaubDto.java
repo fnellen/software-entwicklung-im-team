@@ -9,12 +9,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public record UrlaubDto(
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull
+    @NotNull(message = "Darf nicht leer sein")
     LocalDate urlaubsDatum,
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    @NotNull
+    @NotNull(message = "Darf nicht leer sein")
     LocalTime urlaubsStart,
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    @NotNull
+    @NotNull(message = "Darf nicht leer sein")
     LocalTime urlaubsEnde) {
 }

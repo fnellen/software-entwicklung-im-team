@@ -8,13 +8,25 @@
 </head>
 <body>
 <div class="container">
-    <h1>Anmeldung zu einer Klausur</h1>
 
+    <header>
+        <h1>Anmeldung zu einer Klausur</h1>
+    </header>
+
+    <nav>
+        <a href="/">
+            <button class="btn btn-primary" aria-label="Zurückgehen zur Übersicht">Zurück zur Übersicht</button>
+        </a>
+    </nav>
+
+    <main>
     <div class="formular mt-3">
         <p class="alert">
             <strong>
-                Wenn die Klausur in der Auswahl noch nicht vorhanden ist, dann können Sie
-                sie <a href="/klausuranmelden">hier</a> anlegen.
+                <p>Wenn die Klausur in der Auswahl noch nicht vorhanden ist, dann können Sie sie unter dem folgendem Link anlegen.</p>
+                <a href="/klausuranmelden">
+                    <button class="btn btn-primary" aria-label="Link zur Klausurerstellung">Klausur anlegen</button>
+                </a>
             </strong>
         </p>
         <form method="post" name="klausur_anmelden" th:action="@{/klausurbelegen}">
@@ -39,10 +51,10 @@
             <button class="btn btn-primary mt-2" name="klausuranmeldung_abschicken" type="submit">Eintragen</button>
         </form>
         <div th:if="${!fehler.isEmpty()}">
-            <p class="alert alert-danger" th:text="${fehler}"> Etwas ist schiefgelaufen</p>
+            <p class="alert alert-warning" th:text="${fehler}"><span style="color: black">Etwas ist schiefgelaufen</span></p>
         </div>
     </div>
-
+    </main>
 </div>
 
 </body>

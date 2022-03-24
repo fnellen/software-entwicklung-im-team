@@ -8,16 +8,21 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public record KlausurDto(
-    @NotNull
+    @NotBlank(message = "Darf nicht leer sein")
+    @NotNull(message = "Darf nicht leer sein")
     String veranstaltungsId,
-    @NotNull
+    @NotBlank(message = "Darf nicht leer sein")
+    @NotNull(message = "Darf nicht leer sein")
     String veranstaltungsName,
     @NotNull
     Boolean praesenz,
+    @NotNull(message = "Darf nicht leer sein")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate klausurdatum,
+    @NotNull(message = "Darf nicht leer sein")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     LocalTime klausurstart,
+    @NotNull(message = "Darf nicht leer sein")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     LocalTime klausurende
 ) {
