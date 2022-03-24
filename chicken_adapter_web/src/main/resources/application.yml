@@ -1,10 +1,10 @@
 rollen:
-  tutoren: ${TUTOREN}
-  organisatoren: ${ORGANISATOREN}
+  tutoren: fnellen
+  organisatoren: fnellen
 
 praktikumszeitraum:
-  praktikumsstart: ${PRAKTIKUMS_START}
-  praktikumsende: ${PRAKTIKUMS_ENDE}
+  praktikumsstart: 2022-03-07
+  praktikumsende: 2022-03-25
 
 spring:
   flyway:
