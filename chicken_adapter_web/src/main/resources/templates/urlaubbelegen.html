@@ -49,7 +49,7 @@
                      th:if="${#fields.hasErrors('urlaubsEnde')}"></div>
             </div>
 
-            <button class="btn btn-primary" name="urlaubsanmeldung_abschicken" type="submit">Eintragen</button>
+            <input class="btn btn-primary" name="abschicken" type="submit" value="Eintragen"/>
 
         </form>
         <div th:if="${!fehler.isEmpty()}">
