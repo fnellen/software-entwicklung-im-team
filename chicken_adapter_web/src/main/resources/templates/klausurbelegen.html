@@ -24,7 +24,7 @@
         <p class="alert">
             <strong>
                 <p>Wenn die Klausur in der Auswahl noch nicht vorhanden ist, dann können Sie sie unter dem folgendem Link anlegen.</p>
-                <a href="/klausuranmelden">
+                <a href="/klausuranmelden" name="klausur-anmelden-a">
                     <button class="btn btn-primary" aria-label="Link zur Klausurerstellung">Klausur anlegen</button>
                 </a>
             </strong>
@@ -48,7 +48,7 @@
                 <strong>Natürlich müssen Sie dann auch am Praktikum teilnehmen.</strong> <br>
                 Ggf. überprüfen wir die Teilnahme an der Klausur über die entsprechenden Teilnehmerlisten
             </p>
-            <button class="btn btn-primary mt-2" name="klausuranmeldung_abschicken" type="submit">Eintragen</button>
+            <input class="btn btn-primary mt-2" name="klausuranmeldung_abschicken" type="submit" value="Belegen">
         </form>
         <div th:if="${!fehler.isEmpty()}">
             <p class="alert alert-warning" th:text="${fehler}"><span style="color: black">Etwas ist schiefgelaufen</span></p>

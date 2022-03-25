@@ -372,7 +372,7 @@ public class StudentControllerTest {
 
     mockMvc.perform(postRequest)
         .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/"))
+        .andExpect(redirectedUrl("/klausurbelegen"))
         .andReturn();
 
     ZeitraumDto zeitraum = ZeitraumDto

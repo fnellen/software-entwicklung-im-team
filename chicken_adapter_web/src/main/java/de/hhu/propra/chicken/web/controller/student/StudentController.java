@@ -171,7 +171,7 @@ public class StudentController {
       model.addAttribute("fehler", e.getMessage());
       return "klausuranmelden";
     }
-    return "redirect:/";
+    return "redirect:/klausurbelegen";
   }
 
 }

@@ -15,11 +15,11 @@
 <nav>
     <div class="text-center pt-5">
 
-        <button class="btn btn-primary" style="margin-right: 1rem" name="urlaub-belegen-btn">
+        <button class="btn btn-primary" style="margin-right: 1rem">
             <a name="urlaub-belegen-a" aria-label="Link zur Urlaubsbelegung" href="/urlaubbelegen" style="text-decoration: none; color: white">Urlaub belegen</a>
         </button>
-        <button class="btn btn-primary" style="margin-left: 1rem" name="klausur-belegen-btn">
-            <a aria-label="Link zur Klausurbelegung" href="/klausurbelegen" style="text-decoration: none; color: white">Klausur belegen</a>
+        <button class="btn btn-primary" style="margin-left: 1rem">
+            <a name="klausur-belegen-a" aria-label="Link zur Klausurbelegung" href="/klausurbelegen" style="text-decoration: none; color: white">Klausur belegen</a>
         </button>
     </div>
 </nav>
@@ -51,7 +51,7 @@
                            type="hidden">
                     <input id="urlaubsEnde" name="urlaubsEnde" th:attr="value = ${urlaub.getEndUhrzeit()}"
                            type="hidden">
-                    <button class="btn btn-dark btn-sm" type="submit">Stornieren</button>
+                    <input class="btn btn-dark btn-sm" th:name="'storniere ' + ${urlaub}" type="submit" value="Stornieren">
                 </form>
             </td>
         </tr>
@@ -69,12 +69,12 @@
     </table>
     <h2 id="klausur">Klausuren</h2>
     <div th:if="${details.klausuren().isEmpty()}">
-        <p class="alert alert-warning"><span style="color: black">Sie sind für keine Klausuren
+        <p class="alert alert-warning" name="keineKlausur"><span style="color: black">Sie sind für keine Klausuren
             angemeldet.</span></p>
     </div>
 
     <div th:if="${!details.klausuren().isEmpty()}">
-        <table class="table mb-5" id="klausur_table">
+        <table class="table mb-5" name="klausur_table">
             <thead>
             <tr>
                 <th>Veranstaltungsname</th>
@@ -91,7 +91,7 @@
                     <form method="post" th:action="@{/klausurstornieren}">
                         <input name="veranstaltungsId" th:value="${klausur.getVeranstaltungsId()}" type="hidden">
                         <input name="handle" th:value="${details.student.getGithubHandle()}" type="hidden">
-                        <button class="btn btn-dark btn-sm" type="submit">Stornieren</button>
+                        <input class="btn btn-dark btn-sm" type="submit" th:name="'storniere ' + ${klausur.getVeranstaltungsId()}" value="Stornieren">
 
                     </form>
                 </td>
