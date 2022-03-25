@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import de.hhu.propra.chicken.dao.KlausurDao;
 import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
 import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
+import de.hhu.propra.chicken.domain.aggregates.klausur.KlausurRepositoryImpl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;

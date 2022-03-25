@@ -1,9 +1,8 @@
-package de.hhu.propra.chicken.repositories;
+package de.hhu.propra.chicken.domain.aggregates.klausur;
 
 import de.hhu.propra.chicken.dao.KlausurDao;
 import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
-import de.hhu.propra.chicken.domain.aggregates.klausur.Klausur;
-import de.hhu.propra.chicken.domain.aggregates.klausur.KlausurDto;
+import de.hhu.propra.chicken.repositories.KlausurRepository;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -27,6 +26,16 @@ public class KlausurRepositoryImpl implements KlausurRepository {
     this.klausurDao = klausurDao;
     this.praktikumsstart = LocalDate.parse(praktikumsstart);
     this.praktikumsende = LocalDate.parse(praktikumsende);
+  }
+
+  private static KlausurDto konvertiereZuKlausurDto(Klausur klausur) {
+    return new KlausurDto(klausur.id(), klausur.veranstaltungsId(), klausur.veranstaltungsName(),
+        new KlausurZeitraumDto(klausur.klausurZeitraum().getDatum(),
+            klausur.klausurZeitraum().getStartUhrzeit(), klausur.klausurZeitraum().getEndUhrzeit()),
+        new KlausurZeitraumDto(klausur.freistellungsZeitraum().getDatum(),
+            klausur.freistellungsZeitraum().getStartUhrzeit(),
+            klausur.freistellungsZeitraum().getEndUhrzeit()),
+        klausur.praesenz());
   }
 
   @Override
@@ -56,7 +65,6 @@ public class KlausurRepositoryImpl implements KlausurRepository {
         klausurDto.praesenz());
   }
 
-
   @Override
   @Transactional
   public void speicherKlausur(Klausur klausur) {
@@ -64,7 +72,7 @@ public class KlausurRepositoryImpl implements KlausurRepository {
       findeKlausurMitVeranstaltungsId(klausur.getVeranstaltungsId());
       throw new RuntimeException("fehler");
     } catch (NoSuchElementException e) {
-      KlausurDto klausurDto = KlausurDto.konvertiereZuKlausurDto(klausur);
+      KlausurDto klausurDto = konvertiereZuKlausurDto(klausur);
       klausurDao.save(klausurDto);
     }
   }

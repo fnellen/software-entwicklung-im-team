@@ -2,6 +2,7 @@ package de.hhu.propra.chicken.domain.aggregates.student;
 
 import de.hhu.propra.chicken.dao.StudentDao;
 import de.hhu.propra.chicken.domain.aggregates.dto.ZeitraumDto;
+import de.hhu.propra.chicken.domain.aggregates.klausur.VeranstaltungsIdDto;
 import de.hhu.propra.chicken.repositories.StudentRepository;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
@@ -25,6 +26,16 @@ public class StudentRepositoryImpl implements StudentRepository {
     this.studentDao = studentDao;
     this.praktikumsstart = LocalDate.parse(praktikumsstart);
     this.praktikumsende = LocalDate.parse(praktikumsende);
+  }
+
+  private static StudentDto konvertiereZuStudentDto(Student student) {
+    Set<KlausurReferenzDto> klausurReferenzDtos = student.getKlausuren().stream()
+        .map(e -> new KlausurReferenzDto(new VeranstaltungsIdDto(e.id())))
+        .collect(Collectors.toSet());
+    return new StudentDto(student.getId(), student.getGithubHandle(),
+        student.getUrlaube().stream().map(e -> new UrlaubZeitraumDto(e.getDatum(),
+            e.getStartUhrzeit(), e.getEndUhrzeit())).collect(Collectors.toSet()),
+        klausurReferenzDtos);
   }
 
   private Student konvertiereZuStudent(StudentDto studentDto) {
@@ -53,7 +64,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
   @Override
   public void speicherStudent(Student student) {
-    StudentDto studentDto = StudentDto.konvertiereZuStudentDto(student);
+    StudentDto studentDto = konvertiereZuStudentDto(student);
     StudentDto gespeichertesDto = studentDao.save(studentDto);
     student.setId(gespeichertesDto.id());
   }
