@@ -70,7 +70,7 @@ public class KlausurRepositoryImpl implements KlausurRepository {
   public void speicherKlausur(Klausur klausur) {
     try {
       findeKlausurMitVeranstaltungsId(klausur.getVeranstaltungsId());
-      throw new RuntimeException("fehler");
+      throw new RuntimeException("Klausur wurde bereits angemeldet");
     } catch (NoSuchElementException e) {
       KlausurDto klausurDto = konvertiereZuKlausurDto(klausur);
       klausurDao.save(klausurDto);
