@@ -25,6 +25,8 @@ subprojects {
         excludeFilter = file("$rootDir/config/spotbugs/excludeFilter.xml")
     }
 
+    spotbugsTest.enabled = false
+
     tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
         reports {
             xml.required = false
