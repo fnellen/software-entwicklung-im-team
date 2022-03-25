@@ -10,26 +10,30 @@
 <div class="container">
     <header>
         <h1>Urlaub belegen</h1>
-        <p type="hidden">Hier muss der gewünschte Urlaub angegeben werden im Format Datum, Startuhrzeit und Enduhrzeit</p>
+        <p type="hidden">Hier muss der gewünschte Urlaub angegeben werden im Format Datum, Startuhrzeit und
+            Enduhrzeit</p>
     </header>
 
     <nav>
         <a href="/">
-            <button class="btn btn-primary" aria-label="Zurückgehen zur Übersicht">Zurück zur Übersicht</button>
+            <button aria-label="Zurückgehen zur Übersicht" class="btn btn-primary">Zurück zur Übersicht</button>
         </a>
     </nav>
 
     <div class="formular mt-3">
         <form class="mt-3" method="post" name="urlaub_anmelden" th:action="@{/urlaubbelegen}" th:object="${urlaubDto}">
             <div class="form-floating mb-3">
-                <input class="form-control" id="urlaubdatum" required th:field="*{urlaubsDatum}" type="date" aria-label="Urlaubsdatum">
+                <input aria-label="Urlaubsdatum" class="form-control" id="urlaubdatum" name="urlaubsDatum" required
+                       th:field="*{urlaubsDatum}" type="date">
                 <label class="form-label" for="urlaubdatum">Datum (dd.mm.yyyy)</label>
                 <div class="alert alert-warning" th:errors="*{urlaubsDatum}"
                      th:if="${#fields.hasErrors('urlaubsDatum')}"></div>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" id="urlaubstart" required th:field="*{urlaubsStart}" type="time" aria-label="Startuhrzeit des Urlaubs">
+                <input aria-label="Startuhrzeit des Urlaubs" class="form-control" id="urlaubstart" name="urlaubsStart"
+                       required
+                       th:field="*{urlaubsStart}" type="time">
                 <label for="urlaubstart">Start (hh:mm)</label>
                 <div class="alert alert-warning" th:errors="*{urlaubsStart}"
                      th:if="${#fields.hasErrors('urlaubsStart')}"></div>
@@ -37,7 +41,9 @@
 
             </div>
             <div class="form-floating mb-3">
-                <input class="form-control" id="urlaubende" required th:field="*{urlaubsEnde}" type="time" aria-label="Enduhrzeit des Urlaubs">
+                <input aria-label="Enduhrzeit des Urlaubs" class="form-control" id="urlaubende" name="urlaubsEnde"
+                       required
+                       th:field="*{urlaubsEnde}" type="time">
                 <label class="form-label" for="urlaubende">Ende (hh:mm)</label>
                 <div class="alert alert-warning" th:errors="*{urlaubsEnde}"
                      th:if="${#fields.hasErrors('urlaubsEnde')}"></div>
@@ -47,7 +53,8 @@
 
         </form>
         <div th:if="${!fehler.isEmpty()}">
-            <p class="alert alert-warning" th:text="${fehler}"><span style="color: black">Etwas ist schiefgelaufen</span></p>
+            <p class="alert alert-warning" th:text="${fehler}"><span
+                    style="color: black">Etwas ist schiefgelaufen</span></p>
         </div>
     </div>
 

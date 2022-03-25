@@ -15,10 +15,10 @@
 <nav>
     <div class="text-center pt-5">
 
-        <button class="btn btn-primary" style="margin-right: 1rem">
-            <a aria-label="Link zur Urlaubsbelegung" href="/urlaubbelegen" style="text-decoration: none; color: white">Urlaub belegen</a>
+        <button class="btn btn-primary" style="margin-right: 1rem" name="urlaub-belegen-btn">
+            <a name="urlaub-belegen-a" aria-label="Link zur Urlaubsbelegung" href="/urlaubbelegen" style="text-decoration: none; color: white">Urlaub belegen</a>
         </button>
-        <button class="btn btn-primary" style="margin-left: 1rem">
+        <button class="btn btn-primary" style="margin-left: 1rem" name="klausur-belegen-btn">
             <a aria-label="Link zur Klausurbelegung" href="/klausurbelegen" style="text-decoration: none; color: white">Klausur belegen</a>
         </button>
     </div>
@@ -28,7 +28,7 @@
 
 
     <h2>Urlaubszeiten</h2>
-    <table class="table mb-5" id="urlaub_table">
+    <table class="table mb-5" id="urlaub_table" name="urlaub_table">
         <thead>
         <tr>
             <th>Datum</th>
@@ -45,7 +45,7 @@
             <td th:text="${urlaub.getEndUhrzeit()}"> 13:30</td>
             <td th:text="${urlaub.dauerInMinuten()}">240</td>
             <td>
-                <form method="post" th:action="@{/urlaubstornieren}" th:object="${urlaubDto}">
+                <form method="post" th:action="@{/urlaubstornieren}" th:object="${urlaubDto}" name="urlaubStornieren">
                     <input id="urlaubsDatum" name="urlaubsDatum" th:attr="value = ${urlaub.getDatum()}" type="hidden">
                     <input id="urlaubsStart" name="urlaubsStart" th:attr="value = ${urlaub.getStartUhrzeit()}"
                            type="hidden">

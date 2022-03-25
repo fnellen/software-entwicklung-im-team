@@ -17,6 +17,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'com.tngtech.archunit:archunit-junit5-engine:0.22.0'
+    testImplementation 'net.sourceforge.htmlunit:htmlunit:2.58.0'
+    // downgraded because of https://github.com/HtmlUnit/htmlunit/issues/457
 }
 
 bootJar {
