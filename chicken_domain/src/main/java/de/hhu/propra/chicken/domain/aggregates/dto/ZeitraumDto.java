@@ -16,17 +16,12 @@ public class ZeitraumDto {
   private final LocalDate datum;
   private final LocalTime startUhrzeit;
   private final LocalTime endUhrzeit;
-  private final LocalDate praktikumsStart;
-  private final LocalDate praktikumsEnde;
 
 
-  public ZeitraumDto(LocalDate datum, LocalTime startUhrzeit, LocalTime endUhrzeit,
-                     LocalDate praktikumsStart, LocalDate praktikumsEnde) {
+  public ZeitraumDto(LocalDate datum, LocalTime startUhrzeit, LocalTime endUhrzeit) {
     this.datum = datum;
     this.startUhrzeit = startUhrzeit;
     this.endUhrzeit = endUhrzeit;
-    this.praktikumsStart = praktikumsStart;
-    this.praktikumsEnde = praktikumsEnde;
   }
 
   /**
@@ -55,15 +50,8 @@ public class ZeitraumDto {
     if (!inPraktikumsZeit(startUhrzeit, endUhrzeit)) {
       throw new ZeitraumDtoException("Die Uhrzeiten liegen nicht innerhalb des Arbeitszeitraums");
     }
-    return new ZeitraumDto(datum, startUhrzeit, endUhrzeit, praktikumsStart, praktikumsEnde);
+    return new ZeitraumDto(datum, startUhrzeit, endUhrzeit);
   }
-
-  /*@Deprecated
-  private static boolean validierePraktikumszeitraum(LocalDate datum) {
-    LocalDate startDatum = LocalDate.of(2022, 03, 07);
-    LocalDate endDatum = LocalDate.of(2022, 03, 25);
-    return !datum.isBefore(startDatum) && !datum.isAfter(endDatum);
-  }*/
 
   private static boolean validierePraktikumszeitraum(LocalDate datum, LocalDate praktikumsStart,
                                                      LocalDate praktikumsEnde) {
@@ -108,8 +96,7 @@ public class ZeitraumDto {
   }
 
   public long dauerInMinuten() {
-    long zeitraum = Duration.between(startUhrzeit, endUhrzeit).toMinutes();
-    return zeitraum;
+    return Duration.between(startUhrzeit, endUhrzeit).toMinutes();
   }
 
   @Override
