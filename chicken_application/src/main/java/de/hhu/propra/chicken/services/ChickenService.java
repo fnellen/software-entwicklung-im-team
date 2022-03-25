@@ -77,8 +77,8 @@ public class ChickenService {
     studentRepository.speicherStudent(student);
   }
 
-  public void klausurAnmelden(String veranstaltungsId, String veranstaltungsName,
-                              ZeitraumDto klausurZeitraum, Boolean praesenz)
+  public synchronized void klausurAnmelden(String veranstaltungsId, String veranstaltungsName,
+                                           ZeitraumDto klausurZeitraum, Boolean praesenz)
       throws VeranstaltungsIdException {
     boolean valideId = veranstaltungsIdRepository.webCheck(veranstaltungsId);
     if (!valideId) {
