@@ -95,8 +95,9 @@
             <input class="btn btn-primary" name="klausurSpeichern" type="submit" value="Speichern">
         </form>
         <div th:if="${!fehler.isEmpty()}">
-            <p class="alert alert-warning" th:text="${fehler}"><span
-                    style="color: black">Etwas ist schiefgelaufen</span></p>
+            <p class="alert alert-warning" style="color: black" th:text="${fehler}">
+                <span>Etwas ist schiefgelaufen</span>
+            </p>
         </div>
     </main>
 </div>

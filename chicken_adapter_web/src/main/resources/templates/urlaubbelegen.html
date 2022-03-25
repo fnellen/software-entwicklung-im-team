@@ -10,7 +10,7 @@
 <div class="container">
     <header>
         <h1>Urlaub belegen</h1>
-        <p type="hidden">Hier muss der gewünschte Urlaub angegeben werden im Format Datum, Startuhrzeit und
+        <p>Hier muss der gewünschte Urlaub angegeben werden im Format Datum, Startuhrzeit und
             Enduhrzeit</p>
     </header>
 
@@ -53,8 +53,9 @@
 
         </form>
         <div th:if="${!fehler.isEmpty()}">
-            <p class="alert alert-warning" th:text="${fehler}"><span
-                    style="color: black">Etwas ist schiefgelaufen</span></p>
+            <p class="alert alert-warning" style="color: black" th:text="${fehler}">
+                <span>Etwas ist schiefgelaufen</span>
+            </p>
         </div>
     </div>
 
