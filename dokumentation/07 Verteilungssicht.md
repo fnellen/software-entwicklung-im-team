@@ -3,14 +3,19 @@
 ---
 ---
 
-###Voraussetzungen an den Server:
-- Mindestens Java 11.
+### Voraussetzungen an den Server:
 
+- Java 17
 
-- Docker und alle Dependencies davon.
+- Docker und Docker-Compose
 
 ### Voraussetzungen an den Organisator
-- Docker startet das Programm und die Datenbank
 
-###Voraussetzungen an den Benutzer:
+- ``docker-compose-dev.yml`` startet die Datenbank.
+- Es müssen die Umgebungsvariablen für die Authentifizierung mit GitHub gesetzt sein: ``CLIENT_SECRET``
+  und ``CLIENT_ID``
+- Mittels ``./gradlew bootRun`` wird die Anwendung gestartet.
+
+### Voraussetzungen an den Benutzer:
+
 - Aktueller Browser mit HTML5-Support

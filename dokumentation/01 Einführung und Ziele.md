@@ -3,29 +3,33 @@
 ---
 ---
 
-Unser Projekt ermöglicht eine einfache Verwaltung für Urlaub- und Klausuranmeldungen in der dreiwochigen Praktikumszeit immer Montags bis Freitags von 9:30-13:30 von Propra2.
-Studenten haben in der gesamten Praktikumsdauer 4 Stunden Urlaub zur Verfügung und können sich aussuchen, wann sie diese einplanen wollen. Der Urlaubsblock kann entweder den ganzen Tag dauern oder höchstens 2,5 Stunden. Somit werden sie dann freigestellt vom Praktikum.
-Des Weiteren können sich Studenten für Klausuren anmelden, wenn diese innerhalb der Praktikumszeit liegen. Sollte vorher Urlaub in der Klausurzeit belegt sein, wird dieser gutgeschrieben.
-Darüber hinaus kann man auch eine Klausur eintragen, sollte diese nicht in der Klausurliste vorhanden sein.
-Außerdem können Studenten nachträglich ihre Urlaube oder Klausuren stornieren.
-Organisatoren bekommen eine Übersicht vom Logging der Studenten, welche die Urlaubsänderungen wie z.B. Urlaub ändern/stornieren/belegen zeigt.
+Unser Projekt ermöglicht eine einfache Verwaltung von Urlaubs- und Klausuranmeldungen für das Praktikum des Kurses
+ProPra 2. In der dreiwöchigen Praktikumszeit, die immer montags bis freitags von 9:30-13:30 stattfindet, haben
+Studierende in der gesamten Praktikumsdauer 4 Stunden Urlaub zur Verfügung. Sie können sich aussuchen, wann sie diese
+einplanen.
 
+Der Urlaubsblock kann entweder den ganzen Tag oder höchstens 2,5 Stunden dauern. Es können bis zu zwei Urlaube an einem
+Tag gebucht werden. Des Weiteren können sich Studierende für Klausuren anmelden, wenn diese innerhalb der Praktikumszeit
+liegen. Sollte bereits Urlaub in der Klausurzeit belegt sein, wird dieser wieder gutgeschrieben. Darüber hinaus kann man
+auch eine Klausur anmelden, sollte diese nicht in der Klausurliste vorhanden sein. Studierende können bis zum Vortag
+ihre belegten Urlaube oder Klausuren stornieren. Es werden alle Änderungen an Urlauben in einem Log festgehalten, z.B.
+Urlaub geändert, storniert, belegt.
 
 ### Qualitätsziele
 
 - Wartbarkeit
 - Sicherheit
 - Benutzerfreundlichkeit
+- Barrierefreiheit (a11y)
 - Funktionalität
 - Leistungsfähigkeit
 - Kompatibilität
 
+### Stakeholder
 
-
-### Stakeholder 
-| Rolle     | Kontakt |
-|: ----------- :|: ----------- :|
-| Softwarearchitekten | @dehus101, @fnellen, @ernaz100, @pifis102, @TeeJaey |
-| Studierende | Studierende, die am Praktikum von Propra2 teilnehmen |
-| Tutoren | Tutoren, die im WiSe 2021/2022 in Propra2 vertreten sind |
-| Organisatoren | @bendisposto @n2o @rutenkolk |
+|               Rolle                | Kontakt |
+|:----------------------------------:|: ----------- :|
+|        Softwarearchitekten         | @dehus101, @fnellen, @ernaz100, @pifis102, @TeeJaey |
+|            Studierende             | Studierende, die am Praktikum von Propra2 teilnehmen |
+|       Tutorinnen und Tutoren       | Tutorinnen und Tutoren, die im WiSe 2021/2022 in Propra2 vertreten sind |
+| Organisatorinnen und Organisatoren | @bendisposto @n2o @rutenkolk |

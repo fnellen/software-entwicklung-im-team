@@ -5,29 +5,25 @@
 
 ### Technische Randbedingungen
 
-- Das System verwendet GitHub zum Erstellen von Repositories in einer geeigneten Organisation, 
-sowie für die Anmeldung und Authentifizierung der Nutzer
+- Das System verwendet GitHub zum Anmelden und Authentifizieren der Nutzer
 
 
 - Das System verwendet Spring Boot
 
 
-- Daten werden persistent in einer Datenbank gespeichert
-
-
-- Docker und Docker Compose wird verwendet
+- Daten werden in einer Datenbank gespeichert, die in einer Docker-Umgebung läuft.
 
 
 - Alle verwendeten Bibliotheken und Komponenten haben eine Lizenz die den kostenfreien Betrieb ermöglichen
 
 
-- Der Code wird durch automatisierte Tests getestet
+- Der Code wird durch automatisierte Tests überprüft
 
 
 - Der Build ist mit Gradle automatisiert
 
 
-- Es werden statische Checker wie z.B. Checkstyle oder Spotbugs verwendet
+- Es werden statische Code-Analysetools wie Checkstyle und Spotbugs verwendet
 
 ### Organisatorische Randbedingungen
 
@@ -37,7 +33,7 @@ sowie für die Anmeldung und Authentifizierung der Nutzer
 - Zur Dokumentation kommt arc42 zum Einsatz
 
 
-- Für die Entwicklung wird in Teamarbeit mittels Remote Mob Programming gearbeitet
+- Für die Entwicklung wird in Teamarbeit gearbeitet
 
 
 - Es wird aufgabenbasiert vorgegangen, sodass immer logisch zusammenhängende Teilprobleme gelöst werden
