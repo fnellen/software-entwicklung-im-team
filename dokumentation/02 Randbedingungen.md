@@ -21,3 +21,6 @@
 - Zur Dokumentation kommt arc42 als Template zum Einsatz
 - Für die Entwicklung wird in Teamarbeit gearbeitet
 - Es wird aufgabenbasiert vorgegangen, sodass immer logisch zusammenhängende Teilprobleme gelöst werden
+
+## Konventionen
+* Methoden und Variablen werden in Deutsch definiert und folgen den Java-Naming-Konventionen

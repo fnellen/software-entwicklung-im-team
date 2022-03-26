@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.klausur_dto</OriginalElement>
+  <nodes>
+    <node x="0.0" y="0.0">1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.klausur_dto</node>
+    <node x="265.5" y="0.0">1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.student_dto</node>
+    <node x="0.0" y="298.0">1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.klausur_referenz_dto</node>
+    <node x="264.0" y="127.0">1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.urlaub_zeitraum_dto</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.urlaub_zeitraum_dto" target="1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.student_dto" relationship="REFERENCES">
+      <point x="0.0" y="-60.0" />
+      <point x="0.0" y="38.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="217.5" y="187.0" />
+  <SelectedNodes>
+    <node>1eedc749-6b2d-4477-b8ee-b09d9afd057b.TABLE:chicken.klausur_dto</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

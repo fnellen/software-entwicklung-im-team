@@ -3,31 +3,25 @@
 ---
 ---
 
-Die Daten, die das System während der Laufzeit über die Benutzereingaben bekommt, 
-werden den zuständigen Controllern übergeben.
-Die Controller geben die Daten an die Services weiter, worin sie verarbeitet werden
-und teilweise neu an die Controller zurückgegeben werden sowohl als auch 
-in der Datenbank über die Repositories gespeichert werden.
+Die Daten, die das System während der Laufzeit über die Benutzereingaben bekommt, werden den zuständigen Controllern übergeben.
+Die Controller geben die Daten an den Services weiter, worin sie verarbeitet werden. Neue Informationen werden sowohl an die Controller zurückgegeben, als auch in der Datenbank über die Repositories gespeichert.
 
 Im Folgenden werden ein paar Abläufe der Funktionen erklärt:
 
 ### Urlaub belegen:
-Studenten geben einen Urlaubzeitraum für sich selbst ein. 
-Diese Informationen werden dann vom Controller in den Service und ins Repository gegeben, 
-damit der Student und der Urlaubszeitraum gespeichert werden.
-Nun sieht man auf der Seite, an welchem Tag Urlaub genommen wurde und wie viel Resturlaub der Student noch hat.
+Studenten geben einen Urlaubzeitraum den sie belegen wollen ein. 
+Diese Informationen werden dann vom Controller an den Service geleitet. Nach einiger Validierung wird der Urlaub im Repository gespeichert und der Student an die Übersichtsseite weitergeleitet.
+Hier kann er einsehen wie viel Resturlaub der Student noch zur Verfügung und welche Urlaube er schon belegt hat.
 
 ### Klausur anmelden:
-Studenten können eine valide Klausur anmelden, um diese in der Klausurliste anzeigen zu können.
-Die Klausur wird im Controller ermittelt und dann über den Service ans Repository zum Speichern in der Datenbank geleitet.
+Studenten können eine Klausur anmelden, um diese in der Klausurliste zur Auswahl zu haben.
+Die Klausur wird im Controller entgegengenommen und dann über den Service ans Repository zum Speichern in der Datenbank geleitet. Es wird vorher überprüft, ob die angegebene Veranstaltungs ID der Klausur valide ist.
 
 ### Klausur belegen:
 Studenten wählen eine vorhandene Klausur von der Klausurliste aus, die vorher angemeldet wurde.
-Diese Informationen wird ebenfalls dann vom Controller in den Service und ins Repository gegeben, 
-damit die Klausur und der Klausurzeitraum gespeichert werden.
+Diese Informationen wird ebenfalls dann vom Controller in den Service und ins Repository gegeben, damit die Klausur und der Klausurzeitraum gespeichert werden.
 
 ### Urlaub- oder Klausur stornieren:
-Studenten haben die Möglichkeit ihre Angaben zu ändern wie z.B ihre Urlaube oder Klausuren zu stornieren.
-Diese Informationen wird ebenfalls dann vom Controller in den Service und ins Repository gegeben,
-damit der Urlaub- oder Klausur zeitraum gelöscht wird.
+Studenten haben die Möglichkeit ihre Freistellungen zu stornieren.
+Diese Informationen wird ebenfalls dann vom Controller in den Service und ins Repository gegeben, damit der Urlaub- oder Klausur zeitraum gelöscht wird.
 

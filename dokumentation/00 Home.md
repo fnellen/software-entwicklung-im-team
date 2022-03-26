@@ -5,7 +5,7 @@
 
 ## Starten des Systems
 
-Das Projekt benutzt Docker sowie `docker-compose` beides sollte installiert sein.
+Das Projekt benutzt Docker sowie `docker-compose`, beides sollte installiert sein.
 
 Es ist wichtig, dass die Umgebungsvariablen `CLIENT_ID` sowie `CLIENT_SECRET` gesetzt sind.
 
