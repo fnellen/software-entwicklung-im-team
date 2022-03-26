@@ -16,14 +16,13 @@ ihre belegten Urlaube oder Klausuren stornieren. Es werden alle Änderungen an U
 Urlaub geändert, storniert, belegt.
 
 ### Qualitätsziele
-
-- Wartbarkeit
-- Sicherheit
-- Benutzerfreundlichkeit
-- Barrierefreiheit (a11y)
-- Funktionalität
-- Leistungsfähigkeit
-- Kompatibilität
+| Qualitätsmerkmal | Motivation und Erläuterung|
+|:-----------------------:|:----------------------------:|
+| Wartbarkeit             | Das System soll offen für Wartungsarbeiten sein. Einzelne Komponenten sollen ohne Probleme austauschbar sein. |
+| Sicherheit              | Das System soll nur von authentifizierten Personen genutzt werden. Dies ist Vorraussetzung, damit nachvollzogen werden kann, wer Änderungen bzw. Aktionen vornimmt. |
+| Konfigurierbarkeit      | Die Konfiguration des Systems durch den Organisatoren und Organisatorinnen unproblematisch sein. |
+| Barrierefreiheit (a11y) | Die Weboberfläche soll für Menschen mit Einschränkungen die Bedienung mittels eines Screenreaders ermöglichen. |
+| Architektureinhaltung   | Die Anwendung folgt strickt den Regeln der Onion-Architektur und des Domain-Driven-Designs.  |
 
 ### Stakeholder
 
