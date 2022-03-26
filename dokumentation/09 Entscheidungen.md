@@ -8,14 +8,14 @@ Wir haben uns gegen Microservices entschieden, weil wir der Meinung waren, dass 
 Außerdem haben wir uns dadurch die Kommunikation zwischen verschiedenen Systemen gespart.
 Durch eine Onion Architektur haben wir uns erhofft eine geringere Kopplung zu haben und das Single-Responsibility-Prinzip besser einhalten zu können.
 
-## Domain Driven Design
-Wir haben unser Projekt nach dem Domain Driven Design strukturiert. Dabei haben wir die Verschiedenen Informationen in Aggregate unterteilt:
+## Domain-Driven-Design
+Wir haben unser Projekt nach dem Domain-Driven-Design strukturiert. Dabei haben wir die Verschiedenen Informationen in Aggregate unterteilt:
 
 ### Student
 Der Student enthält lediglich Informationen zu seinem belegten Urlaub bzw. Klausuren. Er hat nur Referenzen zu den Klausuren, um eine bessere Abgrenzung der Aggregate zu haben.
 
 ### Klausur
-Die Klausur hat eine VeranstaltungsId, einen Klausurzeitraum, einen Freistellungszeitraum und die Information, ob die Klausur in präsenz stattfindet. Die beiden Zeiträume werden getrennt von einander gespeichert, um bei der Belegung mehrerer Klausuren an einem Tag, Überschneidungen von Klausuren zu vermeiden. 
+Die Klausur hat eine VeranstaltungsId, einen Veranstaltungsnamen, einen Klausurzeitraum, einen Freistellungszeitraum und die Information, ob die Klausur in präsenz stattfindet. Die beiden Zeiträume werden getrennt von einander gespeichert, um bei der Belegung mehrerer Klausuren an einem Tag, Überschneidungen von Klausuren zu vermeiden. 
 Diese Trennung erfolgte nachdem wir festgestellt hatten, dass mit der vorherigen Implementation von nur einem Zeitraum (freigestellter Zeitraum), Klausuren sich Überschneiden würden, obwohl sich nur deren freigestellten Zeiträume überschneiden.
 
 #### Veranstaltungs ID
@@ -24,6 +24,10 @@ Wir haben uns dazu entschieden die VeranstaltungsId separat als eigene Klasse zu
 ### ZeitraumDto
 Während der Erstellung eines Zeitraumes werden die vorgegebenen Regeln Überprüft (z.B 15-Minuten Blöcke, etc. ...). Somit stellen wir sicher, dass keine invaliden Zeiträume gebucht und erstellt werden können.
 Anfänglich waren die Praktikumszeiträume fest definiert in der Klasse. Um die Konfigurierbarkeit der Anwendung zu ermöglichen, haben wir uns dazu entschieden, bei der Erstellung jedes Zeitraumes den Praktikumszeitraum zu übergeben. 
+Das Object wird als Data-Transfer-Objekt aufgefasst, da es innerhalb der Anwendung an verschiedenen Stellen verwendet wird und nur Daten enthält, wenn sie valiede sind. Somit wird immer sichergestellt, dass nicht versucht wird einen illegalen Zeitraum zu erstellen.
+
+## Validierung von Überschneidungen
+Die Validierung von Überschneidungen haben wir im Application-Layer angesiedelt. Wir kamen zu dieser Entscheidung, da es nur an dieser Stelle möglich ist auf die Daten der Klausuren aus der Datenbank zuzugreifen. Das Student-Aggregat enthält lediglich Referenzen auf die belegten Klausuren. Es käme bei einer Ansiedelung der Validierung in der Domain zu mehrfachen Wiederholungen im Code.
 
 ## Spring Data JDBC
 Da wir unser Projekt nach Domain Driven Design modelliert haben, hat es sich angeboten Spring Data JDBC für die Zugriffe unserer Datenbank zu verwenden.
