@@ -5,8 +5,8 @@ services:
     ports:
       - "3306:3306" # port binding only for external access via IntelliJ
     environment:
-      - "***REMOVED***"
-      - "***REMOVED***"
+      - "DB_USER=${DB_USER}"
+      - "MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}"
     healthcheck:
       test: [ 'CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u$DB_USER', '-p$MARIADB_ROOT_PASSWORD' ]
       timeout: 20s
